@@ -12,5 +12,8 @@
   "scripts": {
     "format": "npx prettier . --write",
     "lint": "npx eslint ."
+  },
+  "dependencies": {
+    "express": "^4.19.2"
   }
 }
