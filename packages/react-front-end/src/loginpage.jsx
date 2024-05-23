@@ -1,77 +1,89 @@
 import React from "react";
 import {
   MDBContainer,
-  MDBCol,
-  MDBRow,
-  MDBBtn,
-  MDBIcon,
   MDBInput,
   MDBCheckbox,
+  MDBBtn,
+  MDBIcon,
 } from "mdb-react-ui-kit";
 
-function App() {
+function loginpage() {
   return (
-    <MDBContainer fluid className="p-3 my-5 h-custom">
-      <MDBRow>
-        <MDBCol col="10" md="6">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-            class="img-fluid"
-            alt="Sample image"
-          />
-        </MDBCol>
+    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+      <MDBInput
+        wrapperClass="mb-4"
+        label="Email address"
+        id="form1"
+        type="email"
+      />
+      <MDBInput
+        wrapperClass="mb-4"
+        label="Password"
+        id="form2"
+        type="password"
+      />
 
-        <MDBCol col="4" md="6">
-          <div className="divider d-flex align-items-center my-4">
-            <p className="text-center fw-bold mx-3 mb-0">Or</p>
-          </div>
+      <div className="d-flex justify-content-between mx-3 mb-4">
+        <MDBCheckbox
+          name="flexCheck"
+          value=""
+          id="flexCheckDefault"
+          label="Remember me"
+        />
+        <a href="!#">Forgot password?</a>
+      </div>
 
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Email address"
-            id="formControlLg"
-            type="email"
-            size="lg"
-          />
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Password"
-            id="formControlLg"
-            type="password"
-            size="lg"
-          />
+      <MDBBtn className="mb-4">Sign in</MDBBtn>
 
-          <div className="d-flex justify-content-between mb-4">
-            <MDBCheckbox
-              name="flexCheck"
-              value=""
-              id="flexCheckDefault"
-              label="Remember me"
-            />
-            <a href="!#">Forgot password?</a>
-          </div>
+      <div className="text-center">
+        <p>
+          Not a member? <a href="#!">Register</a>
+        </p>
+        <p>or sign up with:</p>
 
-          <div className="text-center text-md-start mt-4 pt-2">
-            <MDBBtn className="mb-0 px-5" size="lg">
-              Login
-            </MDBBtn>
-            <p className="small fw-bold mt-2 pt-1 mb-2">
-              Don't have an account?{" "}
-              <a href="#!" className="link-danger">
-                Register
-              </a>
-            </p>
-          </div>
-        </MDBCol>
-      </MDBRow>
+        <div
+          className="d-flex justify-content-between mx-auto"
+          style={{ width: "40%" }}
+        >
+          <MDBBtn
+            tag="a"
+            color="none"
+            className="m-1"
+            style={{ color: "#1266f1" }}
+          >
+            <MDBIcon fab icon="facebook-f" size="sm" />
+          </MDBBtn>
 
-      <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-        <div className="text-white mb-3 mb-md-0">
-          Copyright © 2020. All rights reserved.
+          <MDBBtn
+            tag="a"
+            color="none"
+            className="m-1"
+            style={{ color: "#1266f1" }}
+          >
+            <MDBIcon fab icon="twitter" size="sm" />
+          </MDBBtn>
+
+          <MDBBtn
+            tag="a"
+            color="none"
+            className="m-1"
+            style={{ color: "#1266f1" }}
+          >
+            <MDBIcon fab icon="google" size="sm" />
+          </MDBBtn>
+
+          <MDBBtn
+            tag="a"
+            color="none"
+            className="m-1"
+            style={{ color: "#1266f1" }}
+          >
+            <MDBIcon fab icon="github" size="sm" />
+          </MDBBtn>
         </div>
       </div>
     </MDBContainer>
   );
 }
 
-export default App;
+export default loginpage;
