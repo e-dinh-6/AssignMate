@@ -44,6 +44,19 @@ function getEvent(title) {
   return promise;
 }
 
+function getEvents(userId) {
+  const events = Event.find({user: userId}).sort({date:1,startTime:1});
+  const eventsByDay = {};
+  events.forEach((event) => {
+    const date = event.date;
+    if(!eventsByDay[date]) {
+      eventsByDay[date] = [];
+    }
+    eventsByDay[date].push(event);
+  });
+  return eventsByDay;
+}
+
 // function getEvent(title) {
 //   let query = {};
 //   if (title) {
@@ -100,6 +113,7 @@ export default {
   findUserByUsernameAndPassword,
   addEvent,
   getEvent,
+  getEvents,
   deleteEvent,
   addTag
 };

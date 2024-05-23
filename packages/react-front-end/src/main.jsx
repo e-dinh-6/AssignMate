@@ -1,13 +1,21 @@
 // src/main.jsx
 import React from "react";
 import ReactDOMClient from "react-dom/client";
+import { BrowserRouter as Router, Route, Swtich } from "react-router-dom";
+import List from "./List"
 import "./main.css";
 
 function MyApp() {
   return (
-    <div>
-      <h1>Hello, React!</h1>
-    </div>
+    <Route>
+      <div>
+        <h1>Hello, React!</h1>
+        <Switch>
+          <Route path = "/list" exact component={List}/>
+        </Switch>
+      </div>
+    </Route>
+    
   );
 }
 
