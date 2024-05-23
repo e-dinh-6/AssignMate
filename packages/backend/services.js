@@ -13,12 +13,12 @@ mongoose
   })
   .catch((error) => console.log(error));
 
-function getUsers(name) {
+async function getUsers(username) {
   let promise;
-  if (name) {
-    promise = findUserByName(name).lean();
+  if (username) {
+    promise = await findUserByName(username).lean();
   } else {
-    promise = User.find().lean();
+    promise = await User.find().lean();
   }
 
   return promise;
@@ -86,8 +86,8 @@ function findUserByUsernameAndPassword(username, password) {
   return User.find({username: username, password: password})
 }
 
-function findUserByName(name) {
-  return User.find({name: name})
+function findUserByName(username) {
+  return User.find({username: username})
 }
 
 function addEvent(event) {
@@ -114,6 +114,8 @@ export default {
   addEvent,
   getEvent,
   getEvents,
+  findUserByName,
+  addEvent,
   deleteEvent,
   addTag
 };

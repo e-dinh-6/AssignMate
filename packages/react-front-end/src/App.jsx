@@ -11,6 +11,7 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 import Home from "./main";
 import Login from "./loginpage";
+import List from "./List";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           with exact path "/about", in component 
           props we passes the imported component*/}
           <Route path="/login" element={<Login />} />
+
+          <Route path="/list" element={<List/>} />
 
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
