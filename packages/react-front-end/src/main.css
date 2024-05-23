@@ -36,7 +36,7 @@
   background: var(--calBgColor);
 }
 
-// Place on Timeline
+/* // Place on Timeline */
   .start-10 {
   grid-row-start: 2;
 }
@@ -73,7 +73,7 @@
   grid-row-end: 9;
 }
 
-// Event
+/* // Event */
   
   .title {
   font-weight: 600;
@@ -93,7 +93,7 @@
   height: 60px;
 }
 
-// Global / Etc
+/* // Global / Etc */
   
   body {
   font-family: system-ui, sans-serif;
