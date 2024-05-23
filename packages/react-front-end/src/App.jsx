@@ -7,9 +7,11 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 import Home from "./main";
 import Login from "./loginpage";
+import "./App.css";
 
 function App() {
   return (

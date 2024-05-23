@@ -9,18 +9,20 @@ import {
 
 function loginpage() {
   return (
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+    <MDBContainer className="p-3 my-5 d-flex flex-column w-50 ">
       <MDBInput
         wrapperClass="mb-4"
         label="Email address"
         id="form1"
         type="email"
+        style={{ backgroundColor: "#f0f0f0" }}
       />
       <MDBInput
         wrapperClass="mb-4"
         label="Password"
         id="form2"
         type="password"
+        style={{ backgroundColor: "#f0f0f0" }}
       />
 
       <div className="d-flex justify-content-between mx-3 mb-4">
@@ -39,7 +41,6 @@ function loginpage() {
         <p>
           Not a member? <a href="#!">Register</a>
         </p>
-        <p>or sign up with:</p>
 
         <div
           className="d-flex justify-content-between mx-auto"
