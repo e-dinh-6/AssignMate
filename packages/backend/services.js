@@ -13,12 +13,12 @@ mongoose
   })
   .catch((error) => console.log(error));
 
-function getUsers(name) {
+async function getUsers(username) {
   let promise;
-  if (name) {
-    promise = findUserByName(name).lean();
+  if (username) {
+    promise = await findUserByName(username).lean();
   } else {
-    promise = User.find().lean();
+    promise = await User.find().lean();
   }
 
   return promise;
@@ -42,6 +42,19 @@ function getEvent(title) {
     promise = Event.find().lean();
   }
   return promise;
+}
+
+function getEvents(userId) {
+  const events = Event.find({user: userId}).sort({date:1,startTime:1});
+  const eventsByDay = {};
+  events.forEach((event) => {
+    const date = event.date;
+    if(!eventsByDay[date]) {
+      eventsByDay[date] = [];
+    }
+    eventsByDay[date].push(event);
+  });
+  return eventsByDay;
 }
 
 // function getEvent(title) {
@@ -73,8 +86,8 @@ function findUserByUsernameAndPassword(username, password) {
   return User.find({username: username, password: password})
 }
 
-function findUserByName(name) {
-  return User.find({name: name})
+function findUserByName(username) {
+  return User.find({username: username})
 }
 
 function addEvent(event) {
@@ -100,6 +113,9 @@ export default {
   findUserByUsernameAndPassword,
   addEvent,
   getEvent,
+  getEvents,
+  findUserByName,
+  addEvent,
   deleteEvent,
   addTag
 };

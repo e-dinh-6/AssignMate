@@ -51,6 +51,21 @@ app.post("/events", (req, res) => {
     .catch(error => res.status(400).send());
 });
 
+app.post("/events/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const event = req.body;
+  services.addEvent(event)
+    .then(event => res.status(201).send(event))
+    .catch(error => res.status(400).send());
+});
+
+app.get("/events/:userId", (req,res) => {
+  const userId = req.params.userId;
+  services.getEvents(userId)
+    .then(events => res.send(events))
+    .catch(error => res.status(404).send("Resource not found."));
+});
+
 app.delete("/events/:id", (req,res) => {
   const id = req.params.id;
   services.deleteEvent(id)

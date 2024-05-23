@@ -4,10 +4,14 @@ import mongoose from "mongoose";
 // Define Tag Schema
 const userSchema = new mongoose.Schema(
     {
-        name: {
+        username: {
             type: String,
             required: true
-        }
+        },
+        password: {
+            type: String,
+            required: true
+        },
     },
     { collection : "users_list" });
 
@@ -32,12 +36,26 @@ const Tag = mongoose.model("Tag", tagSchema);
 // Define Event Schema
 const eventSchema = new mongoose.Schema(
     {
-        title: {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        eventName: {
             type: String,
             required: true
         },
         date: {
             type: Date,
+            required: true
+        },
+        startTime: {
+            type: Date
+        },
+        endTime: {
+            type: Date
+        },
+        status: {
+            type: String,
             required: true
         },
         tag: [tagSchema],
@@ -51,4 +69,29 @@ const eventSchema = new mongoose.Schema(
 
 const Event = mongoose.model("Event" , eventSchema);
 
-export default {User, Event, Tag};
+const calendarSchema = new mongoose.Schema(
+    {
+      color: {
+        type: String,
+        default: '#000000'
+      },
+      owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      events: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event'
+      },
+      view: {
+        type: String,
+        enum: ['list','week','month'],
+        default: 'month'
+      },
+    }
+  );
+
+const Calendar = mongoose.model("Calendar", calendarSchema);
+
+export default {User, Event, Tag, Calendar};
