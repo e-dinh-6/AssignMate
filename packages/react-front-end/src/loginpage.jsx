@@ -33,7 +33,7 @@ function loginpage() {
 
       <div className="text-center">
         <p>
-          Not a member? <a href="#!">Register</a>
+          Not a member? <a href="/signup">Register</a>
         </p>
       </div>
     </MDBContainer>
