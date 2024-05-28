@@ -12,6 +12,7 @@ const EventForm = () => {
     description: ''
   });
 
+  
   const [tags, setTags] = useState([
     { name: 'CSC 307', color: '#FF5733' },
   ]);
