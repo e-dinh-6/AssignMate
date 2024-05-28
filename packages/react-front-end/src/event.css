@@ -1,0 +1,157 @@
+.event-form-container {
+  display: flex;
+  font-family: Arial, sans-serif;
+  background-color: #c4e8eb;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #b3d2d4;
+  padding: 20px;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.sidebar h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 5px;
+}
+
+.event-form {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-form h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.tag-selector {
+  position: relative;
+}
+
+.tag-dropdown {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+  width: 100%;
+  max-height: 100px;
+  overflow-y: auto;
+  margin-top: 5px;
+}
+
+.tag-option {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.tag-option input[type="checkbox"] {
+  margin-left: 5px; /* Add some margin between checkbox and tag name */
+}
+
+.tag-option span {
+  color: inherit; /* Set color to inherit from parent */
+}
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(136, 136, 136, 0.25);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.modal-content input {
+  margin-bottom: 8px;
+  width: calc(100% - 20px);
+}
+
+.modal-content .tag-btn {
+  margin-right: 8px;
+  width: 100px;
+}
+
+.modal-content .button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form-group input[type="color"] {
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+}
+
+.create-btn, .tag-btn {
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.create-btn:hover, .tag-btn:hover {
+  background-color: #0056b3;
+}
