@@ -11,4 +11,8 @@ function MyApp() {
   );
 }
 
+<<<<<<< HEAD
 export default MyApp;
+=======
+export default MyApp;
+>>>>>>> cd7f214 (adding sevenday.jsx and css)
