@@ -42,8 +42,4 @@ const container = document.getElementById("root");
 
 const root = ReactDOMClient.createRoot(container);
 
-<<<<<<< HEAD
 root.render(<App />);
-=======
-root.render(<App />);
->>>>>>> cd7f214 (adding sevenday.jsx and css)
