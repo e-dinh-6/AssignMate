@@ -2,7 +2,7 @@
     --numDays: 7;
     --numHours: 10;
     --timeHeight: 60px;
-    --calBgColor: #ffffff;  /* Change to white */
+    --calBgColor: white;  /* Change to white */
     --eventBorderColor: #ddd;  /* Change the border color to a more neutral one */
     --eventColor1: #ffd6d1;
     --eventColor2: #fafaa3;
@@ -14,12 +14,14 @@
   body {
     height: 100%;
     margin: 0;
+    background-color: white; 
   }
   
   #root {
     display: flex;
     flex-direction: column;
     height: 100vh; /* Set height to fill the entire viewport height */
+    background-color: white;
   }
   
   .header {
@@ -29,7 +31,7 @@
     text-align: center;
     display: flex;
     align-items: center;  /* Center items vertically */
-    justify-content: center;  /* Center items horizontally */
+    justify-content: start;  /* Center items horizontally */
   }
   
   .header img.logo {
@@ -52,7 +54,7 @@
   }
   
   .add-event-button {
-    background-color: #fff;
+    background-color: white;
     border: none;
     padding: 0.5rem;
     margin-bottom: 1rem;
@@ -102,29 +104,6 @@
     padding: 1.5em;
     will-change: filter;
     transition: filter 300ms;
-  }
-  
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  
-  .logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
-  }
-  
-  @keyframes logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-      animation: logo-spin infinite 20s linear;
-    }
   }
   
   .card {

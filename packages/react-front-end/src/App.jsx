@@ -14,6 +14,7 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
+import Sevenday from "./sevenday";
 import "./App.css";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/sevenday" element={<Sevenday />} />
 
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
