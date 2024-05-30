@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './event.css';
 
-const EventForm = () => {
+const EventForm = (props) => {
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    tags: [],
-    date: '',
-    timeStart: '',
-    timeEnd: '',
-    status: 'In Progress',
-    description: ''
+    title: selectedEvent? selectedEvent.title : '',
+    tags: selectedEvent? selectedEvent.tags : [],
+    date: selectedEvent? selectedEvent.date : '',
+    timeStart: selectedEvent? selectedEvent.timeStart : '',
+    timeEnd: selectedEvent? selectedEvent.timeEnd : '',
+    status: selectedEvent? selectedEvent.status : 'In Progress',
+    description: selectedEvent? selectedEvent.description : ''
   });
 
   const [tags, setTags] = useState([
@@ -18,12 +19,25 @@ const EventForm = () => {
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState('#000000');
   const [events, setEvents] = useState([
-    { title: 'Event Title 1', tags: [] },
+    { title: 'Project Meeting', tags: ['CSC 307'], date: '2024-05-30', timeStart: '10:00', timeEnd: '12:00', description: 'Description for event 1' },
     { title: 'Event Title 2', tags: [] },
   ]);
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [showNewTagModal, setShowNewTagModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  useEffect(() => {
+    if (selectedEvent) {
+      setFormData({
+        title: selectedEvent.title,
+        tags: selectedEvent.tags,
+        date: selectedEvent.date,
+        timeStart: selectedEvent.timeStart,
+        timeEnd: selectedEvent.timeEnd,
+        status: selectedEvent.status,
+        description: selectedEvent.description
+      });
+    }
+  }, [selectedEvent]);
 
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
@@ -35,11 +49,21 @@ const EventForm = () => {
     }
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    setEvents([...events, { title: formData.title, tags: formData.tags }]);
-    // Reset form fields
+    if (selectedEvent) {
+      // Update existing event
+      const updatedEvents = events.map(event =>
+        event.id === selectedEvent.id ? { ...formData, id: selectedEvent.id } : event
+      );
+      setEvents(updatedEvents);
+    } else {
+      // Add new event
+      const newEvent = { ...formData, id: events.length ? events[events.length - 1].id + 1 : 1 };
+      setEvents([...events, newEvent]);
+    }
+    // Reset form fields and selected event
     setFormData({
       title: '',
       tags: [],
