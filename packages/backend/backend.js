@@ -13,22 +13,9 @@ app.listen(port, () => {
   );
 });
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
-app.post("/users", (req,res) => {
-  const newUser = req.body;
-  services.addUser(newUser)
-    .then(user => res.status(201).send(user))
-    .catch(error => res.status(400).send());
-});
-
-// app.get("/users/:username/:password", (req, res) => {
-//   const {username, password} = req.params;
-//   services.findUserByUsernameAndPassword(username,password)
-//     .then(user => res.send(user))
-//     .catch(error => resizeTo.status(404).send("Resource not found."));
-// });
 
 app.get("/users", (req, res) => {
   const name = req.params;
@@ -37,9 +24,17 @@ app.get("/users", (req, res) => {
     .catch(error => res.status(404).send("Resource not found." + error));
 });
 
+
+app.post("/users", (req,res) => {
+  const newUser = req.body;
+  services.addUser(newUser)
+    .then(user => res.status(201).send(user))
+    .catch(error => res.status(400).send());
+});
+
 app.get("/events", (req, res) => {
   const {title, date, tag, description} = req.query;
-  services.getEvent(title)
+  services.getEvents(title)
     .then(event => res.send(event))
     .catch(error => res.status(404).send("Resource not found."));
 });

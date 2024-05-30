@@ -44,18 +44,18 @@ function getEvents(title) {
   return promise;
 }
 
-function getEvents(userId) {
-  const events = Event.find({user: userId}).sort({date:1,startTime:1});
-  const eventsByDay = {};
-  events.forEach((event) => {
-    const date = event.date;
-    if(!eventsByDay[date]) {
-      eventsByDay[date] = [];
-    }
-    eventsByDay[date].push(event);
-  });
-  return eventsByDay;
-}
+// function getEvents(userId) {
+//   const events = Event.find({user: userId}).sort({date:1,startTime:1});
+//   const eventsByDay = {};
+//   events.forEach((event) => {
+//     const date = event.date;
+//     if(!eventsByDay[date]) {
+//       eventsByDay[date] = [];
+//     }
+//     eventsByDay[date].push(event);
+//   });
+//   return eventsByDay;
+// }
 
 
 function addUser(user) {
