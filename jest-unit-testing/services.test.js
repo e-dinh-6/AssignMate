@@ -20,7 +20,7 @@ describe('getUser function', () => {
     });
 })
 
-describe('getTags function', ()=> {
+describe('getTags function', ()=> {gi
     test('Testing getTags w/ no name', () => {
         jest.spyOn(mut, 'find').mockResolvedValue([]);
         const expected = [];

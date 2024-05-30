@@ -1,4 +1,4 @@
-//datbase.js
+// datbase.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 
