@@ -34,7 +34,7 @@ function getTags(name) {
   return promise;
 }
 
-function getEvent(title) {
+function getEvents(title) {
   let promise;
   if (title) {
     promise = Event.find({title: title}).lean();
@@ -57,24 +57,6 @@ function getEvents(userId) {
   return eventsByDay;
 }
 
-// function getEvent(title) {
-//   let query = {};
-//   if (title) {
-//     query.title = title;
-//   }
-
-//    return Event.find(query).lean().then(events => {
-//     return events.map(event => {
-//       if (Array.isArray(event.tag)) {
-//         event.tag = event.tag.map(tag => ({
-//           name: tag.name,
-//           color: tag.color
-//         }));
-//       }
-//       return event;
-//     });
-//   });
-// }
 
 function addUser(user) {
   const userToAdd = new User(user);
@@ -112,10 +94,8 @@ export default {
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
-  getEvent,
   getEvents,
   findUserByName,
-  addEvent,
   deleteEvent,
   addTag
 };
