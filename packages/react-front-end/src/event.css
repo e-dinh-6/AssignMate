@@ -142,9 +142,13 @@
   border-radius: 4px;
 }
 
-.button-container {
+.buttons {
   display: inline-block;
 }
+
+.tag-color {
+  display: inline-block;
+} 
 
 .event-name:hover {
   color: #4a1fa9;

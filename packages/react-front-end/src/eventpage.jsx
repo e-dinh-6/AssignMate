@@ -199,13 +199,18 @@ const EventForm = (props) => {
                     onChange={(e) => setNewTagName(e.target.value)}
                     placeholder="New Tag Name"
                   />
+                  <div className="tag-color">
+                    <label htmlFor="color">Select a color:</label>
                   <input
                     type="color"
                     value={newTagColor}
                     onChange={(e) => setNewTagColor(e.target.value)}
                   />
+                  </div>
+                  <div className="buttons">
                   <button type="button" onClick={handleAddTag} className="tag-btn">Add Tag</button>
                   <button type="button" onClick={() => setShowNewTagModal(false)} className="tag-btn">Cancel</button>
+                </div>
                 </div>
               </div>
             )}
