@@ -6,33 +6,40 @@ body {
     margin: 0;
     padding: 0;
 }*/
-  
+
 #root {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Set height to fill the entire viewport height */
-    width: 100vw;
-    background-color: #F7F5F5;
-} 
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set height to fill the entire viewport height */
+  width: 100vw;
+  background-color: #f7f5f5;
+}
 
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Set height to fill the entire viewport height */
-    width: 100%;
-    background-color: #F7F5F2;
-    box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set height to fill the entire viewport height */
+  width: 100%;
+  background-color: #f7f5f2;
+  box-sizing: content-box;
 }
 
-.container-sm, .container {
-    max-width: 100vw;
+.container-sm,
+.container {
+  max-width: 100vw;
 }
 
-.container, .container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm {
-    padding-left: 0;
-    padding-right: 0;
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  padding-left: 0;
+  padding-right: 0;
 }
-  
+
 .header {
   background-color: #b3d2d4; /* Header color */
   color: white;
@@ -40,30 +47,30 @@ body {
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;  /* Center items horizontally */
+  justify-content: center; /* Center items horizontally */
 }
 
 .header img.logo {
-    margin-left: 50px;
-    height: 60px;  /* Adjust the height to make the logo twice as large */
-    margin-right: 1rem;  /* Space between logo and text */
+  margin-left: 50px;
+  height: 60px; /* Adjust the height to make the logo twice as large */
+  margin-right: 1rem; /* Space between logo and text */
 }
 
 .header h1 {
-    margin-left: 60px;
+  margin-left: 60px;
 }
 .view-buttons {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .view-buttons button {
-    width: 70px;
-    height: 30px;
+  width: 70px;
+  height: 30px;
 }
 
 .view-buttons .list {
-    background-color: #7CA4A7;
-    pointer-events: none;
+  background-color: #7ca4a7;
+  pointer-events: none;
 }
 
 .main-content {
@@ -71,29 +78,30 @@ body {
   flex: 1;
 }
 
-.sidebar {
+.left-bar {
   background-color: #7ca4a7; /* Sidebar color */
   padding: 1rem;
   width: 200px;
   text-align: left;
-  /*display: flex;
-  flex-direction: column;*/
+}
+
+.event-container {
+  display: flex;
+  justify-content: center;
 }
 
 .add-event-button {
-  margin-left: 40px;
   background-color: #fff;
   border: none;
-  padding: .5rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
   cursor: pointer;
   border-radius: 4px;
   font-size: 1rem;
-  justify-content: center;  /* Center items horizontally */
 }
 
 .to-do-list {
-    height: 100%;
+  height: 100%;
   /*flex-grow: 1; /* Allow the to-do list section to grow and fill the remaining space */
 }
 
@@ -127,25 +135,26 @@ body {
   text-align: left;
 }
 
-.content .date{
+.content .date {
   font-size: 1rem;
 }
 
-.space, .date{
-    height: auto;
+.space,
+.date {
+  height: auto;
 }
 
-.content ul{
-    list-style-type: none;
+.content ul {
+  list-style-type: none;
 }
 
-.content ul li .event-details{
-    margin-right: 30px;
+.content ul li .event-details {
+  margin-right: 30px;
 }
 
-.content ul li button{
-    margin-left: 900px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
+.content ul li button {
+  margin-left: 900px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
 }
