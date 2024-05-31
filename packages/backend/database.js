@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-
 // Define Tag Schema
 const userSchema = new mongoose.Schema(
   {
