@@ -3,17 +3,20 @@ import mongoose from "mongoose";
 import databaseModel from "./database.js";
 import * as dotenv from "dotenv";
 
-const {User, Event, Tag} = databaseModel;
+const { User, Event, Tag } = databaseModel;
 
 mongoose.set("debug", true);
 dotenv.config();
-const { MONGODB_URL } = process.env
+const { MONGODB_URL } = process.env;
 
 mongoose
-  .connect("mongodb+srv://mei:mei@assignmate.gavtgdy.mongodb.net/?retryWrites=true&w=majority&appName=AssignMate", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://mei:mei@assignmate.gavtgdy.mongodb.net/?retryWrites=true&w=majority&appName=AssignMate",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+  )
   .catch((error) => console.log(error));
 
 async function getUsers(username) {
@@ -30,9 +33,9 @@ async function getUsers(username) {
 function getTags(name) {
   let promise;
   if (name) {
-    promise = databaseModel.find({name: name});
+    promise = databaseModel.find({ name: name });
   } else {
-      promise = databaseModel.find();
+    promise = databaseModel.find();
   }
   return promise;
 }
@@ -40,7 +43,7 @@ function getTags(name) {
 function getEvent(title) {
   let promise;
   if (title) {
-    promise = Event.find({title: title}).lean();
+    promise = Event.find({ title: title }).lean();
   } else {
     promise = Event.find().lean();
   }
@@ -48,11 +51,11 @@ function getEvent(title) {
 }
 
 function getEvents(userId) {
-  const events = Event.find({user: userId}).sort({date:1,startTime:1});
+  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
   const eventsByDay = {};
   events.forEach((event) => {
     const date = event.date;
-    if(!eventsByDay[date]) {
+    if (!eventsByDay[date]) {
       eventsByDay[date] = [];
     }
     eventsByDay[date].push(event);
@@ -86,11 +89,11 @@ function addUser(user) {
 }
 
 function findUserByUsernameAndPassword(username, password) {
-  return User.find({username: username, password: password})
+  return User.find({ username: username, password: password });
 }
 
 function findUserByName(username) {
-  return User.find({username: username})
+  return User.find({ username: username });
 }
 
 function addEvent(event) {
@@ -120,5 +123,5 @@ export default {
   findUserByName,
   addEvent,
   deleteEvent,
-  addTag
+  addTag,
 };

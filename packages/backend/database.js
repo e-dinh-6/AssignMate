@@ -2,7 +2,6 @@
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 
-
 // Define Tag Schema
 const userSchema = new mongoose.Schema(
   {

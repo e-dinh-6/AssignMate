@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+/* import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export function registerUser(req, res) {
@@ -38,3 +38,4 @@ function generateAccessToken(username) {
     );
   });
 }
+ */
