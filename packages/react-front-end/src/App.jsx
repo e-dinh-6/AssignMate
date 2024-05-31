@@ -18,6 +18,8 @@ import List from "./list";
 import AddEvent from "./eventpage";
 import "./App.css";
 
+//cd url: https://black-rock-04015071e.5.azurestaticapps.net
+
 function App() {
   return (
     <>
