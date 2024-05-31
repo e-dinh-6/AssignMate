@@ -9,12 +9,28 @@ mongoose.set("debug", true);
 dotenv.config();
 const { MONGODB_URL } = process.env;
 
+console.log("MONGODB_URL:", MONGODB_URL);
+
 mongoose
   .connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .catch((error) => console.log(error));
+  .then(() => {
+    console.log("Connected to cloud db");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the cloud database:", error);
+    console.log("Attempting to connect to the local database...");
+    mongoose
+      .connect("mongodb://localhost:27017/asignmate", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .catch((error) => {
+        console.error("Error connecting to the local database:", error);
+      });
+  });
 
 async function getUsers(username) {
   let promise;
@@ -60,9 +76,16 @@ function getEvents(userId) {
 }
 
 function addUser(user) {
+  if (!user) {
+    return;
+  }
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
+}
+
+function deleteUser(name) {
+  return User.findOneAndDelete({ username: name });
 }
 
 function findUserByUsernameAndPassword(name, pw) {
@@ -91,6 +114,7 @@ function addTag(tag) {
 
 export default {
   addUser,
+  deleteUser,
   getUsers,
   getTags,
   findUserByUsernameAndPassword,

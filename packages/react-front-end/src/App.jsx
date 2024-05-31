@@ -18,6 +18,8 @@ import List from "./list";
 import AddEvent from "./eventpage";
 import "./App.css";
 
+//assignmate7.azurewebsites.net azure front end url (use in place of localhost:8000)
+
 function App() {
   return (
     <>
