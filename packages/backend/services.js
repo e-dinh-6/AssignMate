@@ -1,7 +1,7 @@
-//services.js
+// services.js
 import mongoose from "mongoose";
-import databaseModel from "./database.js";
 import * as dotenv from "dotenv";
+import databaseModel from "./database";
 
 const { User, Event, Tag } = databaseModel;
 
@@ -10,13 +10,10 @@ dotenv.config();
 const { MONGODB_URL } = process.env;
 
 mongoose
-  .connect(
-    "mongodb+srv://mei:mei@assignmate.gavtgdy.mongodb.net/?retryWrites=true&w=majority&appName=AssignMate",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-  )
+  .connect(MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .catch((error) => console.log(error));
 
 async function getUsers(username) {
@@ -33,7 +30,7 @@ async function getUsers(username) {
 function getTags(name) {
   let promise;
   if (name) {
-    promise = databaseModel.find({ name: name });
+    promise = databaseModel.find({ name });
   } else {
     promise = databaseModel.find();
   }
@@ -43,7 +40,7 @@ function getTags(name) {
 function getEvent(title) {
   let promise;
   if (title) {
-    promise = Event.find({ title: title }).lean();
+    promise = Event.find({ title }).lean();
   } else {
     promise = Event.find().lean();
   }
@@ -54,7 +51,7 @@ function getEvents(userId) {
   const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
   const eventsByDay = {};
   events.forEach((event) => {
-    const date = event.date;
+    const { date } = event;
     if (!eventsByDay[date]) {
       eventsByDay[date] = [];
     }
@@ -89,11 +86,11 @@ function addUser(user) {
 }
 
 function findUserByUsernameAndPassword(username, password) {
-  return User.find({ username: username, password: password });
+  return User.find({ username, password });
 }
 
 function findUserByName(username) {
-  return User.find({ username: username });
+  return User.find({ username });
 }
 
 function addEvent(event) {
@@ -121,7 +118,6 @@ export default {
   getEvent,
   getEvents,
   findUserByName,
-  addEvent,
   deleteEvent,
   addTag,
 };

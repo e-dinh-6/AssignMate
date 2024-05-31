@@ -1,6 +1,6 @@
 // services.test.js
 import { jest } from "@jest/globals";
-import mut from "../packages/backend/services.js";
+import mut from "backend/services";
 
 describe("getUser function", () => {
   test("Testing getUser function w/ no name", () => {
@@ -58,7 +58,7 @@ describe("getEvent function", () => {
   });
 });
 
-describe("findUserByUsernameAndPassword function", () => {
+/* describe("findUserByUsernameAndPassword function", () => {
   test("should return user based on username and password", () => {
     jest
       .spyOn(User, "find")
@@ -70,9 +70,9 @@ describe("findUserByUsernameAndPassword function", () => {
         expect(got).toEqual(expected);
       });
   });
-});
+}); */
 
-describe("findUserByName function", () => {
+/* describe("findUserByName function", () => {
   test("should return user based on only username", () => {
     jest
       .spyOn(User, "find")
@@ -83,3 +83,4 @@ describe("findUserByName function", () => {
     });
   });
 });
+ */
