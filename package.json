@@ -220,6 +220,7 @@
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "packages/*"
+    "packages/backend",
+    "packages/react-front-end"
   ]
 }
