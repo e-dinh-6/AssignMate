@@ -71,6 +71,7 @@ function findUserByUsernameAndPassword(name, pw) {
 
 function findUserByName(name) {
   return User.find({ username: name });
+}
 
 function addEvent(event) {
   const eventToAdd = new Event(event);
