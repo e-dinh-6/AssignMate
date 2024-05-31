@@ -1,7 +1,7 @@
 // services.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import databaseModel from "./database.js";
+import databaseModel from "./database";
 
 const { User, Event, Tag } = databaseModel;
 
@@ -71,7 +71,6 @@ function findUserByUsernameAndPassword(name, pw) {
 
 function findUserByName(name) {
   return User.find({ username: name });
-}
 
 function addEvent(event) {
   const eventToAdd = new Event(event);
@@ -98,7 +97,6 @@ export default {
   getEvent,
   getEvents,
   findUserByName,
-  addEvent,
   deleteEvent,
   addTag,
 };
