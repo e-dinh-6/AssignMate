@@ -1,13 +1,16 @@
 //services.js
 import mongoose from "mongoose";
 import databaseModel from "./database.js";
+import * as dotenv from "dotenv";
 
 const {User, Event, Tag} = databaseModel;
 
 mongoose.set("debug", true);
+dotenv.config();
+const { MONGODB_URL } = process.env
 
 mongoose
-  .connect("mongodb://localhost:27017/calendar", {
+  .connect("mongodb+srv://mei:mei@assignmate.gavtgdy.mongodb.net/?retryWrites=true&w=majority&appName=AssignMate", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -34,7 +37,7 @@ function getTags(name) {
   return promise;
 }
 
-function getEvents(title) {
+function getEvent(title) {
   let promise;
   if (title) {
     promise = Event.find({title: title}).lean();
@@ -57,6 +60,24 @@ function getEvents(userId) {
   return eventsByDay;
 }
 
+// function getEvent(title) {
+//   let query = {};
+//   if (title) {
+//     query.title = title;
+//   }
+
+//    return Event.find(query).lean().then(events => {
+//     return events.map(event => {
+//       if (Array.isArray(event.tag)) {
+//         event.tag = event.tag.map(tag => ({
+//           name: tag.name,
+//           color: tag.color
+//         }));
+//       }
+//       return event;
+//     });
+//   });
+// }
 
 function addUser(user) {
   const userToAdd = new User(user);
@@ -94,9 +115,10 @@ export default {
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
+  getEvent,
   getEvents,
   findUserByName,
+  addEvent,
   deleteEvent,
   addTag
 };
-
