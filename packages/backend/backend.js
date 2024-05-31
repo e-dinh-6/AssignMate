@@ -1,7 +1,7 @@
 // backend.js
 import express from "express";
 import cors from "cors";
-import services from "./services";
+import services from "./services.js";
 // import databaseModel from "./database.js";
 
 const app = express();

@@ -1,7 +1,7 @@
 // services.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import databaseModel from "./database";
+import databaseModel from "./database.js";
 
 const { User, Event, Tag } = databaseModel;
 
