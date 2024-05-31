@@ -1,8 +1,8 @@
 // backend.js
 import express from "express";
 import cors from "cors";
-import services from "./services.js";
-import databaseModel from "./database.js";
+import services from "./services";
+// import databaseModel from "./database.js";
 
 const app = express();
 const port = 8000;
@@ -19,7 +19,7 @@ app.post("/users", (req, res) => {
   services
     .addUser(newUser)
     .then((user) => res.status(201).send(user))
-    .catch((error) => res.status(400).send());
+    .catch((error) => res.status(400).send(`Resource not found${error}`));
 });
 
 // app.get("/users/:username/:password", (req, res) => {
@@ -42,7 +42,7 @@ app.get("/events", (req, res) => {
   services
     .getEvent(title)
     .then((event) => res.send(event))
-    .catch((error) => res.status(404).send("Resource not found."));
+    .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
 app.post("/events", (req, res) => {
@@ -50,16 +50,16 @@ app.post("/events", (req, res) => {
   services
     .addEvent(event)
     .then((event) => res.status(201).send(event))
-    .catch((error) => res.status(400).send());
+    .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
 app.post("/events/:userId", (req, res) => {
   const { userId } = req.params;
-  const event = req.body;
+  const evented = req.body;
   services
-    .addEvent(event)
+    .addEvent(evented)
     .then((event) => res.status(201).send(event))
-    .catch((error) => res.status(400).send());
+    .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
 app.get("/events/:userId", (req, res) => {
@@ -67,7 +67,7 @@ app.get("/events/:userId", (req, res) => {
   services
     .getEvents(userId)
     .then((events) => res.send(events))
-    .catch((error) => res.status(404).send("Resource not found."));
+    .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
 app.delete("/events/:id", (req, res) => {
@@ -75,7 +75,7 @@ app.delete("/events/:id", (req, res) => {
   services
     .deleteEvent(id)
     .then((index) => res.status(204).send({ index }))
-    .catch((error) => res.status(404).send("Resource not found."));
+    .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
 app.post("/tag", (req, res) => {
@@ -83,7 +83,7 @@ app.post("/tag", (req, res) => {
   services
     .addTag(tag)
     .then((tag) => res.status(201).send(tag))
-    .catch((error) => res.status(400).send());
+    .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
 app.get("/", (req, res) => {

@@ -13,7 +13,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "cross-env": "^7.0.3",
+    "@jest/globals": "^29.7.0",
+    "backend": "^0.0.0",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
     "jest": "^29.7.0"
   }
 }

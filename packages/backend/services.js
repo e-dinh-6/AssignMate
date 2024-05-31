@@ -1,7 +1,7 @@
 // services.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import databaseModel from "./database.js";
+import databaseModel from "./database";
 
 const { User, Event, Tag } = databaseModel;
 
@@ -122,7 +122,6 @@ export default {
   getEvent,
   getEvents,
   findUserByName,
-  addEvent,
   deleteEvent,
   addTag,
 };
