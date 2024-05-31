@@ -6,17 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon backend.js",
-    "start": "node backend.js"
+    "start": "node backend.js",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "eslint": "^9.3.0",
+    "eslint-config-prettier": "^9.1.0",
     "nodemon": "^3.1.1"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "lint": "^0.8.19",
     "mongodb": "^6.6.2",
     "mongoose": "^8.4.0"
   }

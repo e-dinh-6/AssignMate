@@ -31,7 +31,7 @@ function getTags(tagName) {
   if (tagName) {
     promise = Tag.find({ name: tagName });
   } else {
-    promise = databaseModel.find();
+    promise = Tag.find();
   }
   return promise;
 }
@@ -70,7 +70,7 @@ function findUserByUsernameAndPassword(name, pw) {
 }
 
 function findUserByName(name) {
-  return User.find({ userame: name });
+  return User.find({ username: name });
 }
 
 function addEvent(event) {
