@@ -1,8 +1,8 @@
-//services.js
+// services.js
 import mongoose from "mongoose";
 import databaseModel from "./database.js";
 
-const {User, Event, Tag} = databaseModel;
+const { User, Event, Tag } = databaseModel;
 
 mongoose.set("debug", true);
 
@@ -27,17 +27,17 @@ async function getUsers(username) {
 function getTags(name) {
   let promise;
   if (name) {
-    promise = databaseModel.find({name: name});
+    promise = databaseModel.find({ name });
   } else {
-      promise = databaseModel.find();
+    promise = databaseModel.find();
   }
   return promise;
 }
 
-function getEvents(title) {
+function getEvent(title) {
   let promise;
   if (title) {
-    promise = Event.find({title: title}).lean();
+    promise = Event.find({ title }).lean();
   } else {
     promise = Event.find().lean();
   }
@@ -45,18 +45,17 @@ function getEvents(title) {
 }
 
 function getEvents(userId) {
-  const events = Event.find({user: userId}).sort({date:1,startTime:1});
+  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
   const eventsByDay = {};
   events.forEach((event) => {
-    const date = event.date;
-    if(!eventsByDay[date]) {
+    const { date } = event;
+    if (!eventsByDay[date]) {
       eventsByDay[date] = [];
     }
     eventsByDay[date].push(event);
   });
   return eventsByDay;
 }
-
 
 function addUser(user) {
   const userToAdd = new User(user);
@@ -65,11 +64,11 @@ function addUser(user) {
 }
 
 function findUserByUsernameAndPassword(username, password) {
-  return User.find({username: username, password: password})
+  return User.find({ username, password });
 }
 
 function findUserByName(username) {
-  return User.find({username: username})
+  return User.find({ username });
 }
 
 function addEvent(event) {
@@ -94,9 +93,9 @@ export default {
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
+  getEvent,
   getEvents,
   findUserByName,
   deleteEvent,
-  addTag
+  addTag,
 };
-

@@ -14,7 +14,7 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
-import List from "./List";
+import List from "./list";
 import AddEvent from "./eventpage";
 import "./App.css";
 
