@@ -23,16 +23,15 @@ async function getUsers(username) {
   } else {
     promise = await User.find().lean();
   }
-
   return promise;
 }
 
-function getTags(name) {
+function getTags(tagName) {
   let promise;
-  if (name) {
-    promise = databaseModel.find({ name });
+  if (tagName) {
+    promise = Tag.find({ name: tagName });
   } else {
-    promise = databaseModel.find();
+    promise = Tag.find();
   }
   return promise;
 }
@@ -40,7 +39,7 @@ function getTags(name) {
 function getEvent(title) {
   let promise;
   if (title) {
-    promise = Event.find({ title }).lean();
+    promise = Event.find({ eventName: title }).lean();
   } else {
     promise = Event.find().lean();
   }
@@ -60,38 +59,18 @@ function getEvents(userId) {
   return eventsByDay;
 }
 
-// function getEvent(title) {
-//   let query = {};
-//   if (title) {
-//     query.title = title;
-//   }
-
-//    return Event.find(query).lean().then(events => {
-//     return events.map(event => {
-//       if (Array.isArray(event.tag)) {
-//         event.tag = event.tag.map(tag => ({
-//           name: tag.name,
-//           color: tag.color
-//         }));
-//       }
-//       return event;
-//     });
-//   });
-// }
-
 function addUser(user) {
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
 }
 
-function findUserByUsernameAndPassword(username, password) {
-  return User.find({ username, password });
+function findUserByUsernameAndPassword(name, pw) {
+  return User.find({ username: name, password: pw });
 }
 
-function findUserByName(username) {
-  return User.find({ username });
-}
+function findUserByName(name) {
+  return User.find({ username: name });
 
 function addEvent(event) {
   const eventToAdd = new Event(event);
