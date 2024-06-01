@@ -1,0 +1,23 @@
+{
+  "name": "jest-unit-testing",
+  "version": "1.0.0",
+  "main": "module.js",
+  "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "jest": {
+    "transform": {}
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "backend": "^0.0.0",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
