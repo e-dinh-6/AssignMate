@@ -1,14 +1,14 @@
 // backend.js
 import express from "express";
 import cors from "cors";
-import services from "./services";
+import services from "./services.js";
 // import databaseModel from "./database.js";
 
 const app = express();
 const port = 8000;
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(process.env.PORT || port, () => {
+  console.log(`REST API is listening.`);
 });
 
 app.use(cors());
@@ -34,7 +34,7 @@ app.get("/users", (req, res) => {
   services
     .getUsers(name)
     .then((user) => res.send(user))
-    .catch((error) => res.status(404).send(`Resource not found${error}`));
+    .catch((error) => res.status(404).send(`Resource not found.${error}`));
 });
 
 app.get("/events", (req, res) => {

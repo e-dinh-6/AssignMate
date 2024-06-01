@@ -8,7 +8,7 @@ function List() {
   // const[events, setEvents] = useState([]);
 
   // function removeEvent(eventId) {
-  //     fetch("http://localhost:8000/events/${userId}", {
+  //     fetch("http://lassignmate7.azurewebsites.net/events/${userId}", {
   //         method: "DELETE",
   //     })
   //         .then((response) => {
@@ -23,7 +23,7 @@ function List() {
   // }
 
   // function fetchEvents() {
-  //     const promise = fetch("http://localhost:8000/events/${userId}")
+  //     const promise = fetch("http://assignmate7.azurewebsites.net/events/${userId}")
   //     return promise;
   // }
 
