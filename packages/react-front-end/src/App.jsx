@@ -15,6 +15,7 @@ import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
 import List from "./list";
+import MonthView from "./MonthView";
 import AddEvent from "./eventpage";
 import "./App.css";
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/list" element={<List />} />
           <Route path="/event" element={<AddEvent />} />
+          <Route path="/MonthView" element={<MonthView />} />
 
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
