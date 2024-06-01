@@ -9,8 +9,6 @@ mongoose.set("debug", true);
 dotenv.config();
 const { MONGODB_URL } = process.env;
 
-console.log("MONGODB_URL:", MONGODB_URL);
-
 mongoose
   .connect(MONGODB_URL, {
     useNewUrlParser: true,
@@ -112,6 +110,10 @@ function addTag(tag) {
   return promise;
 }
 
+function deleteTag(tagName) {
+  return Tag.findOneAndDelete({ name: tagName });
+}
+
 export default {
   addUser,
   deleteUser,
@@ -124,4 +126,5 @@ export default {
   findUserByName,
   deleteEvent,
   addTag,
+  deleteTag,
 };

@@ -1,7 +1,10 @@
 // services.test.js
-import { jest } from "@jest/globals";
-import { MongoKerberosError } from "mongodb";
+import mongoose from "mongoose";
 import mut from "../packages/backend/services.js";
+
+// make sure you are running tests while connected to an empty database or tests will fail
+
+const { ObjectId } = mongoose.Types;
 
 describe("getUser from empty database", () => {
   test("Testing getUser function w/ no name", async () => {
@@ -68,24 +71,50 @@ describe("findUserByUsernameAndPassword function", () => {
   });
 });
 
-// describe("addEvent function", () => {
-//   test("adding event should return back the event", () => {
-//     const event = {
-//       eventName: "meeting1",
-//       date: new Date("2024-06-01"),
-//       startTime: new Date("2024-06-01T09:00:00"),
-//       endTime: new Date("2024-06-01T10:00:00"),
-//       status: "in progress",
-//     };
-//     return mut.addEvent(event).then((got) => {
-//       expect(got).toMatchObject(event);
-//     });
-//   });
-// });
+describe("addTag function", () => {
+  test("adding Tag should return back the Tag", () => {
+    const tag = { name: "school" };
+    return mut.addTag(tag).then((got) => {
+      expect(got).toMatchObject(tag);
+    });
+  });
+});
+
+describe("getTags function", () => {
+  test("Testing getTags function w/ no tag name", () => {
+    const expected = [{ name: "school" }];
+    return mut.getTags().then((got) => {
+      expect(got).toMatchObject(expected);
+    });
+  });
+
+  test("Testing getTags function w/ tag name", () => {
+    const expected = [{ name: "school" }];
+    return mut.getTags("school").then((got) => {
+      expect(got).toMatchObject(expected);
+    });
+  });
+});
+
+describe("addEvent function", () => {
+  test("adding event should return back the event", async () => {
+    const event = {
+      eventName: "meeting",
+      date: new Date("2024-06-01"),
+      startTime: new Date("2024-06-01T09:00:00"),
+      endTime: new Date("2024-06-01T10:00:00"),
+      status: "in progress",
+    };
+    return mut.addEvent(event).then((got) => {
+      expect(got).toMatchObject(event);
+    });
+  });
+});
 
 describe("getEvent function", () => {
   test("Testing getEvent function w/ no title", async () => {
     const expected = [{ eventName: "meeting" }];
+    const result = await mut.getEvent();
     return mut.getEvent().then((got) => {
       expect(got).toMatchObject(expected);
     });
@@ -93,23 +122,36 @@ describe("getEvent function", () => {
 
   test("Testing getEvent function w/ title", () => {
     const expected = [{ eventName: "meeting" }];
-    return mut.getUsers("meeting").then((got) => {
+    return mut.getEvent("meeting").then((got) => {
       expect(got).toMatchObject(expected);
     });
   });
 });
 
 describe("deleteEvent function", () => {
-  test("delete event that is in database; should return deleted user", () => {
-    const expected = mut.getEvent("meeting");
-    return mut.deleteEvent("665a15f8962813183d122c80").then((got) => {
-      expect(got).toMatchObject(expected);
+  test("delete event that is in database; should return deleted user", async () => {
+    const expected = await mut.getEvent("meeting");
+    return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => {
+      expect(got).toMatchObject(expected[0]);
     });
   });
-  // test("delete user that isn't in database; should return null", () =>
-  //   mut.deleteUser("sergio").then((got) => {
-  //     expect(got).toBeNull();
-  //   }));
+  test("deleteEvent w/o event id; should return null", () =>
+    mut.deleteEvent().then((got) => {
+      expect(got).toBeNull();
+    }));
+});
+
+describe("deleteTag function", () => {
+  test("delete tag that is in database; should return deleted tag", async () => {
+    const expected = await mut.getTags("school");
+    return mut.deleteTag("school").then((got) => {
+      expect(got).toMatchObject(expected[0]);
+    });
+  });
+  test("delete tag w/o tag name; should return null", () =>
+    mut.deleteEvent().then((got) => {
+      expect(got).toBeNull();
+    }));
 });
 
 describe("deleteUser function", () => {
@@ -119,44 +161,8 @@ describe("deleteUser function", () => {
       expect(got).toMatchObject(expected);
     });
   });
-  test("delete user that isn't in database; should return null", () =>
-    mut.deleteUser("sergio").then((got) => {
+  test("delete user w/o name; should return null", () =>
+    mut.deleteUser().then((got) => {
       expect(got).toBeNull();
     }));
 });
-
-// describe("getTags function", () => {
-//   test("Testing getTags w/ no name", () => {
-//     jest.spyOn(mut, "find").mockResolvedValue([]);
-//     const expected = [];
-//     return mut.getTags().then((got) => {
-//       expect(got).toEqual(expected);
-//     });
-//   });
-
-//   test("Testing getUser function w/ name", () => {
-//     jest.spyOn(mut, "find").mockResolvedValue([{ name: "School" }]);
-//     const expected = [{ name: "School" }];
-//     return mut.getTags("School").then((got) => {
-//       expect(got).toEqual(expected);
-//     });
-//   });
-// });
-
-// describe("getEvent function", () => {
-//   test("Testing getEvent w/ no title", () => {
-//     jest.spyOn(mut, "find").mockResolvedValue([]);
-//     const expected = [];
-//     return mut.getEvent().then((got) => {
-//       expect(got).toEqual(expected);
-//     });
-//   });
-
-//   test("Testing getUser function w/ title", () => {
-//     jest.spyOn(mut, "find").mockResolvedValue([{ title: "Meeting" }]);
-//     const expected = [{ title: "Meeting" }];
-//     return mut.getEvent("Meeting").then((got) => {
-//       expect(got).toEqual(expected);
-//     });
-//   });
-// });
