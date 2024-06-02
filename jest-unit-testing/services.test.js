@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import mut from "../packages/backend/services";
 
-services.test.js;
-
 // make sure you are running tests while connected to an empty database or tests will fail
 
 const { ObjectId } = mongoose.Types;
