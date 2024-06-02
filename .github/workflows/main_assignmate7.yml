@@ -54,6 +54,12 @@ jobs:
           name: node-app
           path: packages/backend/release.zip
 
+      - name: List files in packages/backend
+          run: ls -al packages/backend
+
+      - name: List files in current directory
+          run: ls -al
+
       - name: Unzip artifact for deployment
         run: unzip packages/backend/release.zip
 
