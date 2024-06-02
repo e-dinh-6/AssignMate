@@ -1,6 +1,6 @@
 // services.test.js
 import mongoose from "mongoose";
-import mut from "../packages/backend/services.js";
+import mut from "../packages/backend/services";
 
 // make sure you are running tests while connected to an empty database or tests will fail
 
