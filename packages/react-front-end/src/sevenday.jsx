@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import './sevenday.css'
-import logo from './assets/logo.png'; 
+import { useState } from "react";
+import "./sevenday.css";
+import logo from "./assets/logo.png";
+import { Link } from "react-router-dom";
 
 function sevenday() {
   const [count, setCount] = useState(0);
@@ -13,7 +14,9 @@ function sevenday() {
       </header>
       <div className="main-content">
         <aside className="sidebar">
-          <button className="add-event-button">Add Event</button>
+          <button className="add-event-button">
+            {<Link to="/event">Add Event</Link>}
+          </button>
           <div className="to-do-list">
             <h2>To Do List:</h2>
             <ul>
@@ -40,15 +43,21 @@ function sevenday() {
               ))}
             </div>
             <div className="days">
-              {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, index) => (
+              {[
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+              ].map((day, index) => (
                 <div className="day" key={index}>
                   <div className="date">
                     <div className="date-num">{index + 1}</div>
                     <div className="date-day">{day}</div>
                   </div>
-                  <div className="events">
-                    {/* Add events here */}
-                  </div>
+                  <div className="events">{/* Add events here */}</div>
                 </div>
               ))}
             </div>
@@ -59,5 +68,4 @@ function sevenday() {
   );
 }
 
-
-export default sevenday
+export default sevenday;

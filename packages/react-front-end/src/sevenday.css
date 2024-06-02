@@ -1,181 +1,185 @@
 :root {
-    --numDays: 7;
-    --numHours: 10;
-    --timeHeight: 60px;
-    --calBgColor: white;  /* Change to white */
-    --eventBorderColor: #ddd;  /* Change the border color to a more neutral one */
-    --eventColor1: #ffd6d1;
-    --eventColor2: #fafaa3;
-    --eventColor3: #e2f8ff;
-    --eventColor4: #d1ffe6;
-  }
-  
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-    background-color: white; 
-  }
-  
-  #root {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Set height to fill the entire viewport height */
-    background-color: white;
-  }
-  
-  .header {
-    background-color: #b3d2d4; /* Header color */
-    color: white;
-    padding: 1rem;
-    text-align: center;
-    display: flex;
-    align-items: center;  /* Center items vertically */
-    justify-content: start;  /* Center items horizontally */
-  }
-  
-  .header img.logo {
-    height: 160px;  /* Adjust the height to make the logo twice as large */
-    margin-right: 1rem;  /* Space between logo and text */
-  }
-  
-  .main-content {
-    display: flex;
-    flex: 1;
-  }
-  
-  .sidebar {
-    background-color: #7ca4a7; /* Sidebar color */
-    padding: 1rem;
-    width: 200px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .add-event-button {
-    background-color: white;
-    border: none;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  .to-do-list {
-    flex-grow: 1; /* Allow the to-do list section to grow and fill the remaining space */
-  }
-  
-  .to-do-list h2 {
-    margin-top: 0;
-  }
-  
-  .to-do-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .to-do-list ul li {
-    margin: 0.5rem 0;
-  }
-  
-  .to-do-list ul li label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .to-do-list ul li input {
-    margin-right: 0.5rem;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 1rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  
-  .card {
-    margin: 2rem 0;
-    padding: 2em;
-  }
-  
-  .read-the-docs {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: #888;
-  }
-  
-  /* Calendar styles */
-  .calendar {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: auto 1fr;
-    margin: 2rem;
-    flex-grow: 1; /* Make calendar take available vertical space */
-  }
-  
-  .timeline {
-    display: grid;
-    grid-template-rows: repeat(var(--numHours), var(--timeHeight));
-  }
-  
-  .time-slot {
-    height: var(--timeHeight);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-  }
-  
-  .days {
-    display: grid;
-    grid-column: 2;
-    gap: 5px;
-    grid-template-columns: repeat(var(--numDays), 1fr); /* 7 columns for 7 days */
-  }
-  
-  .day {
-    background-color: #ffffff !important;  /* Explicitly set to white */
-    border: 1px solid #ddd; /* Set border color to a neutral color */
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  
-  .date {
-    display: flex;
-    gap: 1em;
-    align-items: center;
-    padding: 0.5rem;
-    background-color: #fff !important; /* Ensure background color is white */
-    border-bottom: 1px solid #ddd; /* Set border color to a neutral color */
-  }
-  
-  .date-num {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-  
-  .date-day {
-    font-size: 1.5rem;
-    font-weight: 100;
-  }
-  
-  .events {
-    display: grid;
-    grid-template-rows: repeat(var(--numHours), var(--timeHeight));
-    padding: 0.5rem;
-    background-color: #ffffff !important; /* Ensure background color is white */
-  }
+  --numDays: 7;
+  --numHours: 10;
+  --timeHeight: 60px;
+  --calBgColor: white; /* Change to white */
+  --eventBorderColor: #ddd; /* Change the border color to a more neutral one */
+  --eventColor1: #ffd6d1;
+  --eventColor2: #fafaa3;
+  --eventColor3: #e2f8ff;
+  --eventColor4: #d1ffe6;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: white;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set height to fill the entire viewport height */
+  background-color: white;
+}
+
+.header {
+  background-color: #b3d2d4; /* Header color */
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: start; /* Center items horizontally */
+}
+
+.header img.logo {
+  height: 160px; /* Adjust the height to make the logo twice as large */
+  margin-right: 1rem; /* Space between logo and text */
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  background-color: #7ca4a7; /* Sidebar color */
+  padding: 1rem;
+  width: 200px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-event-button {
+  background-color: white;
+  border: none;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.add-event-button a {
+  color: black;
+}
+
+.to-do-list {
+  flex-grow: 1; /* Allow the to-do list section to grow and fill the remaining space */
+}
+
+.to-do-list h2 {
+  margin-top: 0;
+}
+
+.to-do-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.to-do-list ul li {
+  margin: 0.5rem 0;
+}
+
+.to-do-list ul li label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.to-do-list ul li input {
+  margin-right: 0.5rem;
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.card {
+  margin: 2rem 0;
+  padding: 2em;
+}
+
+.read-the-docs {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Calendar styles */
+.calendar {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 1fr;
+  margin: 2rem;
+  flex-grow: 1; /* Make calendar take available vertical space */
+}
+
+.timeline {
+  display: grid;
+  grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+}
+
+.time-slot {
+  height: var(--timeHeight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+}
+
+.days {
+  display: grid;
+  grid-column: 2;
+  gap: 5px;
+  grid-template-columns: repeat(var(--numDays), 1fr); /* 7 columns for 7 days */
+}
+
+.day {
+  background-color: #ffffff !important; /* Explicitly set to white */
+  border: 1px solid #ddd; /* Set border color to a neutral color */
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.date {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #fff !important; /* Ensure background color is white */
+  border-bottom: 1px solid #ddd; /* Set border color to a neutral color */
+}
+
+.date-num {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.date-day {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
+
+.events {
+  display: grid;
+  grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+  padding: 0.5rem;
+  background-color: #ffffff !important; /* Ensure background color is white */
+}

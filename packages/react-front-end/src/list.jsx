@@ -5,62 +5,64 @@ import "./list.css";
 import logo from "./assets/logo.png";
 
 function List() {
-  // const[events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
 
-  // function removeEvent(eventId) {
-  //     fetch("http://lassignmate7.azurewebsites.net/events/${userId}", {
-  //         method: "DELETE",
-  //     })
-  //         .then((response) => {
-  //             if (response.status === 204) {
-  //                 const updated = events.filter((event) => {return event._id !== eventId;});
-  //                 setEvents(updated);
-  //             }
-  //         })
-  //         .catch((error) => {
-  //             console.log(error);
-  //         });
-  // }
+  function removeEvent(eventId) {
+    fetch("http://assignmate7.azurewebsites.net", {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.status === 204) {
+          const updated = events.filter((event) => {
+            return event._id !== eventId;
+          });
+          setEvents(updated);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-  // function fetchEvents() {
-  //     const promise = fetch("http://assignmate7.azurewebsites.net/events/${userId}")
-  //     return promise;
-  // }
+  function fetchEvents() {
+    const promise = fetch("http://assignmate7.azurewebsites.net");
+    return promise;
+  }
 
-  // useEffect(() => {
-  //     fetchEvents()
-  //         .then((res) => res.json())
-  //         .catch((json) => setEvents(json))
-  //         .catch((error) => console.log(error));
-  // }, [userId]);
-  const events = {
-    "2024-05-01": [
-      { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
-      { _id: 2, startTime: "11:00 AM", eventName: "Event 2" },
-    ],
-    "2024-05-02": [
-      { _id: 3, startTime: "12:00 PM", eventName: "Event 3" },
-      { _id: 4, startTime: "01:00 PM", eventName: "Event 4" },
-    ],
-  };
+  useEffect(() => {
+    fetchEvents()
+      .then((res) => res.json())
+      .catch((json) => setEvents(json))
+      .catch((error) => console.log(error));
+  }, [userId]);
+  //   const events = {
+  //     "2024-05-01": [
+  //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
+  //       { _id: 2, startTime: "11:00 AM", eventName: "Event 2" },
+  //     ],
+  //     "2024-05-02": [
+  //       { _id: 3, startTime: "12:00 PM", eventName: "Event 3" },
+  //       { _id: 4, startTime: "01:00 PM", eventName: "Event 4" },
+  //     ],
+  //   };
   return (
     <div className="container">
-      <header className="header">
+      <header className="list-header">
         <img src={logo} className="logo" alt="Logo" />
         <h1>MAY 2024</h1>
         <div className="view-buttons">
-          <button>Week{/* <Link to="/week">Week</Link> */}</button>
+          <button>{<Link to="/sevenday">Week</Link>}</button>
           <button>Month{/* <Link to="/month">Month</Link> */}</button>
-          <button className="list">
-            List{/* <Link to="/month">Month</Link> */}
-          </button>
+          <button className="list">List</button>
         </div>
       </header>
 
       <div className="main-content">
         <aside className="left-bar">
           <div className="event-container">
-            <button className="add-event-button">Add Event</button>
+            <button className="add-event-button">
+              {<Link to="/event">Add Event</Link>}
+            </button>
           </div>
           <div className="to-do-list">
             <h2>To Do List:</h2>
@@ -81,7 +83,7 @@ function List() {
         <div className="content">
           {Object.entries(events).map(([date, events]) => (
             <section key={date}>
-              <h2 className="date">{date}:</h2>
+              <h2 className="list-date">{date}:</h2>
               <ul>
                 {events.map((event) => (
                   <li key={event._id}>
