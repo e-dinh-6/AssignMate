@@ -60,8 +60,9 @@ function getEvent(title) {
   return promise;
 }
 
-function getEvents(userId) {
-  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+async function getEvents(userId) {
+  const events = await Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+  console.log(events);
   const eventsByDay = {};
   events.forEach((event) => {
     const { date } = event;
@@ -70,6 +71,7 @@ function getEvents(userId) {
     }
     eventsByDay[date].push(event);
   });
+  console.log("eventsByDay: ",eventsByDay);
   return eventsByDay;
 }
 

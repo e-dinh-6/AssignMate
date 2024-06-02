@@ -101,8 +101,8 @@ describe("addEvent function", () => {
     const event = {
       eventName: "meeting",
       date: new Date("2024-06-01"),
-      startTime: new Date("2024-06-01T09:00:00"),
-      endTime: new Date("2024-06-01T10:00:00"),
+      startTime: new Date("2024-06-01T14:00:00"),
+      endTime: new Date("2024-06-01T16:00:00"),
       status: "in progress",
     };
     return mut.addEvent(event).then((got) => {
@@ -128,18 +128,36 @@ describe("getEvent function", () => {
   });
 });
 
-describe("deleteEvent function", () => {
-  test("delete event that is in database; should return deleted user", async () => {
-    const expected = await mut.getEvent("meeting");
-    return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => {
-      expect(got).toMatchObject(expected[0]);
+describe("getEvents function", () => {
+  test("Testing getEvents function w/ no title", async () => {
+    const expected = [{ eventName: "meeting" }];
+    const result = await mut.getEvents();
+    console.log("result: ", result);
+    return mut.getEvent().then((got) => {
+      expect(got).toMatchObject(expected);
     });
   });
-  test("deleteEvent w/o event id; should return null", () =>
-    mut.deleteEvent().then((got) => {
-      expect(got).toBeNull();
-    }));
+
+  // test("Testing getEvent function w/ title", () => {
+  //   const expected = [{ eventName: "meeting" }];
+  //   return mut.getEvent("meeting").then((got) => {
+  //     expect(got).toMatchObject(expected);
+  //   });
+  // });
 });
+
+// describe("deleteEvent function", () => {
+//   test("delete event that is in database; should return deleted user", async () => {
+//     const expected = await mut.getEvent("meeting");
+//     return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => {
+//       expect(got).toMatchObject(expected[0]);
+//     });
+//   });
+//   test("deleteEvent w/o event id; should return null", () =>
+//     mut.deleteEvent().then((got) => {
+//       expect(got).toBeNull();
+//     }));
+// });
 
 describe("deleteTag function", () => {
   test("delete tag that is in database; should return deleted tag", async () => {

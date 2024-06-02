@@ -8,33 +8,39 @@ function List() {
   const [events, setEvents] = useState([]);
 
   function removeEvent(eventId) {
-    fetch("http://assignmate7.azurewebsites.net", {
+    console.log("remove: ", eventId);
+    fetch(`http://localhost:8000/events/${eventId}`, {
       method: "DELETE",
     })
       .then((response) => {
         if (response.status === 204) {
-          const updated = events.filter((event) => {
-            return event._id !== eventId;
-          });
+          const updated = Object.values(events).flatMap((eventArray) =>
+            eventArray.filter((event) => event._id !== eventId),
+          );
           setEvents(updated);
         }
       })
       .catch((error) => {
+        console.log("events: ", events);
         console.log(error);
       });
   }
 
   function fetchEvents() {
-    const promise = fetch("http://assignmate7.azurewebsites.net");
+    const promise = fetch("http://localhost:8000/events");
+    console.log(promise);
     return promise;
   }
 
   useEffect(() => {
     fetchEvents()
       .then((res) => res.json())
-      .catch((json) => setEvents(json))
+      .then((json) => {
+        setEvents(json);
+      })
       .catch((error) => console.log(error));
-  }, [userId]);
+  }, []);
+
   //   const events = {
   //     "2024-05-01": [
   //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
@@ -81,13 +87,23 @@ function List() {
           </div>
         </aside>
         <div className="content">
-          {Object.entries(events).map(([date, events]) => (
+          {Object.entries(events).map(([date, dailyEvents]) => (
             <section key={date}>
-              <h2 className="list-date">{date}:</h2>
+              <h2 className="list-date">
+                {new Intl.DateTimeFormat("en-US", { weekday: "long" })
+                  .format(new Date(date))
+                  .toUpperCase()}
+                :
+              </h2>
               <ul>
-                {events.map((event) => (
+                {dailyEvents.map((event) => (
                   <li key={event._id}>
-                    <strong className="event-details">{event.startTime}</strong>
+                    <strong className="event-details">
+                      {new Date(event.startTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </strong>
                     <label className="event-details">{event.eventName}</label>
                     <button onClick={() => removeEvent(event._id)}></button>
                   </li>

@@ -37,13 +37,13 @@ app.get("/users", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found.${error}`));
 });
 
-app.get("/events", (req, res) => {
-  const { title, date, tag, description } = req.query;
-  services
-    .getEvent(title)
-    .then((event) => res.send(event))
-    .catch((error) => res.status(404).send(`Resource not found${error}`));
-});
+// app.get("/events", (req, res) => {
+//   const { title, date, tag, description } = req.query;
+//   services
+//     .getEvent(title)
+//     .then((event) => res.send(event))
+//     .catch((error) => res.status(404).send(`Resource not found${error}`));
+// });
 
 app.post("/events", (req, res) => {
   const event = req.body;
@@ -62,7 +62,7 @@ app.post("/events/:userId", (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-app.get("/events/:userId", (req, res) => {
+app.get("/events", (req, res) => {
   const { userId } = req.params;
   services
     .getEvents(userId)

@@ -161,7 +161,8 @@ body {
 }
 
 .content ul li button {
-  margin-left: 900px;
+  position: absolute;
+  right: 50px;
   width: 15px;
   height: 15px;
   border-radius: 50%;
