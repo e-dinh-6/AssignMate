@@ -52,19 +52,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-          path: packages/backend/release.zip
-
-      - name: List files in packages/backend
-        run: ls -al packages/backend
+          path: release.zip
 
       - name: List files in current directory
         run: ls -al
 
       - name: Check permissions of a directory
-        run: ls -l packages/backend/release.zip
+        run: ls -l release.zip
 
       - name: Unzip artifact for deployment
-        run: unzip /home/runner/work/AssignMate/AssignMate/packages/backend/release.zip
+        run: unzip release.zip
 
       - name: Login to Azure
         uses: azure/login@v1
