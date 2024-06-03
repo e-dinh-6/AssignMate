@@ -134,6 +134,7 @@
   width: 100%;
 }
 
+
 .form-group input[type="color"] {
   padding: 0;
   width: 30px;
@@ -144,6 +145,22 @@
 
 .buttons {
   display: inline-block;
+}
+
+.edit-event {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 70%;
+  padding: 5px; 
+}
+
+.event-description-container {
+  width: 100%; /* Adjust width as necessary */
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .tag-color {
@@ -157,6 +174,7 @@
 .create-btn, .tag-btn {
   padding: 10px 15px;
   margin-bottom: 5px;
+  margin-right: auto;
   background-color: #007bff;
   color: white;
   border: none;

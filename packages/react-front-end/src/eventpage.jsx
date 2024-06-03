@@ -163,10 +163,10 @@ const EventForm = () => {
               <label>End Time:</label>
               <div>{selectedEvent.timeEnd}</div>
             </div>
-            <div className="form-group">
-              <label>Description:</label>
-              <div>{selectedEvent.description}</div>
-            </div>
+			<div className="form-group">
+  				<label>Description:</label>
+  				<div className="event-description-container">{selectedEvent.description}</div>
+			</div>
             <button type="button" onClick={handleEdit} className="create-btn">Edit Event</button>
           </div>
         ) : (
@@ -270,9 +270,11 @@ const EventForm = () => {
                     
                   ></textarea>
                 </div>
-                <button type="submit" className="create-btn">{isEditMode ? 'Update Event' : 'Create Event'}</button>
-                {isEditMode && <button type="button" onClick={handleCancelEdit} className="create-btn">Cancel Edit</button>}
-              </div>
+				<div className="edit-event">
+                	<button type="submit" className="create-btn">{isEditMode ? 'Update Event' : 'Create Event'}</button>
+                	{isEditMode && <button type="button" onClick={handleCancelEdit} className="create-btn">Cancel Edit</button>}
+              	</div>
+			  </div>
             )}
           </form>
         </div>
