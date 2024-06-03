@@ -98,10 +98,10 @@ describe("getTags function", () => {
 describe("addEvent function", () => {
   test("adding event should return back the event", async () => {
     const event = {
-      eventName: "meeting",
-      date: new Date("2024-06-01"),
-      startTime: new Date("2024-06-01T14:00:00"),
-      endTime: new Date("2024-06-01T16:00:00"),
+      eventName: "monday meeting",
+      date: new Date("2024-06-04"),
+      startTime: new Date("2024-06-04T17:00:00"),
+      endTime: new Date("2024-06-04T19:00:00"),
       status: "in progress",
     };
     return mut.addEvent(event).then((got) => {

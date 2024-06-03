@@ -43,29 +43,48 @@ body {
 .list-header {
   background-color: #b3d2d4; /* Header color */
   color: white;
-  padding: 1rem;
-  text-align: center;
+  text-align: left;
   display: flex;
   align-items: center;
   justify-content: center; /* Center items horizontally */
 }
 
-.header img {
-  margin-left: 50px;
-  height: 60px; /* Adjust the height to make the logo twice as large */
+.logo {
+  margin-left: 40px;
+  padding: 0;
+  height: 90px; /* Adjust the height to make the logo twice as large */
   margin-right: 1rem; /* Space between logo and text */
 }
 
-.header h1 {
-  margin-left: 60px;
+.header-dates {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin-left: 40px;
 }
+
+h1 {
+  font-size: 60px;
+  margin-bottom: 0;
+  margin-top: 30px;
+  text-shadow: 0px 3px 5px #929292;
+}
+
+p {
+  color: #7ca4a7;
+  font-size: 25px;
+}
+
 .view-buttons {
   margin-left: auto;
+  padding-right: 40px;
 }
 
 .view-buttons button {
-  width: 70px;
-  height: 30px;
+  width: 100px;
+  height: 40px;
+  border-color: #929292;
+  font-size: 20px;
 }
 
 .view-buttons button a {
@@ -90,6 +109,7 @@ body {
 }
 
 .event-container {
+  margin-top: 10px;
   display: flex;
   justify-content: center;
 }
@@ -138,13 +158,16 @@ body {
 }
 
 .content {
-  padding: 50px;
+  padding: 40px;
   flex: 1;
   text-align: left;
 }
 
 .content .list-date {
-  font-size: 1rem;
+  font-size: 18px;
+  padding-bottom: 5px;
+  border-bottom: 1.5px solid black;
+  margin-bottom: 0;
 }
 
 .space,
@@ -154,13 +177,25 @@ body {
 
 .content ul {
   list-style-type: none;
+  padding-left: 0;
+}
+
+.content ul li {
+  border-bottom: 1px solid #8d8d8d;
+  padding: 5px;
 }
 
 .content ul li .event-details {
-  margin-right: 30px;
+  margin-right: 50px;
+}
+
+hr {
+  margin-bottom: 20px;
+  border-top: 0;
 }
 
 .content ul li button {
+  margin-top: 5px;
   position: absolute;
   right: 50px;
   width: 15px;

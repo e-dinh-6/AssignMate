@@ -6,6 +6,9 @@ import logo from "./assets/logo.png";
 
 function List() {
   const [events, setEvents] = useState([]);
+  const currentDate = new Date();
+  const options = { weekday: "long", month: "long", day: "numeric" };
+  const today = currentDate.toLocaleDateString("en-US", options);
 
   function removeEvent(eventId) {
     console.log("remove: ", eventId);
@@ -55,7 +58,10 @@ function List() {
     <div className="container">
       <header className="list-header">
         <img src={logo} className="logo" alt="Logo" />
-        <h1>MAY 2024</h1>
+        <div className="header-dates">
+          <h1>MAY 2024</h1>
+          <p>{today}</p>
+        </div>
         <div className="view-buttons">
           <button>{<Link to="/sevenday">Week</Link>}</button>
           <button>Month{/* <Link to="/month">Month</Link> */}</button>
@@ -75,7 +81,7 @@ function List() {
             <ul>
               <li>
                 <label>
-                  <input type="checkbox" checked readOnly /> Do laundry
+                  <input type="checkbox" /> Do laundry
                 </label>
               </li>
               <li>
