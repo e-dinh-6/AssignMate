@@ -128,11 +128,6 @@ p {
   color: black;
 }
 
-.to-do-list {
-  height: 100%;
-  /*flex-grow: 1; /* Allow the to-do list section to grow and fill the remaining space */
-}
-
 .to-do-list h2 {
   margin-top: 0;
 }
@@ -155,6 +150,26 @@ p {
 
 .to-do-list ul li input {
   margin-right: 0.5rem;
+}
+
+.new-task {
+  bottom: 50px;
+  width: 100%;
+}
+
+.submit {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.clean-tasks {
+  margin-top: 10px;
+}
+
+.bottom-left {
+  width: 160px;
+  position: absolute;
+  bottom: 20px;
 }
 
 .content {

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import databaseModel from "./database.js";
 
-const { User, Event, Tag } = databaseModel;
+const { User, Event, Tag, Task } = databaseModel;
 
 mongoose.set("debug", true);
 dotenv.config();
@@ -116,6 +116,26 @@ function deleteTag(tagName) {
   return Tag.findOneAndDelete({ name: tagName });
 }
 
+function addTask(task) {
+  const newTask = new Task(task);
+  const promise = newTask.save();
+  return promise;
+}
+
+function getTask(taskName) {
+  let promise;
+  if (taskName) {
+    promise = Task.find({ title: taskName });
+  } else {
+    promise = Task.find();
+  }
+  return promise;
+}
+
+function deleteTask(id) {
+  return Task.findByIdAndDelete(id);
+}
+
 export default {
   addUser,
   deleteUser,
@@ -129,4 +149,7 @@ export default {
   deleteEvent,
   addTag,
   deleteTag,
+  addTask,
+  getTask,
+  deleteTask,
 };

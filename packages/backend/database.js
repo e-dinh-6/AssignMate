@@ -96,4 +96,16 @@ const calendarSchema = new mongoose.Schema({
 
 const Calendar = mongoose.model("Calendar", calendarSchema);
 
-export default { User, Event, Tag, Calendar };
+const taskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      equired: true,
+    },
+  },
+  {collection: "tasks_list"},
+);
+
+const Task = mongoose.model("Task", taskSchema);
+
+export default { User, Event, Tag, Calendar, Task };

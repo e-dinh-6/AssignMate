@@ -79,6 +79,15 @@ describe("addTag function", () => {
   });
 });
 
+describe("addTask function", () => {
+  test("adding Task should return back the Task", () => {
+    const task = { title: "Laundry" };
+    return mut.addTask(task).then((got) => {
+      expect(got).toMatchObject(task);
+    });
+  });
+});
+
 describe("getTags function", () => {
   test("Testing getTags function w/ no tag name", () => {
     const expected = [{ name: "school" }];
@@ -90,6 +99,22 @@ describe("getTags function", () => {
   test("Testing getTags function w/ tag name", () => {
     const expected = [{ name: "school" }];
     return mut.getTags("school").then((got) => {
+      expect(got).toMatchObject(expected);
+    });
+  });
+});
+
+describe("getTask function", () => {
+  test("Testing getTask function w/ no tag name", () => {
+    const expected = [{ title: "Laundry" }];
+    return mut.getTask().then((got) => {
+      expect(got).toMatchObject(expected);
+    });
+  });
+
+  test("Testing getTask function w/ tag name", () => {
+    const expected = [{ title: "Laundry" }];
+    return mut.getTask("Laundry").then((got) => {
       expect(got).toMatchObject(expected);
     });
   });

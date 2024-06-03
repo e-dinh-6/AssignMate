@@ -6,12 +6,18 @@ import logo from "./assets/logo.png";
 
 function List() {
   const [events, setEvents] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [checkedTaskIds, setCheckedTaskIds] = useState([]);
   const currentDate = new Date();
   const options = { weekday: "long", month: "long", day: "numeric" };
+  const monthYear = currentDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
   const today = currentDate.toLocaleDateString("en-US", options);
 
   function removeEvent(eventId) {
-    console.log("remove: ", eventId);
     fetch(`http://localhost:8000/events/${eventId}`, {
       method: "DELETE",
     })
@@ -24,14 +30,75 @@ function List() {
         }
       })
       .catch((error) => {
-        console.log("events: ", events);
+        console.log(error);
+      });
+  }
+
+  function handleCheck(taskId) {
+    if (checkedTaskIds.includes(taskId)) {
+      setCheckedTaskIds(checkedTaskIds.filter((id) => id !== taskId)); // Remove taskId from checkedTaskIds
+    } else {
+      setCheckedTaskIds([...checkedTaskIds, taskId]); // Add taskId to checkedTaskIds
+    }
+  }
+
+  function removeTask(taskId) {
+    console.log(taskId);
+    fetch(`http://localhost:8000/tasks/${taskId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.status === 204) {
+          const updated = tasks.filter((task) => task._id !== taskId);
+          setTasks(updated);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function removeCheckedTasks() {
+    checkedTaskIds.forEach((taskId) => {
+      removeTask(taskId);
+    });
+    setCheckedTaskIds([]);
+  }
+
+  function addTask(tasj) {
+    postTask({ title: newTaskTitle })
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        }
+      })
+      .then((newTask) => {
+        setTasks([...tasks, newTask]);
+        setNewTaskTitle("");
+      })
+      .catch((error) => {
         console.log(error);
       });
   }
 
   function fetchEvents() {
     const promise = fetch("http://localhost:8000/events");
-    console.log(promise);
+    return promise;
+  }
+
+  function fetchTasks() {
+    const promise = fetch("http://localhost:8000/tasks");
+    return promise;
+  }
+
+  function postTask(task) {
+    const promise = fetch("http://localhost:8000/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
     return promise;
   }
 
@@ -41,6 +108,11 @@ function List() {
       .then((json) => {
         setEvents(json);
       })
+      .catch((error) => console.log(error));
+
+    fetchTasks()
+      .then((res) => res.json())
+      .then((json) => setTasks(json))
       .catch((error) => console.log(error));
   }, []);
 
@@ -59,7 +131,7 @@ function List() {
       <header className="list-header">
         <img src={logo} className="logo" alt="Logo" />
         <div className="header-dates">
-          <h1>MAY 2024</h1>
+          <h1>{monthYear}</h1>
           <p>{today}</p>
         </div>
         <div className="view-buttons">
@@ -79,17 +151,41 @@ function List() {
           <div className="to-do-list">
             <h2>To Do List:</h2>
             <ul>
-              <li>
-                <label>
-                  <input type="checkbox" /> Do laundry
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input type="checkbox" /> Get groceries
-                </label>
-              </li>
+              {tasks.map((task) => (
+                <li>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={task.checked}
+                      onChange={() => handleCheck(task._id)}
+                    />{" "}
+                    {task.title}
+                  </label>
+                </li>
+              ))}
             </ul>
+          </div>
+          <div className="bottom-left">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                addTask();
+              }}
+            >
+              <input
+                type="text"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                placeholder="Enter new task"
+                className="new-task"
+              />
+              <button type="submit" className="submit">
+                Add Task
+              </button>
+            </form>
+            <button onClick={removeCheckedTasks} className="clean-tasks">
+              Remove Completed
+            </button>
           </div>
         </aside>
         <div className="content">

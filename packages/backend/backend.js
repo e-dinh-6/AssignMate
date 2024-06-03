@@ -86,6 +86,30 @@ app.post("/tag", (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
+app.get("/tasks", (req,res) => {
+  const taskName = req.query.taskName;
+  services
+    .getTask(taskName)
+    .then((tasks) => res.send(tasks))
+    .catch((error) => res.status(404).send("Resource not found ${error}"));
+});
+
+app.post("/tasks", (req,res) => {
+  const task = req.body;
+  services 
+    .addTask(task)
+    .then((task) => res.status(201).send(task))
+    .catch((error) => res.status(404).send("error: ${error}"));
+});
+
+app.delete("/tasks/:id", (req,res) => {
+  const {id} = req.params;
+  services
+    .deleteTask(id)
+    .then((index) => res.status(204).send({index}))
+    .catch((error) => res.status(404).send("Resource not found ${error"));
+})
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
