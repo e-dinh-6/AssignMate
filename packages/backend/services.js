@@ -1,17 +1,34 @@
-//services.js
+// services.js
 import mongoose from "mongoose";
+import * as dotenv from "dotenv";
 import databaseModel from "./database.js";
 
-const {User, Event, Tag} = databaseModel;
+const { User, Event, Tag } = databaseModel;
 
 mongoose.set("debug", true);
+dotenv.config();
+const { MONGODB_URL } = process.env;
 
 mongoose
-  .connect("mongodb://localhost:27017/calendar", {
+  .connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .catch((error) => console.log(error));
+  .then(() => {
+    console.log("Connected to cloud db");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the cloud database:", error);
+    console.log("Attempting to connect to the local database...");
+    mongoose
+      .connect("mongodb://localhost:27017/asignmate", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .catch((error) => {
+        console.error("Error connecting to the local database:", error);
+      });
+  });
 
 async function getUsers(username) {
   let promise;
@@ -20,56 +37,61 @@ async function getUsers(username) {
   } else {
     promise = await User.find().lean();
   }
-
   return promise;
 }
 
-function getTags(name) {
+function getTags(tagName) {
   let promise;
-  if (name) {
-    promise = databaseModel.find({name: name});
+  if (tagName) {
+    promise = Tag.find({ name: tagName });
   } else {
-      promise = databaseModel.find();
+    promise = Tag.find();
   }
   return promise;
 }
 
-function getEvents(title) {
+function getEvent(title) {
   let promise;
   if (title) {
-    promise = Event.find({title: title}).lean();
+    promise = Event.find({ eventName: title }).lean();
   } else {
     promise = Event.find().lean();
   }
   return promise;
 }
 
-// function getEvents(userId) {
-//   const events = Event.find({user: userId}).sort({date:1,startTime:1});
-//   const eventsByDay = {};
-//   events.forEach((event) => {
-//     const date = event.date;
-//     if(!eventsByDay[date]) {
-//       eventsByDay[date] = [];
-//     }
-//     eventsByDay[date].push(event);
-//   });
-//   return eventsByDay;
-// }
-
+function getEvents(userId) {
+  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+  const eventsByDay = {};
+  events.forEach((event) => {
+    const { date } = event;
+    if (!eventsByDay[date]) {
+      eventsByDay[date] = [];
+    }
+    eventsByDay[date].push(event);
+  });
+  return eventsByDay;
+}
 
 function addUser(user) {
+  if (!user) {
+    return;
+  }
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
 }
 
-function findUserByUsernameAndPassword(username, password) {
-  return User.find({username: username, password: password})
+function deleteUser(name) {
+  return User.findOneAndDelete({ username: name });
 }
 
-function findUserByName(username) {
-  return User.find({username: username})
+function findUserByUsernameAndPassword(name, pw) {
+  return User.find({ username: name, password: pw });
+}
+
+function findUserByName(name) {
+  return User.find({ username: name });
 }
 
 function addEvent(event) {
@@ -88,15 +110,21 @@ function addTag(tag) {
   return promise;
 }
 
+function deleteTag(tagName) {
+  return Tag.findOneAndDelete({ name: tagName });
+}
+
 export default {
   addUser,
+  deleteUser,
   getUsers,
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
+  getEvent,
   getEvents,
   findUserByName,
   deleteEvent,
-  addTag
+  addTag,
+  deleteTag,
 };
-

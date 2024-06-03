@@ -14,8 +14,12 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
+import Sevenday from "./sevenday";
+import List from "./list";
 import AddEvent from "./eventpage";
 import "./App.css";
+
+//cd url: https://black-rock-04015071e.5.azurestaticapps.net
 
 function App() {
 //   const [events, setEvents] = useState([]);
@@ -43,6 +47,8 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/sevenday" element={<Sevenday />} />
+          <Route path="/list" element={<List />} />
           <Route path="/event" element={<AddEvent />} />
 
           {/* If any route mismatches the upper 
