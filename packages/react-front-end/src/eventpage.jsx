@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './event.css';
 
-const EventForm = (props) => {
+const EventForm = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [formData, setFormData] = useState({
-    title: selectedEvent? selectedEvent.title : '',
-    tags: selectedEvent? selectedEvent.tags : [],
-    date: selectedEvent? selectedEvent.date : '',
-    timeStart: selectedEvent? selectedEvent.timeStart : '',
-    timeEnd: selectedEvent? selectedEvent.timeEnd : '',
-    status: selectedEvent? selectedEvent.status : 'In Progress',
-    description: selectedEvent? selectedEvent.description : ''
+    title: '',
+    tags: [],
+    date: '',
+    timeStart: '',
+    timeEnd: '',
+    status: 'In Progress',
+    description: ''
   });
-
   const [tags, setTags] = useState([
-    { name: 'CSC 307', color: '#FF5733' },
+    { name: 'CSC 307', color: '#FF5733' }
   ]);
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState('#000000');
   const [events, setEvents] = useState([
-    { title: 'Project Meeting', tags: ['CSC 307'], date: '2024-05-30', timeStart: '10:00', timeEnd: '12:00', description: 'Description for event 1' },
-    { title: 'Event Title 2', tags: [] },
+    { id: 1, title: 'Project Meeting', tags: ['CSC 307'], date: '2024-05-30', timeStart: '10:00', timeEnd: '12:00', description: 'Description for event 1' },
+    { id: 2, title: 'Event Title 2', tags: [] }
   ]);
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [showNewTagModal, setShowNewTagModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -36,6 +36,18 @@ const EventForm = (props) => {
         status: selectedEvent.status,
         description: selectedEvent.description
       });
+      setIsEditMode(false);
+    } else {
+      setFormData({
+        title: '',
+        tags: [],
+        date: '',
+        timeStart: '',
+        timeEnd: '',
+        status: 'In Progress',
+        description: ''
+      });
+      setIsEditMode(false);
     }
   }, [selectedEvent]);
 
@@ -49,10 +61,9 @@ const EventForm = (props) => {
     }
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selectedEvent) {
+    if (isEditMode && selectedEvent) {
       // Update existing event
       const updatedEvents = events.map(event =>
         event.id === selectedEvent.id ? { ...formData, id: selectedEvent.id } : event
@@ -74,6 +85,7 @@ const EventForm = (props) => {
       description: ''
     });
     setSelectedEvent(null);
+    setIsEditMode(false);
   };
 
   const handleAddTag = () => {
@@ -107,7 +119,12 @@ const EventForm = (props) => {
 
   const handleEdit = () => {
     setFormData(selectedEvent);
+    setIsEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
     setSelectedEvent(null);
+    setIsEditMode(false);
   };
 
   return (
@@ -115,16 +132,16 @@ const EventForm = (props) => {
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-          {events.map((event, index) => (
-            <li key={index} className="event-name" onClick={() => setSelectedEvent(event)}>
+          {events.map(event => (
+            <li key={event.id} className="event-name" onClick={() => setSelectedEvent(event)}>
               {event.title} ({event.tags.join(', ')})
             </li>
           ))}
         </ul>
       </div>
       <form className="event-form" onSubmit={handleSubmit}>
-        <h1>{selectedEvent ? "View Event" : "Create Event"}</h1>
-        {selectedEvent ? (
+        <h1>{selectedEvent && !isEditMode ? "View Event" : isEditMode ? "Edit Event" : "Create Event"}</h1>
+        {selectedEvent && !isEditMode ? (
           <div>
             <div className="form-group">
               <label>Title:</label>
@@ -231,33 +248,35 @@ const EventForm = (props) => {
                 name="timeStart"
                 value={formData.timeStart}
                 onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="timeEnd">End Time:</label>
-              <input
-                type="time"
-                name="timeEnd"
-                value={formData.timeEnd}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="description">Description:</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Description"
-              />
-            </div>
-            <button type="submit" className="create-btn">Create Event</button>
-          </div>
-        )}
-      </form>
-    </div>
-  );
-};
-
-
-export default EventForm;
+                />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="timeEnd">End Time:</label>
+                  <input
+                    type="time"
+                    name="timeEnd"
+                    value={formData.timeEnd}
+                    onChange={handleChange}
+                    
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="description">Description:</label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Event Description"
+                    
+                  ></textarea>
+                </div>
+                <button type="submit" className="create-btn">{isEditMode ? 'Update Event' : 'Create Event'}</button>
+                {isEditMode && <button type="button" onClick={handleCancelEdit} className="create-btn">Cancel Edit</button>}
+              </div>
+            )}
+          </form>
+        </div>
+      );
+    };
+    
+    export default EventForm;
