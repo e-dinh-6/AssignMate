@@ -17,6 +17,7 @@ import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
 import List from "./list";
 import AddEvent from "./eventpage";
+import Landing from "./landing";
 import "./App.css";
 
 //cd url: https://black-rock-04015071e.5.azurestaticapps.net
@@ -34,6 +35,7 @@ function App() {
           <Route path="/sevenday" element={<Sevenday />} />
           <Route path="/list" element={<List />} />
           <Route path="/event" element={<AddEvent />} />
+          <Route path="/landing" element={<Landing />} />
 
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
