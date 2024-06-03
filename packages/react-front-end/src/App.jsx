@@ -23,6 +23,22 @@ import "./App.css";
 //cd url: https://black-rock-04015071e.5.azurestaticapps.net
 
 function App() {
+//   const [events, setEvents] = useState([]);
+//   function fetchUsers(){
+//     const promise = fetch("http://localhost:8000/events");
+//     return promise;
+//   }
+
+//   useEffect(() => {
+//     fetchUsers()
+//       .then((eventsList) => {
+//         setEvents(eventsList);
+//       })
+//       .catch((error) => {
+//         console.error("Erro setting events:", error); 
+//   });
+// },[]);
+
   return (
     <>
       {/* This is the alias of BrowserRouter i.e. Router */}
