@@ -128,6 +128,12 @@ p {
   color: black;
 }
 
+.to-do-list {
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the start of the container */
+  justify-content: flex-start;
+}
+
 .to-do-list h2 {
   margin-top: 0;
 }
@@ -136,6 +142,8 @@ p {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  overflow: scroll;
+  height: 300px;
 }
 
 .to-do-list ul li {
@@ -168,14 +176,15 @@ p {
 
 .bottom-left {
   width: 160px;
-  position: absolute;
   bottom: 20px;
+  position: absolute;
 }
 
 .content {
   padding: 40px;
   flex: 1;
   text-align: left;
+  overflow: scroll;
 }
 
 .content .list-date {

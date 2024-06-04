@@ -10,16 +10,16 @@
   flex-direction: column;
 }
 
-.logo {
+.landing-logo {
   height: 220px;
 }
 
-h1 {
+.welcome {
   margin-top: 50px;
   color: white;
 }
 
-button {
+.view-cal {
   border: none;
   background-color: #b3d2d4;
   margin-top: 80px;

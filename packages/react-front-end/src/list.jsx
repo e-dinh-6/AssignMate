@@ -116,6 +116,31 @@ function List() {
       .catch((error) => console.log(error));
   }, []);
 
+  const filteredEvents = Object.entries(events).reduce(
+    (acc, [date, dailyEvents]) => {
+      const eventDate = new Date(date);
+      const eventYear = eventDate.getFullYear();
+      const eventMonth = eventDate.getMonth();
+      const eventDay = eventDate.getDate();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth();
+      const currentDay = currentDate.getDate();
+
+      // Compare only year, month, and day components
+      if (
+        eventYear > currentYear ||
+        (eventYear === currentYear && eventMonth > currentMonth) ||
+        (eventYear === currentYear &&
+          eventMonth === currentMonth &&
+          eventDay >= currentDay)
+      ) {
+        acc[date] = dailyEvents;
+      }
+      return acc;
+    },
+    {},
+  );
+
   //   const events = {
   //     "2024-05-01": [
   //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
@@ -136,7 +161,9 @@ function List() {
         </div>
         <div className="view-buttons">
           <button>{<Link to="/sevenday">Week</Link>}</button>
-          <button>Month{/* <Link to="/month">Month</Link> */}</button>
+          <button>
+            <Link to="/MonthView">Month</Link>
+          </button>
           <button className="list">List</button>
         </div>
       </header>
@@ -152,7 +179,7 @@ function List() {
             <h2>To Do List:</h2>
             <ul>
               {tasks.map((task) => (
-                <li>
+                <li key={task._id}>
                   <label>
                     <input
                       type="checkbox"
@@ -164,37 +191,39 @@ function List() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="bottom-left">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                addTask();
-              }}
-            >
-              <input
-                type="text"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                placeholder="Enter new task"
-                className="new-task"
-              />
-              <button type="submit" className="submit">
-                Add Task
+            <div className="bottom-left">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addTask();
+                }}
+              >
+                <input
+                  type="text"
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  placeholder="Enter new task"
+                  className="new-task"
+                />
+                <button type="submit" className="submit">
+                  Add Task
+                </button>
+              </form>
+              <button onClick={removeCheckedTasks} className="clean-tasks">
+                Remove Completed
               </button>
-            </form>
-            <button onClick={removeCheckedTasks} className="clean-tasks">
-              Remove Completed
-            </button>
+            </div>
           </div>
         </aside>
         <div className="content">
-          {Object.entries(events).map(([date, dailyEvents]) => (
+          {Object.entries(filteredEvents).map(([date, dailyEvents]) => (
             <section key={date}>
               <h2 className="list-date">
-                {new Intl.DateTimeFormat("en-US", { weekday: "long" })
-                  .format(new Date(date))
-                  .toUpperCase()}
+                {new Date(date).toDateString() === currentDate.toDateString()
+                  ? "TODAY"
+                  : new Intl.DateTimeFormat("en-US", { weekday: "long" })
+                      .format(new Date(date))
+                      .toUpperCase()}
                 :
               </h2>
               <ul>

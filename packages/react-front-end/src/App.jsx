@@ -12,7 +12,7 @@ import {
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 import Home from "./main";
-import Login from "./loginpage";
+import List from "./loginpage";
 import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
 import List from "./list";
