@@ -16,6 +16,7 @@ import Login from "./loginpage";
 import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
 import List from "./list";
+import MonthView from "./MonthView";
 import AddEvent from "./eventpage";
 import Landing from "./landing";
 import "./App.css";
@@ -23,6 +24,22 @@ import "./App.css";
 //cd url: https://black-rock-04015071e.5.azurestaticapps.net
 
 function App() {
+//   const [events, setEvents] = useState([]);
+//   function fetchUsers(){
+//     const promise = fetch("http://localhost:8000/events");
+//     return promise;
+//   }
+
+//   useEffect(() => {
+//     fetchUsers()
+//       .then((eventsList) => {
+//         setEvents(eventsList);
+//       })
+//       .catch((error) => {
+//         console.error("Erro setting events:", error); 
+//   });
+// },[]);
+
   return (
     <>
       {/* This is the alias of BrowserRouter i.e. Router */}
@@ -36,6 +53,7 @@ function App() {
           <Route path="/list" element={<List />} />
           <Route path="/event" element={<AddEvent />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/MonthView" element={<MonthView />} />
 
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
