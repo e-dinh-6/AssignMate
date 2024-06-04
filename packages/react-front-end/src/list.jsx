@@ -34,7 +34,7 @@ function List() {
       .then((res) => res.json())
       .catch((json) => setEvents(json))
       .catch((error) => console.log(error));
-  }, [userId]);
+  }, []);
   //   const events = {
   //     "2024-05-01": [
   //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
