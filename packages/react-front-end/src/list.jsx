@@ -103,13 +103,6 @@ function List() {
   }
 
   useEffect(() => {
-    fetchEvents()
-      .then((res) => res.json())
-      .then((json) => {
-        setEvents(json);
-      })
-      .catch((error) => console.log(error));
-
     fetchTasks()
       .then((res) => res.json())
       .then((json) => setTasks(json))
