@@ -116,6 +116,7 @@ function List() {
       .catch((error) => console.log(error));
   }, []);
 
+  main
   //   const events = {
   //     "2024-05-01": [
   //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
