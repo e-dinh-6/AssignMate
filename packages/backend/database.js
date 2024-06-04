@@ -23,7 +23,6 @@ const tagSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     color: {
       type: String,
@@ -60,7 +59,7 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: [tagSchema],
+    tag: {type: [tagSchema],default: undefined},
     description: {
       type: String,
       required: false,

@@ -168,10 +168,14 @@ p {
 .submit {
   margin-top: 10px;
   width: 100%;
+  border: none;
+  border-radius: 4px;
 }
 
 .clean-tasks {
   margin-top: 10px;
+  border: none;
+  border-radius: 4px;
 }
 
 .bottom-left {

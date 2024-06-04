@@ -14,7 +14,7 @@
   },
   "scripts": {
     "lint": "npx eslint . && npx prettier --write .",
-    "test": "npx jest",
+    "test": "cd jest-unit-testing && npm test",
     "dev": "nodemon backend.js",
     "start": "node backend.js"
   },

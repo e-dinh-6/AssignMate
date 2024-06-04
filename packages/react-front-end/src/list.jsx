@@ -18,7 +18,7 @@ function List() {
   const today = currentDate.toLocaleDateString("en-US", options);
 
   function removeEvent(eventId) {
-    fetch(`http://localhost:8000/events/${eventId}`, {
+    fetch(`https://assignmate7.azurewebsites.net/events/${eventId}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -65,7 +65,7 @@ function List() {
     setCheckedTaskIds([]);
   }
 
-  function addTask(tasj) {
+  function addTask(task) {
     postTask({ title: newTaskTitle })
       .then((response) => {
         if (response.status === 201) {

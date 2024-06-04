@@ -123,10 +123,10 @@ describe("getTask function", () => {
 describe("addEvent function", () => {
   test("adding event should return back the event", async () => {
     const event = {
-      eventName: "monday meeting",
-      date: new Date("2024-06-04"),
-      startTime: new Date("2024-06-04T17:00:00"),
-      endTime: new Date("2024-06-04T19:00:00"),
+      eventName: "meeting",
+      date: new Date("2024-06-05"),
+      startTime: new Date("2024-06-05T12:00:00"),
+      endTime: new Date("2024-06-05T13:00:00"),
       status: "in progress",
     };
     return mut.addEvent(event).then((got) => {
