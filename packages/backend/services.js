@@ -30,10 +30,10 @@ mongoose
       });
   });
 
-async function getUsers(username) {
+async function getUser(name) {
   let promise;
-  if (username) {
-    promise = await findUserByName(username).lean();
+  if (name) {
+    promise = await User.find({ username: name }).lean();
   } else {
     promise = await User.find().lean();
   }
@@ -61,7 +61,10 @@ function getEvent(title) {
 }
 
 async function getEvents(userId) {
-  const events = await Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+  const events = await Event.find({ user: userId }).sort({
+    date: 1,
+    startTime: 1,
+  });
   const eventsByDay = {};
   events.forEach((event) => {
     const { date } = event;
@@ -70,14 +73,10 @@ async function getEvents(userId) {
     }
     eventsByDay[date].push(event);
   });
-  console.log("Events By Day: ", eventsByDay);
   return eventsByDay;
 }
 
 function addUser(user) {
-  if (!user) {
-    return;
-  }
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
@@ -89,10 +88,6 @@ function deleteUser(name) {
 
 function findUserByUsernameAndPassword(name, pw) {
   return User.find({ username: name, password: pw });
-}
-
-function findUserByName(name) {
-  return User.find({ username: name });
 }
 
 function addEvent(event) {
@@ -138,13 +133,12 @@ function deleteTask(id) {
 export default {
   addUser,
   deleteUser,
-  getUsers,
+  getUser,
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
   getEvent,
   getEvents,
-  findUserByName,
   deleteEvent,
   addTag,
   deleteTag,

@@ -59,7 +59,7 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: {type: [tagSchema],default: undefined},
+    tag: { type: [tagSchema], default: undefined },
     description: {
       type: String,
       required: false,
@@ -100,9 +100,9 @@ const taskSchema = new mongoose.Schema(
       equired: true,
     },
   },
-  {collection: "tasks_list"},
+  { collection: "tasks_list" },
 );
 
 const Task = mongoose.model("Task", taskSchema);
 
-export default { User, Event, Tag, Calendar , Task};
+export default { User, Event, Tag, Calendar, Task };

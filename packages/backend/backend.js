@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import services from "./services.js";
+import { registerUser, authenticateUser, loginUser } from "./auth.js";
 // import databaseModel from "./database.js";
 
 const app = express();
@@ -14,7 +15,7 @@ app.listen(process.env.PORT || port, () => {
 app.use(cors());
 app.use(express.json());
 
-app.post("/users", (req, res) => {
+app.post("/users", authenticateUser, (req, res) => {
   const newUser = req.body;
   services
     .addUser(newUser)
@@ -22,15 +23,9 @@ app.post("/users", (req, res) => {
     .catch((error) => res.status(400).send(`Resource not found${error}`));
 });
 
-// app.get("/users/:username/:password", (req, res) => {
-//   const {username, password} = req.params;
-//   services.findUserByUsernameAndPassword(username,password)
-//     .then(user => res.send(user))
-//     .catch(error => resizeTo.status(404).send("Resource not found."));
-// });
 
-app.get("/users", (req, res) => {
-  const name = req.params;
+app.get("/users", authenticateUser, (req, res) => {
+  const {name} = req.params;
   services
     .getUsers(name)
     .then((user) => res.send(user))
@@ -45,7 +40,7 @@ app.get("/users", (req, res) => {
 //     .catch((error) => res.status(404).send(`Resource not found${error}`));
 // });
 
-app.post("/events", (req, res) => {
+app.post("/events", authenticateUser, (req, res) => {
   const event = req.body;
   services
     .addEvent(event)
@@ -62,7 +57,7 @@ app.post("/events/:userId", (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-app.get("/events", (req, res) => {
+app.get("/events", authenticateUser, (req, res) => {
   const { userId } = req.params;
   services
     .getEvents(userId)
@@ -70,7 +65,7 @@ app.get("/events", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.delete("/events/:id", (req, res) => {
+app.delete("/events/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
   services
     .deleteEvent(id)
@@ -78,7 +73,7 @@ app.delete("/events/:id", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.post("/tag", (req, res) => {
+app.post("/tag", authenticateUser, (req, res) => {
   const tag = req.params;
   services
     .addTag(tag)
@@ -86,30 +81,34 @@ app.post("/tag", (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-app.get("/tasks", (req,res) => {
-  const taskName = req.query.taskName;
+app.get("/tasks", authenticateUser, (req, res) => {
+  const { taskName } = req.query;
   services
     .getTask(taskName)
     .then((tasks) => res.send(tasks))
-    .catch((error) => res.status(404).send("Resource not found ${error}"));
+    .catch((error) => res.status(404).send(`Resource not found ${error}`));
 });
 
-app.post("/tasks", (req,res) => {
+app.post("/tasks", authenticateUser, (req, res) => {
   const task = req.body;
-  services 
+  services
     .addTask(task)
     .then((task) => res.status(201).send(task))
-    .catch((error) => res.status(404).send("error: ${error}"));
+    .catch((error) => res.status(404).send(`error: ${error}`));
 });
 
-app.delete("/tasks/:id", (req,res) => {
-  const {id} = req.params;
+app.delete("/tasks/:id", authenticateUser, (req, res) => {
+  const { id } = req.params;
   services
     .deleteTask(id)
-    .then((index) => res.status(204).send({index}))
+    .then((index) => res.status(204).send({ index }))
     .catch((error) => res.status(404).send("Resource not found ${error"));
-})
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.post("/signup", registerUser);
+
+app.post("/login", loginUser);
