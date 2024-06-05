@@ -23,7 +23,6 @@ const tagSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     color: {
       type: String,
@@ -60,7 +59,7 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: [tagSchema],
+    tag: {type: [tagSchema],default: undefined},
     description: {
       type: String,
       required: false,
@@ -94,4 +93,16 @@ const calendarSchema = new mongoose.Schema({
 
 const Calendar = mongoose.model("Calendar", calendarSchema);
 
-export default { User, Event, Tag, Calendar };
+const taskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      equired: true,
+    },
+  },
+  {collection: "tasks_list"},
+);
+
+const Task = mongoose.model("Task", taskSchema);
+
+export default { User, Event, Tag, Calendar , Task};

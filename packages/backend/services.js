@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import databaseModel from "./database.js";
 
-const { User, Event, Tag } = databaseModel;
+const { User, Event, Tag, Task } = databaseModel;
 
 mongoose.set("debug", true);
 dotenv.config();
@@ -60,8 +60,8 @@ function getEvent(title) {
   return promise;
 }
 
-function getEvents(userId) {
-  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+async function getEvents(userId) {
+  const events = await Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
   const eventsByDay = {};
   events.forEach((event) => {
     const { date } = event;
@@ -70,6 +70,7 @@ function getEvents(userId) {
     }
     eventsByDay[date].push(event);
   });
+  console.log("Events By Day: ", eventsByDay);
   return eventsByDay;
 }
 
@@ -114,6 +115,26 @@ function deleteTag(tagName) {
   return Tag.findOneAndDelete({ name: tagName });
 }
 
+function addTask(task) {
+  const newTask = new Task(task);
+  const promise = newTask.save();
+  return promise;
+}
+
+function getTask(taskName) {
+  let promise;
+  if (taskName) {
+    promise = Task.find({ title: taskName });
+  } else {
+    promise = Task.find();
+  }
+  return promise;
+}
+
+function deleteTask(id) {
+  return Task.findByIdAndDelete(id);
+}
+
 export default {
   addUser,
   deleteUser,
@@ -127,4 +148,7 @@ export default {
   deleteEvent,
   addTag,
   deleteTag,
+  addTask,
+  getTask,
+  deleteTask,
 };
