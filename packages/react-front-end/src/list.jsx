@@ -1,5 +1,5 @@
 // src/list.jsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./list.css";
 import logo from "./assets/logo.png";
@@ -80,7 +80,7 @@ function List() {
     setCheckedTaskIds([]);
   }
 
-  function addTask(task) {
+  function addTask() {
     postTask({ title: newTaskTitle })
       .then((response) => {
         if (response.status === 201) {
@@ -160,16 +160,6 @@ function List() {
     {},
   );
 
-  //   const events = {
-  //     "2024-05-01": [
-  //       { _id: 1, startTime: "10:00 AM", eventName: "Event 1" },
-  //       { _id: 2, startTime: "11:00 AM", eventName: "Event 2" },
-  //     ],
-  //     "2024-05-02": [
-  //       { _id: 3, startTime: "12:00 PM", eventName: "Event 3" },
-  //       { _id: 4, startTime: "01:00 PM", eventName: "Event 4" },
-  //     ],
-  //   };
   return (
     <div className="container">
       <header className="list-header">

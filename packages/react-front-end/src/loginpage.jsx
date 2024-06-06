@@ -1,14 +1,8 @@
-import {
-  MDBContainer,
-  MDBInput,
-  MDBCheckbox,
-  MDBBtn,
-  MDBIcon,
-} from "mdb-react-ui-kit";
-import React, { useState } from "react";
+import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
+import { useState } from "react";
 import "./login.css";
 
-function loginpage(props) {
+function Loginpage(props) {
   const [creds, setCreds] = useState({
     username: "",
     pwd: "",
@@ -80,4 +74,4 @@ function loginpage(props) {
     setCreds({ username: "", pwd: "" });
   }
 }
-export default loginpage;
+export default Loginpage;

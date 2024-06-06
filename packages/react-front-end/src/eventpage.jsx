@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./event.css";
 
 function EventForm() {
@@ -66,9 +66,12 @@ function EventForm() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("https://assignmate7.azurewebsites.net/events", {
-        headers: addAuthHeader(),
-      });
+      const response = await fetch(
+        "https://assignmate7.azurewebsites.net/events",
+        {
+          headers: addAuthHeader(),
+        },
+      );
       if (!response.ok)
         throw new Error(
           `Failed to fetch events: ${response.status} ${response.statusText}`,
@@ -89,9 +92,12 @@ function EventForm() {
 
   const fetchTags = async () => {
     try {
-      const response = await fetch("https://assignmate7.azurewebsites.net/tag", {
-        headers: addAuthHeader(),
-      });
+      const response = await fetch(
+        "https://assignmate7.azurewebsites.net/tag",
+        {
+          headers: addAuthHeader(),
+        },
+      );
       if (!response.ok)
         throw new Error(
           `Failed to fetch tags: ${response.status} ${response.statusText}`,

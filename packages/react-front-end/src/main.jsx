@@ -1,6 +1,4 @@
 // src/main.jsx
-import React from "react";
-
 import "./main.css";
 
 function MyApp() {

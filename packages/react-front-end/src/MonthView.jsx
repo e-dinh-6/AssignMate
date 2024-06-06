@@ -1,5 +1,5 @@
 /* MonthView.jsx */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./MonthView.css";
 import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
