@@ -50,7 +50,7 @@ function EventForm() {
 		status: selectedEvent.status || 'In Progress',
 		description: selectedEvent.description || ''
 	  });
-	  setIsEditMode(true);
+	  setIsEditMode(false);
 	} else {
       setFormData({
         title: '',
@@ -202,8 +202,18 @@ const fetchEvents = () => {
   };
 
   const handleEdit = () => {
-    setFormData(selectedEvent);
-    setIsEditMode(true);
+	if (selectedEvent) {
+	  setFormData({
+		title: selectedEvent.eventName || '',
+		tags: selectedEvent.tags || [],
+		date: selectedEvent.date ? selectedEvent.date.split('T')[0] : '',
+		timeStart: selectedEvent.startTime ? selectedEvent.startTime.split('T')[1]?.substring(0, 5) : '',
+		timeEnd: selectedEvent.endTime ? selectedEvent.endTime.split('T')[1]?.substring(0, 5) : '',
+		status: selectedEvent.status || 'In Progress',
+		description: selectedEvent.description || ''
+	  });
+	  setIsEditMode(true);
+	}
   };
 
   const handleCancelEdit = () => {
