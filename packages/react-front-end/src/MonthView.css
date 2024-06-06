@@ -1,4 +1,36 @@
-/* MonthView.css */
+/*list.css*/
+
+/*html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}*/
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set height to fill the entire viewport height */
+  width: 100vw;
+  background-color: #f7f5f5;
+}
+
+
+.container-sm,
+.container {
+  max-width: 100vw;
+}
+
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  padding-left: 0;
+  padding-right: 0;
+}
 
 .month-container {
   display: flex;
@@ -9,35 +41,89 @@
 }
 
 .month-header {
-  background-color: #b3d2d4;
+  background-color: #b3d2d4; /* Header color */
   color: white;
-  padding: 1rem;
-  text-align: center;
+  text-align: left;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Center items horizontally */
 }
 
-.month-logo {
-  margin-left: 50px;
-  height: 60px;
-  margin-right: 1rem;
+
+.logo {
+  margin-left: 40px;
+  padding: 0;
+  height: 90px; /* Adjust the height to make the logo twice as large */
+  margin-right: 1rem; /* Space between logo and text */
+}
+
+
+.month-year-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Adjust this to control the spacing */
+}
+
+
+.Mbutton {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 5px;
+  margin-top: 5%;
+  font-size: 500%; 
+  text-decoration: none; 
+
+}
+
+
+h1 {
+  font-size: 60px;
+  margin-bottom: 0;
+  margin-top: 30px;
+  text-shadow: 0px 3px 5px #929292;
+}
+
+p {
+  color: #7ca4a7;
+  font-size: 25px;
+}
+
+.view-buttons {
+  margin-left: auto;
+  padding-right: 40px;
+}
+
+.view-buttons button {
+  width: 100px;
+  height: 40px;
+  border-color: #929292;
+  font-size: 20px;
+}
+
+.view-buttons button a {
+  color: black;
+}
+
+.view-buttons .list {
+  background-color: #7ca4a7;
+  pointer-events: none;
 }
 
 .month-main-content {
   display: flex;
   flex: 1;
-  padding: 20px;
+  padding: 0;
   justify-content: center;
 }
 
 .month-grid {
   display: grid;
+  padding-left: 1%;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   width: 100%;
 }
-
 .day-cell {
   background-color: #fff;
   padding: 10px;
@@ -45,11 +131,133 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.event-item {
-  background-color: #b3d2d4;
-  padding: 5px;
-  margin-top: 5px;
-  border-radius: 3px;
-  font-size: 0.8rem;
+.left-bar {
+  background-color: #7ca4a7; /* Sidebar color */
+  padding: 1rem;
+  
+  width: 200px;
+  text-align: left;
 }
 
+.event-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.add-event-button {
+  background-color: #fff;
+  border: none;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.add-event-button a {
+  color: black;
+}
+
+.to-do-list {
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the start of the container */
+  justify-content: flex-start;
+}
+
+.to-do-list h2 {
+  margin-top: 0;
+}
+
+.to-do-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow: scroll;
+  height: 300px;
+}
+
+.to-do-list ul li {
+  margin: 0.5rem 0;
+}
+
+.to-do-list ul li label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.to-do-list ul li input {
+  margin-right: 0.5rem;
+}
+
+.new-task {
+  bottom: 50px;
+  width: 100%;
+}
+
+.submit {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+}
+
+.clean-tasks {
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+}
+
+.bottom-left {
+  width: 160px;
+  bottom: 20px;
+  position: absolute;
+}
+
+.content {
+  padding: 40px;
+  flex: 1;
+  text-align: left;
+  overflow: scroll;
+}
+
+.content .list-date {
+  font-size: 18px;
+  padding-bottom: 5px;
+  border-bottom: 1.5px solid black;
+  margin-bottom: 0;
+}
+
+.space,
+.date {
+  height: auto;
+}
+
+.content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.content ul li {
+  border-bottom: 1px solid #8d8d8d;
+  padding: 5px;
+}
+
+.content ul li .event-details {
+  margin-right: 50px;
+}
+
+hr {
+  margin-bottom: 20px;
+  border-top: 0;
+}
+
+.content ul li button {
+  margin-top: 5px;
+  position: absolute;
+  right: 50px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
