@@ -43,7 +43,7 @@ app.post("/events", authenticateUser, (req, res) => {
 app.get("/events", authenticateUser, (req, res) => {
   const { username } = req;
   services
-    .getEvent(id)
+    .getEvents(username)
     .then((events) => res.json(events)) // Ensure events are returned as JSON
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
@@ -74,32 +74,17 @@ app.post("/tag", authenticateUser, (req, res) => {
   const { username } = req;
   tag.username = username;
   services
-  .getEvents(username)
+  .addTag(tag)
   .then((events) => res.send(events))
   .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.get("/tags", (req, res) => {
-  services
-    .getTags()
-    .then((tags) => res.send(tags))
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
-});
-
-app.get("/tags/:id", (req, res) => {
+app.get("/tag/:id", (req, res) => {
   const {id} = req.params;
   services
     .getTags(id)
     .then((tags) => res.json(tags)) // Ensure events are returned as JSON
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
-});
-
-app.post("/tags", (req, res) => {
-  const tag = req.body;
-  services
-    .addTag(tag)
-    .then((newTag) => res.status(201).send(newTag))
-    .catch((error) => res.status(400).send(`Error: ${error}`));
 });
 
 app.get("/tag", authenticateUser, (req, res) => {

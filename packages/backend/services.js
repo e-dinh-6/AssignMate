@@ -78,18 +78,15 @@ function deleteTag(tagName) {
   return Tag.findOneAndDelete({ name: tagName });
 }
 
-function addEvent(event) {
-  const eventToAdd = new Event(event);
-  const promise = eventToAdd.save();
-function getTags(id) {
-  let promise;
-  if (id) {
-    promise = Tag.findById(id);
-  } else {
-    promise = Tag.find();
-  }
-  return promise;
-}}
+// function getTags(id) {
+//   let promise;
+//   if (id) {
+//     promise = Tag.findById(id);
+//   } else {
+//     promise = Tag.find();
+//   }
+//   return promise;
+// }
 
 function getEvent(user, title) {
   let promise;
@@ -117,28 +114,6 @@ async function getEvents(user) {
   });
   return eventsByDay;
 }
-
-function addUser(user) {
-  if (!user) {
-    return;
-  }
-  const userToAdd = new User(user);
-  const promise = userToAdd.save();
-  return promise;
-}
-
-function deleteUser(name) {
-  return User.findOneAndDelete({ username: name });
-}
-
-function findUserByUsernameAndPassword(name, pw) {
-  return User.find({ username: name, password: pw });
-}
-
-function findUserByName(name) {
-  return User.find({ username: name });
-}
-
 
  const addEvent = async (eventData) => {
   try {

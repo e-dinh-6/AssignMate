@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './event.css';
+import React, { useState, useEffect } from "react";
+import "./event.css";
 
 function EventForm() {
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [checkedTags, setCheckedTags] = useState([])
+  const [checkedTags, setCheckedTags] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     tags: [],
@@ -14,77 +14,95 @@ function EventForm() {
     description: "",
   });
   const [tags, setTags] = useState([]);
-  const [newTagName, setNewTagName] = useState('');
-  const [newTagColor, setNewTagColor] = useState('#000000');
-  const [events, setEvents] = useState([]);  // Initialize as an empty array
+  const [newTagName, setNewTagName] = useState("");
+  const [newTagColor, setNewTagColor] = useState("#000000");
+  const [events, setEvents] = useState([]); // Initialize as an empty array
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [showNewTagModal, setShowNewTagModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // function addAuthHeader(otherHeaders = {}) {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     return otherHeaders;
-  //   } else {
-  //     return {
-  //       ...otherHeaders,
-  //       Authorization: `Bearer ${token}`,
-  //     };
-  //   }
-  // }
-
+  function addAuthHeader(otherHeaders = {}) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return otherHeaders;
+    } else {
+      return {
+        ...otherHeaders,
+        Authorization: `Bearer ${token}`,
+      };
+    }
+  }
 
   useEffect(() => {
     fetchEvents();
     fetchTags();
   }, []);
 
-  
   useEffect(() => {
-	if (selectedEvent) {
-	  setFormData({
-		title: selectedEvent.eventName || '',
-		tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
-		date: selectedEvent.date? selectedEvent.date.split('T')[0] : '',
-		timeStart: selectedEvent.startTime? selectedEvent.startTime.split('T')[1].substring(0, 5) : '',
-		timeEnd: selectedEvent.endTime? selectedEvent.endTime.split('T')[1].substring(0, 5) : '',
-		status: selectedEvent.status || 'In Progress',
-		description: selectedEvent.description || ''
-	  });
-	  const initialCheckedTags = {};
-	  selectedEvent.tags.forEach((tag) => {
-		initialCheckedTags[tag._id] = true;
-	  });
-	  setCheckedTags(initialCheckedTags);
-	  setIsEditMode(true);
-	} else {
-	  resetForm();
-	}
+    if (selectedEvent) {
+      setFormData({
+        title: selectedEvent.eventName || "",
+        tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
+        date: selectedEvent.date ? selectedEvent.date.split("T")[0] : "",
+        timeStart: selectedEvent.startTime
+          ? selectedEvent.startTime.split("T")[1].substring(0, 5)
+          : "",
+        timeEnd: selectedEvent.endTime
+          ? selectedEvent.endTime.split("T")[1].substring(0, 5)
+          : "",
+        status: selectedEvent.status || "In Progress",
+        description: selectedEvent.description || "",
+      });
+      const initialCheckedTags = {};
+      selectedEvent.tags.forEach((tag) => {
+        initialCheckedTags[tag._id] = true;
+      });
+      setCheckedTags(initialCheckedTags);
+      setIsEditMode(true);
+    } else {
+      resetForm();
+    }
   }, [selectedEvent]);
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:8000/events');
-      if (!response.ok) throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+      const response = await fetch("http://localhost:8000/events", {
+        headers: addAuthHeader(),
+      });
+      if (!response.ok)
+        throw new Error(
+          `Failed to fetch events: ${response.status} ${response.statusText}`,
+        );
       const data = await response.json();
-      setEvents(data);
+      const arrayData = Object.entries(data).reduce((acc, [date, events]) => {
+        events.forEach((event) => {
+          const newEvent = { ...event, date: new Date(date).toISOString() };
+          acc.push(newEvent);
+        });
+        return acc;
+      }, []);
+      setEvents(arrayData);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error("Error fetching events:", error);
     }
   };
 
   const fetchTags = async () => {
-	try {
-	  const response = await fetch('http://localhost:8000/tags');
-	  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
-	  const data = await response.json();
-	  setTags(data);
-	} catch (error) {
-	  console.error('Error fetching tags:', error);
-	}
+    try {
+      const response = await fetch("http://localhost:8000/tag", {
+        headers: addAuthHeader(),
+      });
+      if (!response.ok)
+        throw new Error(
+          `Failed to fetch tags: ${response.status} ${response.statusText}`,
+        );
+      const data = await response.json();
+      setTags(data);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    }
   };
 
-  
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
     if (type === "select-multiple") {
@@ -97,48 +115,53 @@ function EventForm() {
     }
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedTags = formData.tags.filter(tag => tag.name && typeof tag.name === 'string');
+    const formattedTags = formData.tags.filter(
+      (tag) => tag.name && typeof tag.name === "string",
+    );
 
     const eventToSubmit = {
       eventName: formData.title,
-	  tags: formattedTags,
-	  date: new Date(`${formData.date}T00:00:00Z`),  // Ensure date is in ISO format
-      startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`),  // Ensure time is in ISO format
-      endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`),  // Ensure time is in ISO format
+      tags: formattedTags,
+      date: new Date(`${formData.date}T00:00:00Z`), // Ensure date is in ISO format
+      startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`), // Ensure time is in ISO format
+      endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`), // Ensure time is in ISO format
       status: formData.status,
-      description: formData.description
+      description: formData.description,
     };
 
-    const method = isEditMode ? 'PUT' : 'POST';
-    const url = isEditMode ? `http://localhost:8000/events/${selectedEvent._id}` : 'http://localhost:8000/events';
+    const method = isEditMode ? "PUT" : "POST";
+    const url = isEditMode
+      ? `http://localhost:8000/events/${selectedEvent._id}`
+      : "http://localhost:8000/events";
 
     fetch(url, {
       method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: addAuthHeader({
+        "Content-Type": "application/json",
+      }),
       body: JSON.stringify(eventToSubmit),
     })
-	.then((response) => {
-		console.log(response);
-		if (!response.ok) {
-			return response.text().then(text => {throw new Error(text)});
-		}
-		setCheckedTags({});
-		return response.json();
-	})
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        setCheckedTags({});
+        return response.json();
+      })
       .then((data) => {
-        fetchEvents();  // Refresh events list
-		resetForm();
-        setSelectedEvent(null);  // Reset form
+        fetchEvents(); // Refresh events list
+        resetForm();
+        setSelectedEvent(null); // Reset form
         setIsEditMode(false);
       })
 
-      .catch((error) => console.error('Error submitting event:', error));
+      .catch((error) => console.error("Error submitting event:", error));
   };
 
   const resetForm = () => {
@@ -153,29 +176,28 @@ function EventForm() {
     });
   };
 
-
   const handleAddTag = () => {
     const newTag = {
       name: newTagName,
-      color: newTagColor
+      color: newTagColor,
     };
 
-    fetch('http://localhost:8000/tags', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    fetch("http://localhost:8000/tags", {
+      method: "POST",
+      headers: addAuthHeader({
+        "Content-Type": "application/json",
+      }),
       body: JSON.stringify(newTag),
     })
       .then((response) => response.json())
       .then((data) => {
         // Ensure the new tag is added to the list
         setTags([...tags, data]);
-        setNewTagName('');
-        setNewTagColor('#000000');
+        setNewTagName("");
+        setNewTagColor("#000000");
         setShowNewTagModal(false);
       })
-      .catch((error) => console.error('Error adding tag:', error));
+      .catch((error) => console.error("Error adding tag:", error));
   };
 
   const handleCheckboxChange = (tagId, isChecked) => {
@@ -184,12 +206,12 @@ function EventForm() {
     if (isChecked) {
       setFormData((prevState) => ({
         ...prevState,
-        tags: [...prevState.tags, tagId]
+        tags: [...prevState.tags, tagId],
       }));
     } else {
       setFormData((prevState) => ({
         ...prevState,
-        tags: prevState.tags.filter((id) => id !== tagId)
+        tags: prevState.tags.filter((id) => id !== tagId),
       }));
     }
   };
@@ -198,20 +220,23 @@ function EventForm() {
     setShowTagDropdown(!showTagDropdown);
   };
 
-
   const handleEdit = () => {
-	if (selectedEvent) {
-	  setFormData({
-		title: selectedEvent.eventName || '',
-		tags: selectedEvent.tags || [],
-		date: selectedEvent.date ? selectedEvent.date.split('T')[0] : '',
-		timeStart: selectedEvent.startTime ? selectedEvent.startTime.split('T')[1]?.substring(0, 5) : '',
-		timeEnd: selectedEvent.endTime ? selectedEvent.endTime.split('T')[1]?.substring(0, 5) : '',
-		status: selectedEvent.status || 'In Progress',
-		description: selectedEvent.description || ''
-	  });
-	  setIsEditMode(true);
-	}
+    if (selectedEvent) {
+      setFormData({
+        title: selectedEvent.eventName || "",
+        tags: selectedEvent.tags || [],
+        date: selectedEvent.date ? selectedEvent.date.split("T")[0] : "",
+        timeStart: selectedEvent.startTime
+          ? selectedEvent.startTime.split("T")[1]?.substring(0, 5)
+          : "",
+        timeEnd: selectedEvent.endTime
+          ? selectedEvent.endTime.split("T")[1]?.substring(0, 5)
+          : "",
+        status: selectedEvent.status || "In Progress",
+        description: selectedEvent.description || "",
+      });
+      setIsEditMode(true);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -226,11 +251,18 @@ function EventForm() {
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-			{events && events.map(event => (
-			<li key={event._id} className="event-name" onClick={() => setSelectedEvent(event)}>
-				{event.eventName} ({event.tags ? event.tags.map(tag => tag.name).join(', ') : ''})
-			</li>
-			))}
+          {events &&
+            events.map((event) => (
+              <li
+                key={event._id}
+                className="event-name"
+                onClick={() => setSelectedEvent(event)}
+              >
+                {event.eventName} (
+                {event.tags ? event.tags.map((tag) => tag.name).join(", ") : ""}
+                )
+              </li>
+            ))}
         </ul>
       </div>
       <form className="event-form" onSubmit={handleSubmit}>
@@ -248,26 +280,39 @@ function EventForm() {
               <div>{selectedEvent.eventName}</div>
             </div>
             <div className="form-group">
-               <label>Tags:</label>
-      			<div>{selectedEvent.tags?.join(', ')}</div> {/* Add optional chaining here */}
+              <label>Tags:</label>
+              <div>{selectedEvent.tags?.join(", ")}</div>{" "}
+              {/* Add optional chaining here */}
             </div>
             <div className="form-group">
               <label>Date:</label>
-              <div>{selectedEvent.date.split('T')[0]}</div>
+              <div>{selectedEvent.date.split("T")[0]}</div>
             </div>
-			<div className="form-group">
-				<label>Start Time:</label>
-				<div>{selectedEvent.startTime ? selectedEvent.startTime.split('T')[1]?.substring(0, 5) : ''}</div>
-			</div>
-			<div className="form-group">
-				<label>End Time:</label>
-				<div>{selectedEvent.endTime ? selectedEvent.endTime.split('T')[1]?.substring(0, 5) : ''}</div>
-			</div>
+            <div className="form-group">
+              <label>Start Time:</label>
+              <div>
+                {selectedEvent.startTime
+                  ? selectedEvent.startTime.split("T")[1]?.substring(0, 5)
+                  : ""}
+              </div>
+            </div>
+            <div className="form-group">
+              <label>End Time:</label>
+              <div>
+                {selectedEvent.endTime
+                  ? selectedEvent.endTime.split("T")[1]?.substring(0, 5)
+                  : ""}
+              </div>
+            </div>
             <div className="form-group">
               <label>Description:</label>
-              <div className="event-description-container">{selectedEvent.description}</div>
+              <div className="event-description-container">
+                {selectedEvent.description}
+              </div>
             </div>
-            <button type="button" onClick={handleEdit} className="create-btn">Edit Event</button>
+            <button type="button" onClick={handleEdit} className="create-btn">
+              Edit Event
+            </button>
           </div>
         ) : (
           <div>
@@ -294,11 +339,17 @@ function EventForm() {
                 {showTagDropdown && (
                   <div className="tag-dropdown">
                     {tags.map((tag) => (
-                      <div key={tag._id} className="tag-option" onClick={() => handleCheckboxChange(tag._id)}>
+                      <div
+                        key={tag._id}
+                        className="tag-option"
+                        onClick={() => handleCheckboxChange(tag._id)}
+                      >
                         <input
                           type="checkbox"
                           checked={checkedTags[tag._id]}
-						  onChange={(e) => handleCheckboxChange(tag._id, e.target.checked)}
+                          onChange={(e) =>
+                            handleCheckboxChange(tag._id, e.target.checked)
+                          }
                           readOnly
                         />
                         <span style={{ color: tag.color }}>{tag.name}</span>
@@ -336,8 +387,20 @@ function EventForm() {
                     />
                   </div>
                   <div className="buttons">
-                    <button type="button" onClick={handleAddTag} className="tag-btn">Add Tag</button>
-                    <button type="button" onClick={() => setShowNewTagModal(false)} className="tag-btn">Cancel</button>
+                    <button
+                      type="button"
+                      onClick={handleAddTag}
+                      className="tag-btn"
+                    >
+                      Add Tag
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewTagModal(false)}
+                      className="tag-btn"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
               </div>
@@ -380,8 +443,18 @@ function EventForm() {
               ></textarea>
             </div>
             <div className="edit-event">
-              <button type="submit" className="create-btn">{isEditMode ? 'Update Event' : 'Create Event'}</button>
-              {isEditMode && <button type="button" onClick={handleCancelEdit} className="create-btn">Cancel Edit</button>}
+              <button type="submit" className="create-btn">
+                {isEditMode ? "Update Event" : "Create Event"}
+              </button>
+              {isEditMode && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="create-btn"
+                >
+                  Cancel Edit
+                </button>
+              )}
             </div>
           </div>
         )}
