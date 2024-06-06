@@ -141,6 +141,18 @@ async function getEvents(user) {
   }
 };
 
+async function convertTagNamesToObjectIds(tagNames) {
+  const tagIds = await Promise.all(tagNames.map(async (tagName) => {
+    let tag = await Tag.findOne({ name: tagName });
+    if (!tag) {
+      tag = new Tag({ name: tagName });
+      await tag.save();
+    }
+    return tag._id;
+  }));
+  return tagIds;
+}
+
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);
 }
@@ -194,4 +206,5 @@ export default {
   getTasks,
   deleteTask,
   updateEvent,
+  convertTagNamesToObjectIds,
 };

@@ -66,7 +66,7 @@ function EventForm() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("http://localhost:8000/events", {
+      const response = await fetch("https://assignmate7.azurewebsites.net/events", {
         headers: addAuthHeader(),
       });
       if (!response.ok)
@@ -89,7 +89,7 @@ function EventForm() {
 
   const fetchTags = async () => {
     try {
-      const response = await fetch("http://localhost:8000/tag", {
+      const response = await fetch("https://assignmate7.azurewebsites.net/tag", {
         headers: addAuthHeader(),
       });
       if (!response.ok)
@@ -134,8 +134,8 @@ function EventForm() {
 
     const method = isEditMode ? "PUT" : "POST";
     const url = isEditMode
-      ? `http://localhost:8000/events/${selectedEvent._id}`
-      : "http://localhost:8000/events";
+      ? "https://assignmate7.azurewebsites.net/${selectedEvent._id}"
+      : "https://assignmate7.azurewebsites.net/events";
 
     fetch(url, {
       method: method,
@@ -182,7 +182,7 @@ function EventForm() {
       color: newTagColor,
     };
 
-    fetch("http://localhost:8000/tags", {
+    fetch("https://assignmate7.azurewebsites.net/tag", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",

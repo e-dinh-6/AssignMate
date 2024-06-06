@@ -79,10 +79,10 @@ app.post("/tag", authenticateUser, (req, res) => {
   .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.get("/tag/:id", (req, res) => {
-  const {id} = req.params;
+app.get("/tag/:id", authenticateUser, (req, res) => {
+  const {user} = req;
   services
-    .getTags(id)
+    .getTags(user)
     .then((tags) => res.json(tags)) // Ensure events are returned as JSON
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
