@@ -75,19 +75,14 @@ app.get("/events/:id", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
 
-app.put("/events/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  const updatedEvent = req.body;
 
+app.put('/events/:id', async (req, res) => {
   try {
-    const event = await services.updateEvent(eventId, updatedEvent);
-    if (event) {
-      res.status(200).send(event);
-    } else {
-      res.status(404).send("Resource not found");
-    }
+    const tagIds = await convertTagNamesToObjectIds(req.body.tags);
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, { ...req.body, tags: tagIds }, { new: true });
+    res.status(200).json(updatedEvent);
   } catch (error) {
-    res.status(500).send(`Internal server error: ${error}`);
+    res.status(500).json({ error: 'Unable to update event: ' + error.message });
   }
 });
 
@@ -251,6 +246,14 @@ function findUserByName(name) {
   return User.find({ username: name });
 }
 
+const convertTagNamesToObjectIds = async (tags) => {
+  const Tag = mongoose.model('Tag');
+  const tagIds = await Promise.all(tags.map(async tag => {
+    const foundTag = await Tag.findOne({ name: tag.name });
+    return foundTag ? foundTag._id : null;
+  }));
+  return tagIds.filter(tagId => tagId !== null);
+};
 
  const addEvent = async (eventData) => {
   try {

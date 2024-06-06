@@ -45,87 +45,47 @@ function EventForm() {
 	if (selectedEvent) {
 	  setFormData({
 		title: selectedEvent.eventName || '',
-		tags: selectedEvent.tags || [],
-		date: selectedEvent.date ? selectedEvent.date.split('T')[0] : '',  
-		timeStart: selectedEvent.startTime ? selectedEvent.startTime.split('T')[1].substring(0, 5) : '',
-		timeEnd: selectedEvent.endTime ? selectedEvent.endTime.split('T')[1].substring(0, 5) : '',
+		tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
+		date: selectedEvent.date? selectedEvent.date.split('T')[0] : '',
+		timeStart: selectedEvent.startTime? selectedEvent.startTime.split('T')[1].substring(0, 5) : '',
+		timeEnd: selectedEvent.endTime? selectedEvent.endTime.split('T')[1].substring(0, 5) : '',
 		status: selectedEvent.status || 'In Progress',
 		description: selectedEvent.description || ''
 	  });
-	  setIsEditMode(false);
+	  const initialCheckedTags = {};
+	  selectedEvent.tags.forEach((tag) => {
+		initialCheckedTags[tag._id] = true;
+	  });
+	  setCheckedTags(initialCheckedTags);
+	  setIsEditMode(true);
 	} else {
-      setFormData({
-        title: '',
-        tags: [],
-        date: '',
-        timeStart: '',
-        timeEnd: '',
-        status: 'In Progress',
-        description: ''
-      });
-      setIsEditMode(false);
-    }
+	  resetForm();
+	}
   }, [selectedEvent]);
 
-
-const fetchEvents = () => {
-  console.log("Fetching events...");
-  fetch('http://localhost:8000/events', {
-    // headers: {
-    //   method: "GET",
-    //   // headers: addAuthHeader(),
-    // },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Fetched events data:', data);
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/events');
+      if (!response.ok) throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+      const data = await response.json();
       setEvents(data);
-      // Process the fetched data as needed
-    })
-    .catch((error) => console.error('Error fetching events:', error));
-};
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
 
-	const handleCheckboxChange = (tagId) => {
-		setCheckedTags(prevState => ({
-		...prevState,
-		[tagId]: !prevState[tagId]
-		}));
-	};
+  const fetchTags = async () => {
+	try {
+	  const response = await fetch('http://localhost:8000/tags');
+	  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
+	  const data = await response.json();
+	  setTags(data);
+	} catch (error) {
+	  console.error('Error fetching tags:', error);
+	}
+  };
 
-	// const fetchTags = async () => {
-	// 	try {
-	// 	  const response = await fetch('http://localhost:8000/tags');
-	// 	  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
-	// 	  const data = await response.json();
-	// 	  setTags(data);
-	// 	  // Initialize checkedTags state
-	// 	  const initialCheckedTags = {};
-	// 	  data.forEach(tag => {
-	// 		initialCheckedTags[tag._id] = false;
-	// 	  });
-	// 	  setCheckedTags(initialCheckedTags);
-	// 	} catch (error) {
-	// 	  console.error('Error fetching tags:', error);
-	// 	}
-	//   };
-
-	const fetchTags = async () => {
-		try {
-		  const response = await fetch('http://localhost:8000/tags');
-		  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
-		  const data = await response.json();
-		  setTags(data);
-		} catch (error) {
-		  console.error('Error fetching tags:', error);
-		}
-	  };
-	
-
+  
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
     if (type === 'select-multiple') {
@@ -136,15 +96,15 @@ const fetchEvents = () => {
     }
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const formattedTags = formData.tags.filter(tag => tag.name && typeof tag.name === 'string');
+
     const eventToSubmit = {
       eventName: formData.title,
-	  tags: formData.tags.map(tagId => {
-		const tag = tags.find(t => t._id === tagId);
-		return { _id: tagId, name: tag.name, color: tag.color };
-	  }),
+	  tags: formattedTags,
 	  date: new Date(`${formData.date}T00:00:00Z`),  // Ensure date is in ISO format
       startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`),  // Ensure time is in ISO format
       endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`),  // Ensure time is in ISO format
@@ -153,7 +113,6 @@ const fetchEvents = () => {
     };
 
     const method = isEditMode ? 'PUT' : 'POST';
-	console.log(method);
     const url = isEditMode ? `http://localhost:8000/events/${selectedEvent._id}` : 'http://localhost:8000/events';
 
     fetch(url, {
@@ -173,21 +132,26 @@ const fetchEvents = () => {
 	})
       .then((data) => {
         fetchEvents();  // Refresh events list
+		resetForm();
         setSelectedEvent(null);  // Reset form
-        setFormData({
-          title: '',
-          tags: [],
-          date: '',
-          timeStart: '',
-          timeEnd: '',
-          status: 'In Progress',
-          description: ''
-        });
         setIsEditMode(false);
       })
 
       .catch((error) => console.error('Error submitting event:', error));
   };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      tags: [],
+      date: '',
+      timeStart: '',
+      timeEnd: '',
+      status: 'In Progress',
+      description: ''
+    });
+  };
+
 
   const handleAddTag = () => {
     const newTag = {
@@ -213,23 +177,26 @@ const fetchEvents = () => {
       .catch((error) => console.error('Error adding tag:', error));
   };
 
+  const handleCheckboxChange = (tagId, isChecked) => {
+    setCheckedTags((prevState) => ({ ...prevState, [tagId]: isChecked }));
+
+    if (isChecked) {
+      setFormData((prevState) => ({
+        ...prevState,
+        tags: [...prevState.tags, tagId]
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        tags: prevState.tags.filter((id) => id !== tagId)
+      }));
+    }
+  };
+
   const toggleTagDropdown = () => {
     setShowTagDropdown(!showTagDropdown);
   };
 
-  const handleTagSelect = (tag) => {
-    if (formData.tags.includes(tag._id)) {
-      setFormData({
-        ...formData,
-        tags: formData.tags.filter(id => id !== tag._id)
-      });
-    } else {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, tag._id]
-      });
-    }
-  };
 
   const handleEdit = () => {
 	if (selectedEvent) {
@@ -258,11 +225,11 @@ const fetchEvents = () => {
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-			{events.map(event => (
-            <li key={event._id} className="event-name" onClick={() => setSelectedEvent(event)}>
-              {event.eventName} ({event.tags ? event.tags.join(', ') : ''})
-            </li>
-          ))}
+			{events && events.map(event => (
+			<li key={event._id} className="event-name" onClick={() => setSelectedEvent(event)}>
+				{event.eventName} ({event.tags ? event.tags.map(tag => tag.name).join(', ') : ''})
+			</li>
+			))}
         </ul>
       </div>
       <form className="event-form" onSubmit={handleSubmit}>
@@ -315,12 +282,12 @@ const fetchEvents = () => {
                 </button>
                 {showTagDropdown && (
                   <div className="tag-dropdown">
-                    {tags.map(tag => (
-                      <div key={tag._id} className="tag-option" onClick={() => handleTagSelect(tag)}>
+                    {tags.map((tag) => (
+                      <div key={tag._id} className="tag-option" onClick={() => handleCheckboxChange(tag._id)}>
                         <input
                           type="checkbox"
                           checked={checkedTags[tag._id]}
-						  onChange={() => handleCheckboxChange(tag._id)}
+						  onChange={(e) => handleCheckboxChange(tag._id, e.target.checked)}
                           readOnly
                         />
                         <span style={{ color: tag.color }}>{tag.name}</span>
