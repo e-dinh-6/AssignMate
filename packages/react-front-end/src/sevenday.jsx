@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./sevenday.css";
 import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
+import { blue, blueBright } from "ansi-colors";
 
 function sevenday() {
   const [events, setEvents] = useState([]);
@@ -189,11 +190,10 @@ function sevenday() {
       <header className="list-header">
         <img src={logo} className="logo" alt="Logo" />
         <div className="header-dates">
-          <h1>{monthYear}</h1>
-          <p>{today}</p>
+          <h1>{majorityMonth}</h1>
         </div>
         <div className="week-navigation">
-          <div className="month-picker">{majorityMonth}</div>
+          <div className="month-picker"></div>
           <div>
             <button onClick={previousWeek}>&#9664;</button>
             <button onClick={nextWeek}>&#9654;</button>
@@ -275,19 +275,21 @@ function sevenday() {
                       <ul>
                         {eventsForWeek[dateString].map((event) => (
                           <li key={event._id}>
-                            <strong className="event-details">
-                              {event.startTime &&
-                                new Date(event.startTime).toLocaleTimeString(
-                                  [],
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  },
-                                )}
-                            </strong>
-                            <label className="event-details">
-                              {event.eventName}
-                            </label>
+                            <div className="event-box">
+                              <strong className="event-details">
+                                {event.startTime &&
+                                  new Date(event.startTime).toLocaleTimeString(
+                                    [],
+                                    {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    },
+                                  )}
+                              </strong>
+                              <label className="event-details">
+                                {event.eventName}
+                              </label>
+                            </div>
                           </li>
                         ))}
                       </ul>

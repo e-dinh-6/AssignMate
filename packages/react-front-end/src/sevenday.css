@@ -74,9 +74,9 @@
   margin-left: 40px;
 }
 
-h1 {
+.header-dates h1 {
   font-size: 60px;
-  margin-bottom: 0;
+  margin-bottom: 30px;
   margin-top: 30px;
   text-shadow: 0px 3px 5px #929292;
 }
@@ -212,9 +212,8 @@ p {
 
 .content ul li {
   position: relative;
-  margin-left: 5px;
-  border-bottom: 1px solid #8d8d8d;
   padding: 5px;
+  border-bottom: 1px solid #8d8d8d;
 }
 
 .content ul li .event-details {
@@ -242,7 +241,8 @@ hr {
   gap: 0px;
   grid-template-columns: auto 1fr;
   margin: -1rem;
-  flex-grow: 1; /* Make calendar take available vertical space */
+  /*flex-grow: 1;  Make calendar take available vertical space */
+  height: 100%;
 }
 
 .days {
@@ -280,6 +280,5 @@ hr {
 
 .events {
   display: grid;
-  padding: 0.2rem;
   background-color: white; /* Ensure background color is white */
 }
