@@ -1,16 +1,17 @@
 // import React, { useState } from "react";
 // import { Redirect } from "react-router-dom";
-// import {
-//   MDBBtn,
-//   MDBContainer,
-//   MDBCard,
-//   MDBCardBody,
-//   MDBCardImage,
-//   MDBRow,
-//   MDBCol,
-//   MDBInput,
-//   MDBCheckbox,
-// } from "mdb-react-ui-kit";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage,
+  MDBRow,
+  MDBCol,
+  MDBInput,
+  MDBCheckbox,
+} from "mdb-react-ui-kit";
+import "./login.css";
 
 // function RegisterUser() {
 //   const [username, setUsername] = useState("");
@@ -44,48 +45,7 @@
 //     return <Redirect to="/landing" />;
 //   }
 
-//   return (
-//     <MDBContainer className="my-5">
-//       <MDBCard>
-//         <MDBRow className="g-0 d-flex align-items-center">
-//           <MDBCol md="4">
-//             <MDBCardImage
-//               src="src/logo.png"
-//               alt="logo"
-//               className="rounded-t-5 rounded-tr-lg-0"
-//               fluid
-//             />
-//           </MDBCol>
-
-//           <MDBCol md="8">
-//             <MDBCardBody>
-//               <h4 className="mt-1 mb-5 pb-1">Sign Up for AssignMate!</h4>
-//               <form onSubmit={addUser}>
-//                 <MDBInput
-//                   wrapperClass="mb-4"
-//                   label="Username"
-//                   id="form1"
-//                   type="username"
-//                   value={username}
-//                   onChange={(e) => setUsername(e.target.value)}
-//                 />
-//                 <MDBInput
-//                   wrapperClass="mb-4"
-//                   label="Password"
-//                   id="form2"
-//                   type="password"
-//                   value={password}
-//                   onChange={(e) => setPassword(e.target.value)}
-//                 />
-
-//                 <MDBBtn className="mb-4 w-100">Register</MDBBtn>
-//               </form>
-//             </MDBCardBody>
-//           </MDBCol>
-//         </MDBRow>
-//       </MDBCard>
-//     </MDBContainer>
-//   );
+//
 // }
 
 // export default RegisterUser;
@@ -97,6 +57,53 @@ function RegisterUser(props) {
     username: "",
     pwd: "",
   });
+
+  return (
+    <MDBContainer className="my-5" style={{ backgroundColor: "#b3d2d4" }}>
+      <MDBCard style={{ backgroundColor: "#e0ebec" }}>
+        <MDBRow className="g-0 d-flex align-items-center">
+          <MDBCol md="4">
+            <MDBCardImage
+              src="src/logo.png"
+              alt="logo"
+              className="rounded-t-5 rounded-tr-lg-0"
+              fluid
+            />
+          </MDBCol>
+
+          <MDBCol md="8">
+            <MDBCardBody>
+              <h4 className="mt-1 mb-5 pb-1">Sign Up for AssignMate!</h4>
+              <form>
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Username"
+                  type="text"
+                  name="username"
+                  id="username"
+                  value={creds.username}
+                  onChange={handleChange}
+                />
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Password"
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={creds.pwd}
+                  onChange={handleChange}
+                />
+
+                <MDBBtn className="mb-4 w-100" onClick={submitForm}>
+                  Register
+                </MDBBtn>
+              </form>
+            </MDBCardBody>
+          </MDBCol>
+        </MDBRow>
+      </MDBCard>
+    </MDBContainer>
+  );
 
   return (
     <form>
