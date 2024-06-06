@@ -1,19 +1,20 @@
 import express from "express";
 import cors from "cors";
-import services from "./services.js";
+import services from "./services.js"; //eslint-disable-line
+import { registerUser, authenticateUser, loginUser } from "./auth.js"; //eslint-disable-line
 // import databaseModel from "./database.js";
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
-app.listen(process.env.PORT || port, () => {
-  console.log(`REST API is listening.`);
+app.listen(port, () => {
+  console.log(`REST API is listening at ${port}.`);
 });
 
 app.use(cors());
 app.use(express.json());
 
-app.post("/users", (req, res) => {
+app.post("/users", authenticateUser, (req, res) => {
   const newUser = req.body;
   services
     .addUser(newUser)
@@ -21,54 +22,26 @@ app.post("/users", (req, res) => {
     .catch((error) => res.status(400).send(`Resource not found${error}`));
 });
 
-app.get("/users", (req, res) => {
-  const name = req.params;
+app.get("/users:name", authenticateUser, (req, res) => {
+  const { name } = req.params;
   services
-    .getUsers(name)
+    .getUser(name)
     .then((user) => res.send(user))
     .catch((error) => res.status(404).send(`Resource not found.${error}`));
 });
 
-
-app.post("/events", (req, res) => {
+app.post("/events", authenticateUser, (req, res) => {
   const event = req.body;
+  const { username } = req;
+  event.username = username;
   services
     .addEvent(event)
     .then((event) => res.status(201).send(event))
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-// app.post("/events/:userId", (req, res) => {
-//   const { userId } = req.params;
-//   const evented = req.body;
-//   services
-//     .addEvent(evented)
-//     .then((event) => res.status(201).send(event))
-//     .catch((error) => res.status(400).send(`error: ${error}`));
-// });
-
-app.post("/events", async (req, res) => {
-  try {
-    const eventData = req.body;
-    // Assuming tags are provided as an array of tag IDs or names in the request body
-    const event = await Event.create(eventData);
-    res.status(201).json(event);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.get("/events", async (req, res) => {
-  try {
-    const events = await services.getEvent(); // Call the function to retrieve events
-    res.json(events);
-  } catch (error) {
-    res.status(404).send(`Resource not found: ${error}`);
-  }
-});
-
-app.get("/events/:id", (req, res) => {
-  const {id} = req.params;
+app.get("/events", authenticateUser, (req, res) => {
+  const { username } = req;
   services
     .getEvent(id)
     .then((events) => res.json(events)) // Ensure events are returned as JSON
@@ -87,12 +60,23 @@ app.put('/events/:id', async (req, res) => {
 });
 
 
-app.delete("/events/:id", (req, res) => {
+
+app.delete("/events/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
   services
     .deleteEvent(id)
     .then((index) => res.status(204).send({ index }))
     .catch((error) => res.status(404).send(`Resource not found${error}`));
+});
+
+app.post("/tag", authenticateUser, (req, res) => {
+  const tag = req.body;
+  const { username } = req;
+  tag.username = username;
+  services
+  .getEvents(username)
+  .then((events) => res.send(events))
+  .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
 app.get("/tags", (req, res) => {
@@ -118,228 +102,44 @@ app.post("/tags", (req, res) => {
     .catch((error) => res.status(400).send(`Error: ${error}`));
 });
 
-app.get("/tasks", (req,res) => {
-  const taskName = req.query.taskName;
+app.get("/tag", authenticateUser, (req, res) => {
+  const { username } = req;
   services
-    .getTask(taskName)
-    .then((tasks) => res.send(tasks))
-    .catch((error) => res.status(404).send("Resource not found ${error}"));
+    .getTags(username)
+    .then((events) => res.send(events))
+    .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.post("/tasks", (req,res) => {
+app.post("/tasks", authenticateUser, (req, res) => {
   const task = req.body;
-  services 
+  const { username } = req;
+  task.username = username;
+  services
     .addTask(task)
     .then((task) => res.status(201).send(task))
-    .catch((error) => res.status(404).send("error: ${error}"));
+    .catch((error) => res.status(404).send(`error: ${error}`));
 });
 
-app.delete("/tasks/:id", (req,res) => {
-  const {id} = req.params;
+app.get("/tasks", authenticateUser, (req, res) => {
+  const { username } = req;
+  services
+    .getTasks(username)
+    .then((tasks) => res.send(tasks))
+    .catch((error) => res.status(404).send(`Resource not found ${error}`));
+});
+
+app.delete("/tasks/:id", authenticateUser, (req, res) => {
+  const { id } = req.params;
   services
     .deleteTask(id)
-    .then((index) => res.status(204).send({index}))
+    .then((index) => res.status(204).send({ index }))
     .catch((error) => res.status(404).send("Resource not found ${error"));
-})
+});
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Backend is working");
 });
-// services.js
-import mongoose from "mongoose";
-import * as dotenv from "dotenv";
-import databaseModel from "./database.js";
 
-const { User, Event, Tag, Task } = databaseModel;
+app.post("/signup", registerUser);
 
-mongoose.set("debug", true);
-dotenv.config();
-const { MONGODB_URL } = process.env;
-
-mongoose
-  .connect(MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to cloud db");
-  })
-  .catch((error) => {
-    console.error("Error connecting to the cloud database:", error);
-    console.log("Attempting to connect to the local database...");
-    mongoose
-      .connect("mongodb://localhost:27017/asignmate", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
-      .catch((error) => {
-        console.error("Error connecting to the local database:", error);
-      });
-  });
-
-  mongoose.set('strictPopulate', false);
-
-
-
-async function getUsers(username) {
-  let promise;
-  if (username) {
-    promise = await findUserByName(username).lean();
-  } else {
-    promise = await User.find().lean();
-  }
-  return promise;
-}
-
-function getTags(id) {
-  let promise;
-  if (id) {
-    promise = Tag.findById(id);
-  } else {
-    promise = Tag.find();
-  }
-  return promise;
-}
-
-async function getEvent(id) {
-  let promise;
-  if (id) {
-    promise = Event.findById(id).populate('tags').lean(); // Fetch a single event by ID
-  } else {
-    promise = Event.find().populate('tags').lean(); // Fetch all events
-  }
-  return promise;
-}
-
-async function getEvents(userId) {
-  const events = await Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
-  const eventsByDay = {};
-  events.forEach((event) => {
-    const { date } = event;
-    if (!eventsByDay[date]) {
-      eventsByDay[date] = [];
-    }
-    eventsByDay[date].push(event);
-  });
-  console.log("Events By Day: ", eventsByDay);
-  return eventsByDay;
-}
-
-function addUser(user) {
-  if (!user) {
-    return;
-  }
-  const userToAdd = new User(user);
-  const promise = userToAdd.save();
-  return promise;
-}
-
-function deleteUser(name) {
-  return User.findOneAndDelete({ username: name });
-}
-
-function findUserByUsernameAndPassword(name, pw) {
-  return User.find({ username: name, password: pw });
-}
-
-function findUserByName(name) {
-  return User.find({ username: name });
-}
-
-const convertTagNamesToObjectIds = async (tags) => {
-  const Tag = mongoose.model('Tag');
-  const tagIds = await Promise.all(tags.map(async tag => {
-    const foundTag = await Tag.findOne({ name: tag.name });
-    return foundTag ? foundTag._id : null;
-  }));
-  return tagIds.filter(tagId => tagId !== null);
-};
-
- const addEvent = async (eventData) => {
-  try {
-    // Find tags by name or create them if they don't exist
-    const tags = await Promise.all(
-      eventData.tags.map(async (tagName) => {
-        let tag = await Tag.findOne({ name: tagName });
-        if (!tag) {
-          tag = new Tag({ name: tagName });
-          await tag.save();
-        }
-        return tag._id;
-      })
-    );
-
-    const event = new Event({
-      ...eventData,
-      tags: tags,
-    });
-
-    await event.save();
-    return event;
-  } catch (error) {
-    throw new Error(`Error creating event: ${error.message}`);
-  }
-};
-
-function deleteEvent(id) {
-  return Event.findByIdAndDelete(id);
-}
-
-function addTag(tag) {
-  const newTag = new Tag(tag);
-  const promise = newTag.save();
-  return promise;
-}
-
-function deleteTag(tagName) {
-  return Tag.findOneAndDelete({ name: tagName });
-}
-
-function addTask(task) {
-  const newTask = new Task(task);
-  const promise = newTask.save();
-  return promise;
-}
-
-function getTask(taskName) {
-  let promise;
-  if (taskName) {
-    promise = Task.find({ title: taskName });
-  } else {
-    promise = Task.find();
-  }
-  return promise;
-}
-
-function deleteTask(id) {
-  return Task.findByIdAndDelete(id);
-}
-
-
-const updateEvent = async (eventId, updatedEvent) => {
-  try {
-    const event = await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
-    return event;
-  } catch (error) {
-    throw new Error(`Unable to update event: ${error.message}`);
-  }
-};
-
-export default {
-  addUser,
-  deleteUser,
-  getUsers,
-  getTags,
-  findUserByUsernameAndPassword,
-  addEvent,
-  getEvent,
-  getEvents,
-  findUserByName,
-  deleteEvent,
-  addTag,
-  deleteTag,
-  addTask,
-  getTask,
-  deleteTask,
-  updateEvent,
-};
+app.post("/login", loginUser);

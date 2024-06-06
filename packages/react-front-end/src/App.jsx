@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
-import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
@@ -25,13 +24,12 @@ import "./App.css";
 
 function App() {
   const INVALID_TOKEN = "INVALID_TOKEN";
-  //const [token, setToken] = useState(INVALID_TOKEN);
   const [message, setMessage] = useState("");
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   function loginUser(creds) {
     console.log("loginUser");
-    const promise = fetch(`http://localhost:8000/login`, {
+    const promise = fetch(`https://assignmate7.azurewebsites.net/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,9 +41,9 @@ function App() {
           response.json().then((payload) => {
             //setToken(payload.token);
             localStorage.setItem("token", payload.token);
-          }),
             setMessage(`Login successful; auth token saved`);
-          setRegistrationSuccess(true);
+            setRegistrationSuccess(true);
+          });
         } else {
           setMessage(`Login Error ${response.status}: ${response.data}`);
         }
@@ -53,13 +51,11 @@ function App() {
       .catch((error) => {
         setMessage(`Login Error: ${error}`);
       });
-
     return promise;
   }
 
   function signupUser(creds) {
-    console.log("signupUser");
-    const promise = fetch(`http://localhost:8000/signup`, {
+    const promise = fetch(`https://assignmate7.azurewebsites.net/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +83,6 @@ function App() {
   }
 
   if (registrationSuccess) {
-    //console.log(localStorage.getItem("token"));
     window.location.href = "/landing"; // Redirect to /landing
   }
 
@@ -96,7 +91,7 @@ function App() {
       {/* This is the alias of BrowserRouter i.e. Router */}
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Login handleSubmit={loginUser} />} />
           <Route path="/login" element={<Login handleSubmit={loginUser} />} />
           <Route
             path="/signup"
@@ -111,7 +106,7 @@ function App() {
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
           and redirects app to home component with to="/" */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
     </>

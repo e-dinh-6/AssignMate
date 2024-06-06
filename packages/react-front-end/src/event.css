@@ -136,7 +136,6 @@
   width: 100%;
 }
 
-
 .form-group input[type="color"] {
   padding: 0;
   width: 30px;
@@ -153,7 +152,7 @@
   display: inline-flex;
   justify-content: space-between;
   width: 70%;
-  padding: 5px; 
+  padding: 5px;
 }
 
 .event-description-container {
@@ -167,13 +166,14 @@
 
 .tag-color {
   display: inline-block;
-} 
+}
 
 .event-name:hover {
   color: #4a1fa9;
 }
 
-.create-btn, .tag-btn {
+.create-btn,
+.tag-btn {
   padding: 10px 15px;
   margin-bottom: 5px;
   margin-right: auto;
@@ -184,6 +184,7 @@
   cursor: pointer;
 }
 
-.create-btn:hover, .tag-btn:hover {
+.create-btn:hover,
+.tag-btn:hover {
   background-color: #0056b3;
 }

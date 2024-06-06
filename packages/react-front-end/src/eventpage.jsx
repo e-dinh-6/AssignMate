@@ -1,4 +1,3 @@
-// eventpage.jsx
 import React, { useState, useEffect } from 'react';
 import './event.css';
 
@@ -6,13 +5,13 @@ function EventForm() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [checkedTags, setCheckedTags] = useState([])
   const [formData, setFormData] = useState({
-    title: '',
+    title: "",
     tags: [],
-    date: '',
-    timeStart: '',
-    timeEnd: '',
-    status: 'In Progress',
-    description: ''
+    date: "",
+    timeStart: "",
+    timeEnd: "",
+    status: "In Progress",
+    description: "",
   });
   const [tags, setTags] = useState([]);
   const [newTagName, setNewTagName] = useState('');
@@ -88,8 +87,10 @@ function EventForm() {
   
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
-    if (type === 'select-multiple') {
-      const selectedOptions = Array.from(options).filter(option => option.selected).map(option => option.value);
+    if (type === "select-multiple") {
+      const selectedOptions = Array.from(options)
+        .filter((option) => option.selected)
+        .map((option) => option.value);
       setFormData({ ...formData, [name]: selectedOptions });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -142,13 +143,13 @@ function EventForm() {
 
   const resetForm = () => {
     setFormData({
-      title: '',
+      title: "",
       tags: [],
-      date: '',
-      timeStart: '',
-      timeEnd: '',
-      status: 'In Progress',
-      description: ''
+      date: "",
+      timeStart: "",
+      timeEnd: "",
+      status: "In Progress",
+      description: "",
     });
   };
 
@@ -233,7 +234,13 @@ function EventForm() {
         </ul>
       </div>
       <form className="event-form" onSubmit={handleSubmit}>
-        <h1>{selectedEvent && !isEditMode ? "View Event" : isEditMode ? "Edit Event" : "Create Event"}</h1>
+        <h1>
+          {selectedEvent && !isEditMode
+            ? "View Event"
+            : isEditMode
+              ? "Edit Event"
+              : "Create Event"}
+        </h1>
         {selectedEvent && !isEditMode ? (
           <div>
             <div className="form-group">
@@ -277,7 +284,11 @@ function EventForm() {
             <div className="form-group">
               <label htmlFor="tags">Tags:</label>
               <div className="tag-selector">
-                <button type="button" onClick={toggleTagDropdown} className="tag-btn">
+                <button
+                  type="button"
+                  onClick={toggleTagDropdown}
+                  className="tag-btn"
+                >
                   Select Tags
                 </button>
                 {showTagDropdown && (
@@ -298,7 +309,13 @@ function EventForm() {
               </div>
             </div>
             <div className="form-group">
-              <button type="button" onClick={() => setShowNewTagModal(true)} className="tag-btn">Create New Tag</button>
+              <button
+                type="button"
+                onClick={() => setShowNewTagModal(true)}
+                className="tag-btn"
+              >
+                Create New Tag
+              </button>
             </div>
             {showNewTagModal && (
               <div className="modal">

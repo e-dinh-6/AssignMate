@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import mut from "../packages/backend/services";
+import mut from "../packages/backend/services"; //eslint-disable-line
 
 // make sure you are running tests while connected to an empty database or tests will fail
 
@@ -33,38 +33,6 @@ describe("getUser function", () => {
   test("Testing getUser function w/ username", () => {
     const expected = [{ username: "joe" }];
     return mut.getUsers("joe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-});
-
-describe("findUserByName function", () => {
-  test("Testing findUserByName function w/ no name", async () => {
-    const expected = [{ username: "joe" }];
-    return mut.findUserByName("joe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-
-  test("Testing findUserByName function w/ username", () => {
-    const expected = [{ username: "joe" }];
-    return mut.findUserByName("joe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-});
-
-describe("findUserByUsernameAndPassword function", () => {
-  test("Testing findUserByUserameAndPassword function w/ no name", async () => {
-    const expected = [{ username: "joe", password: "hijoe" }];
-    return mut.findUserByUsernameAndPassword("joe", "hijoe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-
-  test("Testing findUserByUsernameAndPassword function w/ username", () => {
-    const expected = [{ username: "joe", password: "hijoe" }];
-    return mut.findUserByUsernameAndPassword("joe", "hijoe").then((got) => {
       expect(got).toMatchObject(expected);
     });
   });

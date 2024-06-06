@@ -9,6 +9,7 @@ function List() {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
+
   const currentDate = new Date();
   const options = { weekday: "long", month: "long", day: "numeric" };
   const monthYear = currentDate.toLocaleDateString("en-US", {
@@ -17,9 +18,22 @@ function List() {
   });
   const today = currentDate.toLocaleDateString("en-US", options);
 
+  function addAuthHeader(otherHeaders = {}) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return otherHeaders;
+    } else {
+      return {
+        ...otherHeaders,
+        Authorization: `Bearer ${token}`,
+      };
+    }
+  }
+
   function removeEvent(eventId) {
     fetch(`https://assignmate7.azurewebsites.net/events/${eventId}`, {
       method: "DELETE",
+      headers: addAuthHeader(),
     })
       .then((response) => {
         if (response.status === 204) {
@@ -44,8 +58,9 @@ function List() {
 
   function removeTask(taskId) {
     console.log(taskId);
-    fetch(`http://localhost:8000/tasks/${taskId}`, {
+    fetch(`https://assignmate7.azurewebsites.net/tasks/${taskId}`, {
       method: "DELETE",
+      headers: addAuthHeader(),
     })
       .then((response) => {
         if (response.status === 204) {
@@ -82,27 +97,38 @@ function List() {
   }
 
   function fetchEvents() {
-    const promise = fetch("http://localhost:8000/events");
+    const promise = fetch("https://assignmate7.azurewebsites.net/events", {
+      headers: addAuthHeader(),
+    });
     return promise;
   }
 
   function fetchTasks() {
-    const promise = fetch("http://localhost:8000/tasks");
+    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
+      headers: addAuthHeader(),
+    });
     return promise;
   }
 
   function postTask(task) {
-    const promise = fetch("http://localhost:8000/tasks", {
+    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
       method: "POST",
-      headers: {
+      headers: addAuthHeader({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(task),
     });
     return promise;
   }
 
   useEffect(() => {
+    fetchEvents()
+      .then((res) => res.json())
+      .then((json) => {
+        setEvents(json);
+      })
+      .catch((error) => console.log(error));
+
     fetchTasks()
       .then((res) => res.json())
       .then((json) => setTasks(json))
