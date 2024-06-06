@@ -1,42 +1,111 @@
-:root {
-  --numDays: 7;
-  --numHours: 10;
-  --timeHeight: 60px;
-  --calBgColor: white; /* Change to white */
-  --eventBorderColor: #ddd; /* Change the border color to a more neutral one */
-  --eventColor1: #ffd6d1;
-  --eventColor2: #fafaa3;
-  --eventColor3: #e2f8ff;
-  --eventColor4: #d1ffe6;
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  background-color: white;
-}
-
 #root {
   display: flex;
   flex-direction: column;
   height: 100vh; /* Set height to fill the entire viewport height */
-  background-color: white;
+  width: 100vw;
+  background-color: #f7f5f5;
 }
 
-.header {
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: #f7f5f2;
+  box-sizing: content-box;
+}
+
+.container-sm,
+.container {
+  max-width: 100vw;
+}
+
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+.list-header {
   background-color: #b3d2d4; /* Header color */
   color: white;
-  padding: 1rem;
-  text-align: center;
+  text-align: left;
   display: flex;
   align-items: center; /* Center items vertically */
-  justify-content: start; /* Center items horizontally */
+  justify-content: center; /* Center items horizontally */
 }
 
-.header img.logo {
-  height: 160px; /* Adjust the height to make the logo twice as large */
+.logo {
+  margin-left: 40px;
+  padding: 0;
+  height: 90px; /* Adjust the height to make the logo twice as large */
   margin-right: 1rem; /* Space between logo and text */
+}
+
+.week-navigation {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  margin-left: 50px;
+}
+
+.week-navigation button {
+  width: 40px;
+  height: 30px;
+  margin: 8px;
+}
+
+.month-picker {
+  color: white;
+  font-size: 40px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.header-dates {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin-left: 40px;
+}
+
+h1 {
+  font-size: 60px;
+  margin-bottom: 0;
+  margin-top: 30px;
+  text-shadow: 0px 3px 5px #929292;
+}
+
+p {
+  color: #7ca4a7;
+  font-size: 25px;
+}
+
+.view-buttons {
+  margin-left: auto;
+  padding-right: 40px;
+}
+
+.view-buttons button {
+  width: 100px;
+  height: 40px;
+  border-color: #929292;
+  font-size: 20px;
+}
+
+.view-buttons button a {
+  color: black;
+}
+
+.view-buttons .list {
+  background-color: #7ca4a7;
+  pointer-events: none;
 }
 
 .main-content {
@@ -44,17 +113,21 @@ body {
   flex: 1;
 }
 
-.sidebar {
+.left-bar {
   background-color: #7ca4a7; /* Sidebar color */
   padding: 1rem;
   width: 200px;
   text-align: left;
+}
+
+.event-container {
+  margin-top: 10px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
 }
 
 .add-event-button {
-  background-color: white;
+  background-color: #fff;
   border: none;
   padding: 0.5rem;
   margin-bottom: 1rem;
@@ -68,7 +141,9 @@ body {
 }
 
 .to-do-list {
-  flex-grow: 1; /* Allow the to-do list section to grow and fill the remaining space */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .to-do-list h2 {
@@ -79,6 +154,8 @@ body {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  overflow: scroll;
+  height: 300px;
 }
 
 .to-do-list ul li {
@@ -95,64 +172,89 @@ body {
   margin-right: 0.5rem;
 }
 
+.new-task {
+  bottom: 50px;
+  width: 100%;
+}
+
+.submit {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+}
+
+.clean-tasks {
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+}
+
+.bottom-left {
+  width: 160px;
+  bottom: 20px;
+  position: absolute;
+}
+
 .content {
+  background-color: #f7f5f2;
+  padding: 40px;
   flex: 1;
-  padding: 1rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+  text-align: left;
+  overflow: scroll;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.content .list-date {
+  font-size: 18px;
+  padding-bottom: 5px;
+  border-bottom: 1.5px solid black;
+  margin-bottom: 0;
 }
 
-.card {
-  margin: 2rem 0;
-  padding: 2em;
+.content ul li {
+  position: relative;
+  margin-left: -20px;
+  border-bottom: 1px solid #8d8d8d;
+  padding: 5px;
 }
 
-.read-the-docs {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: #888;
-}
-
-/* Calendar styles */
-.calendar {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: auto 1fr;
-  margin: 2rem;
-  flex-grow: 1; /* Make calendar take available vertical space */
-}
-
-.timeline {
-  display: grid;
-  grid-template-rows: repeat(var(--numHours), var(--timeHeight));
-}
-
-.time-slot {
-  height: var(--timeHeight);
+.content ul li .event-details {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+}
+
+hr {
+  margin-bottom: 20px;
+  border-top: 0;
+}
+
+.content ul li button {
+  position: absolute;
+  margin-left: auto;
+  right: 20px;
+  top: 10px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.calendar {
+  display: grid;
+  gap: 0px;
+  grid-template-columns: auto 1fr;
+  margin: -1rem;
+  flex-grow: 1; /* Make calendar take available vertical space */
 }
 
 .days {
   display: grid;
   grid-column: 2;
-  gap: 5px;
-  grid-template-columns: repeat(var(--numDays), 1fr); /* 7 columns for 7 days */
+  gap: 10px;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for 7 days */
 }
 
 .day {
-  background-color: #ffffff !important; /* Explicitly set to white */
+  background-color: #ffffff; /* Explicitly set to white */
   border: 1px solid #ddd; /* Set border color to a neutral color */
   border-radius: 5px;
   overflow: hidden;
@@ -168,18 +270,17 @@ body {
 }
 
 .date-num {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .date-day {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 100;
 }
 
 .events {
   display: grid;
-  grid-template-rows: repeat(var(--numHours), var(--timeHeight));
-  padding: 0.5rem;
-  background-color: #ffffff !important; /* Ensure background color is white */
+  padding: 0.2rem;
+  background-color: white; /* Ensure background color is white */
 }
