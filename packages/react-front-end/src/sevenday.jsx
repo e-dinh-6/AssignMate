@@ -78,20 +78,21 @@ function sevenday() {
   }
 
   function fetchEvents() {
-    const promise = fetch("http://assignmate7.azurewebsites.net/events/", {headers: addAuthHeader(),
-  });
+    const promise = fetch("https://assignmate7.azurewebsites.net/events", {
+      headers: addAuthHeader(),
+    });
     return promise;
   }
 
   function fetchTasks() {
-    const promise = fetch("http://assignmate7.azurewebsites.net/tasks/", {
+    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
       headers: addAuthHeader(),
     });
     return promise;
   }
 
   function postTask(task) {
-    const promise = fetch("http://assignmate7.azurewebsites.net/tasks/", {
+    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
@@ -107,7 +108,7 @@ function sevenday() {
       .then((json) => setTasks(json))
       .catch((error) => console.log(error));
 
-      fetchEvents()
+    fetchEvents()
       .then((res) => res.json())
       .then((json) => setEvents(json))
       .catch((error) => console.log(error));
@@ -139,10 +140,19 @@ function sevenday() {
 
   const weekDates = getWeekDates(startOfWeek);
 
+  const arrayData = Object.entries(events).reduce((acc, [date, events]) => {
+    events.forEach((event) => {
+      const newEvent = { ...event, date: new Date(date).toISOString() };
+      acc.push(newEvent);
+    });
+    return acc;
+  }, []);
+
   const eventsForWeek = weekDates.reduce((acc, date) => {
-    const dateString = date.toISOString().split('T')[0];
-    acc[dateString] = events.filter((event) => 
-      new Date(event.date).toISOString().split('T')[0] === dateString
+    const dateString = date.toISOString().split("T")[0];
+    acc[dateString] = arrayData.filter(
+      (event) =>
+        new Date(event.date).toISOString().split("T")[0] === dateString,
     );
     return acc;
   }, {});
@@ -168,7 +178,7 @@ function sevenday() {
     }, {});
 
     return Object.keys(monthCounts).reduce((a, b) =>
-      monthCounts[a] > monthCounts[b] ? a : b
+      monthCounts[a] > monthCounts[b] ? a : b,
     );
   }
 
@@ -184,24 +194,27 @@ function sevenday() {
         </div>
         <div className="week-navigation">
           <div className="month-picker">{majorityMonth}</div>
-          <d>
+          <div>
             <button onClick={previousWeek}>&#9664;</button>
             <button onClick={nextWeek}>&#9654;</button>
-          </d>
+          </div>
         </div>
         <div className="view-buttons">
           <button className="sevenday">Week</button>
-          <button><Link to="/MonthView">Month</Link></button>
-          <button><Link to="/list">List</Link></button>
+          <button>
+            <Link to="/MonthView">Month</Link>
+          </button>
+          <button>
+            <Link to="/list">List</Link>
+          </button>
         </div>
       </header>
-      
 
       <div className="main-content">
         <aside className="left-bar">
           <div className="event-container">
             <button className="add-event-button">
-             {<Link to="/event">Add Event</Link>}
+              {<Link to="/event">Add Event</Link>}
             </button>
           </div>
           <div className="to-do-list">
@@ -243,13 +256,15 @@ function sevenday() {
               </button>
             </div>
           </div>
-        </aside>  
+        </aside>
         <main className="content">
           <div className="calendar">
             <div className="days">
               {weekDates.map((date, index) => {
-                const dateString = date.toISOString().split('T')[0];
-                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                const dateString = date.toISOString().split("T")[0];
+                const dayName = date.toLocaleDateString("en-US", {
+                  weekday: "long",
+                });
                 return (
                   <div className="day" key={index}>
                     <div className="date">
@@ -261,13 +276,18 @@ function sevenday() {
                         {eventsForWeek[dateString].map((event) => (
                           <li key={event._id}>
                             <strong className="event-details">
-                              {event.startTime && new Date(event.startTime).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
+                              {event.startTime &&
+                                new Date(event.startTime).toLocaleTimeString(
+                                  [],
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  },
+                                )}
                             </strong>
-                            <label className="event-details">{event.eventName}</label>
-                            <button onClick={() => removeEvent(event._id)}></button>
+                            <label className="event-details">
+                              {event.eventName}
+                            </label>
                           </li>
                         ))}
                       </ul>
