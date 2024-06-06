@@ -22,7 +22,6 @@ const tagSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
     },
     name: {
       type: String,
@@ -43,7 +42,6 @@ const eventSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
     },
     eventName: {
       type: String,
@@ -101,7 +99,6 @@ const taskSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
     },
     title: {
       type: String,

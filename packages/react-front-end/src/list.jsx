@@ -31,7 +31,7 @@ function List() {
   }
 
   function removeEvent(eventId) {
-    fetch(`https://assignmate7.azurewebsites.net/events/${eventId}`, {
+    fetch(`http://localhost:8000/events/${eventId}`, {
       method: "DELETE",
       headers: addAuthHeader(),
     })
@@ -58,7 +58,7 @@ function List() {
 
   function removeTask(taskId) {
     console.log(taskId);
-    fetch(`https://assignmate7.azurewebsites.net/tasks/${taskId}`, {
+    fetch(`http://localhost:8000/tasks/${taskId}`, {
       method: "DELETE",
       headers: addAuthHeader(),
     })
@@ -97,21 +97,21 @@ function List() {
   }
 
   function fetchEvents() {
-    const promise = fetch("https://assignmate7.azurewebsites.net/events", {
+    const promise = fetch("http://localhost:8000/events", {
       headers: addAuthHeader(),
     });
     return promise;
   }
 
   function fetchTasks() {
-    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
+    const promise = fetch("http://localhost:8000/tasks", {
       headers: addAuthHeader(),
     });
     return promise;
   }
 
   function postTask(task) {
-    const promise = fetch("https://assignmate7.azurewebsites.net/tasks", {
+    const promise = fetch("http://localhost:8000/tasks", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
