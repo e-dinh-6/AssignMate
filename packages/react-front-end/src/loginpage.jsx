@@ -21,7 +21,11 @@ function loginpage(props) {
         style={{ backgroundColor: "#b3d2d4" }}
       >
         <div className="text-center">
-          <img src="src/logo.png" style={{ width: "185px" }} alt="logo" />
+          <img
+            src="src/assets/logo.png"
+            style={{ width: "185px" }}
+            alt="logo"
+          />
           <h4 className="mt-1 mb-5 pb-1">Login to AssignMate</h4>
         </div>
         <MDBInput
