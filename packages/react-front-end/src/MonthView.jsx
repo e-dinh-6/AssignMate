@@ -1,19 +1,23 @@
 // src/MonthView.jsx
 import React from "react";
-import "./MonthView.css"; 
+import "./MonthView.css";
 import logo from "./assets/logo.png";
 
 function MonthView() {
   const events = {
     "2024-05-03": ["event 3"],
     "2024-05-15": ["event 2"],
-    "2024-05-21": ["event 1"]
+    "2024-05-21": ["event 1"],
   };
 
   const renderDayEvents = (day) => {
-    return events[day]?.map((event, index) => (
-      <div key={index} className="event-item">{event}</div>
-    )) || [];
+    return (
+      events[day]?.map((event, index) => (
+        <div key={index} className="event-item">
+          {event}
+        </div>
+      )) || []
+    );
   };
 
   const daysInMonth = Array.from({ length: 30 }, (_, i) => i + 1);
@@ -52,10 +56,10 @@ function MonthView() {
         </aside>
         <div className="month-main-content">
           <div className="month-grid">
-            {daysInMonth.map(day => (
+            {daysInMonth.map((day) => (
               <div key={day} className="day-cell">
                 <strong className="date">{`May ${day}`}</strong>
-                {renderDayEvents(`2024-05-${day.toString().padStart(2, '0')}`)}
+                {renderDayEvents(`2024-05-${day.toString().padStart(2, "0")}`)}
               </div>
             ))}
           </div>
@@ -66,4 +70,3 @@ function MonthView() {
 }
 
 export default MonthView;
-
