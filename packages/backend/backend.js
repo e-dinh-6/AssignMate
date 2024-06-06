@@ -30,32 +30,40 @@ app.get("/users:name", authenticateUser, (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found.${error}`));
 });
 
-app.post("/events", authenticateUser, (req, res) => {
-  const event = req.body;
-  const { username } = req;
-  event.username = username;
-  services
-    .addEvent(event)
-    .then((event) => res.status(201).send(event))
-    .catch((error) => res.status(400).send(`error: ${error}`));
-});
-
-app.get("/events", authenticateUser, (req, res) => {
-  const { username } = req;
-  services
-    .getEvents(username)
-    .then((events) => res.json(events)) // Ensure events are returned as JSON
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
-});
-
-
-app.put('/events/:id', async (req, res) => {
+app.post("/events", authenticateUser, async(req, res) => {
   try {
-    const tagIds = await convertTagNamesToObjectIds(req.body.tags);
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, { ...req.body, tags: tagIds }, { new: true });
-    res.status(200).json(updatedEvent);
+    const eventData = req.body;
+    const eventie = await Event.create(eventData);
+    res.status(201).json(eventie)
   } catch (error) {
-    res.status(500).json({ error: 'Unable to update event: ' + error.message });
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/events", authenticateUser, async(req, res) => {
+  const { username } = req;
+  try {
+    const events = await services.getEvent(username); // Call the function to retrieve events
+    res.json(events);
+  } catch (error) {
+    res.status(404).send(`Resource not found: ${error}`);
+  }
+});
+
+
+app.put("/events/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const updatedEvent = req.body;
+
+  try {
+    const event = await services.updateEvent(eventId, updatedEvent);
+    if (event) {
+      res.status(200).send(event);
+    } else {
+      res.status(404).send("Resource not found");
+    }
+  } catch (error) {
+    res.status(500).send(`Internal server error: ${error}`);
   }
 });
 

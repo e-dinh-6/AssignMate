@@ -42,7 +42,7 @@ function EventForm() {
     if (selectedEvent) {
       setFormData({
         title: selectedEvent.eventName || "",
-        tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
+        tags: selectedEvent.tags || [], // Make sure to map tag IDs to an array
         date: selectedEvent.date ? selectedEvent.date.split("T")[0] : "",
         timeStart: selectedEvent.startTime
           ? selectedEvent.startTime.split("T")[1].substring(0, 5)
@@ -61,6 +61,7 @@ function EventForm() {
       setIsEditMode(true);
     } else {
       resetForm();
+	  setIsEditMode(false);
     }
   }, [selectedEvent]);
 
@@ -87,40 +88,37 @@ function EventForm() {
     }
   };
 
-  const fetchTags = async () => {
-    try {
-      const response = await fetch("https://assignmate7.azurewebsites.net/tag", {
-        headers: addAuthHeader(),
-      });
-      if (!response.ok)
-        throw new Error(
-          `Failed to fetch tags: ${response.status} ${response.statusText}`,
-        );
-      const data = await response.json();
-      setTags(data);
-    } catch (error) {
-      console.error("Error fetching tags:", error);
-    }
-  };
+	const fetchTags = async () => {
+		try {
+			const response = await fetch("https://assignmate7.azurewebsites.net/tag", {
+				headers: addAuthHeader(),
+		});
+		if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
+			const data = await response.json();
+			setTags(data);
+		} catch (error) {
+			console.error('Error fetching tags:', error);
+		}
+		};
 
-  const handleChange = (e) => {
-    const { name, value, type, options } = e.target;
-    if (type === "select-multiple") {
-      const selectedOptions = Array.from(options)
-        .filter((option) => option.selected)
-        .map((option) => option.value);
-      setFormData({ ...formData, [name]: selectedOptions });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
+	const handleChange = (e) => {
+		const { name, value, type, options } = e.target;
+		if (type === 'select-multiple') {
+			const selectedOptions = Array.from(options).filter(option => option.selected).map(option => option.value);
+			setFormData({ ...formData, [name]: selectedOptions });
+		} else {
+			setFormData({ ...formData, [name]: value });
+		}
+		};
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formattedTags = formData.tags.filter(
-      (tag) => tag.name && typeof tag.name === "string",
+      (tag) => tag && tag.name && typeof tag.name === "string",
     );
+
+	console.log('Formatted Tags:', formattedTags);
 
     const eventToSubmit = {
       eventName: formData.title,
@@ -134,7 +132,7 @@ function EventForm() {
 
     const method = isEditMode ? "PUT" : "POST";
     const url = isEditMode
-      ? "https://assignmate7.azurewebsites.net/${selectedEvent._id}"
+      ? 'https://assignmate7.azurewebsites.net/events/${selectedEvent._id}'
       : "https://assignmate7.azurewebsites.net/events";
 
     fetch(url, {
@@ -156,8 +154,9 @@ function EventForm() {
       })
       .then((data) => {
         fetchEvents(); // Refresh events list
-        resetForm();
         setSelectedEvent(null); // Reset form
+		resetForm();
+
         setIsEditMode(false);
       })
 
@@ -200,24 +199,30 @@ function EventForm() {
       .catch((error) => console.error("Error adding tag:", error));
   };
 
-  const handleCheckboxChange = (tagId, isChecked) => {
-    setCheckedTags((prevState) => ({ ...prevState, [tagId]: isChecked }));
-
-    if (isChecked) {
-      setFormData((prevState) => ({
-        ...prevState,
-        tags: [...prevState.tags, tagId],
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        tags: prevState.tags.filter((id) => id !== tagId),
-      }));
-    }
-  };
+  const handleCheckboxChange = (tagId) => {
+	setCheckedTags(prevState => ({
+	...prevState,
+	[tagId]: !prevState[tagId]
+	}));
+};
 
   const toggleTagDropdown = () => {
     setShowTagDropdown(!showTagDropdown);
+  };
+
+
+  const handleTagSelect = (tag) => {
+    if (formData.tags.includes(tag._id)) {
+      setFormData({
+        ...formData,
+        tags: formData.tags.filter(id => id !== tag._id)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        tags: [...formData.tags, tag._id]
+      });
+    }
   };
 
   const handleEdit = () => {
@@ -239,6 +244,7 @@ function EventForm() {
     }
   };
 
+  
   const handleCancelEdit = () => {
     setSelectedEvent(null);
     setIsEditMode(false);
@@ -342,13 +348,13 @@ function EventForm() {
                       <div
                         key={tag._id}
                         className="tag-option"
-                        onClick={() => handleCheckboxChange(tag._id)}
+                        onClick={() => handleTagSelect(tag)}
                       >
                         <input
                           type="checkbox"
                           checked={checkedTags[tag._id]}
-                          onChange={(e) =>
-                            handleCheckboxChange(tag._id, e.target.checked)
+                          onChange={() =>
+                            handleCheckboxChange(tag._id)
                           }
                           readOnly
                         />
