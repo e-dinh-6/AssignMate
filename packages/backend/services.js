@@ -30,6 +30,8 @@ mongoose
       });
   });
 
+  mongoose.set('strictPopulate', false);
+
 
 
 async function getUsers(username) {
@@ -42,22 +44,22 @@ async function getUsers(username) {
   return promise;
 }
 
-function getTags(tagName) {
+function getTags(id) {
   let promise;
-  if (tagName) {
-    promise = Tag.find({ name: tagName });
+  if (id) {
+    promise = Tag.findById(id);
   } else {
     promise = Tag.find();
   }
   return promise;
 }
 
-function getEvent(id) {
+async function getEvent(id) {
   let promise;
   if (id) {
-    promise = Event.findById(id).lean();
+    promise = Event.findById(id).populate('tags').lean(); // Fetch a single event by ID
   } else {
-    promise = Event.find().lean();
+    promise = Event.find().populate('tags').lean(); // Fetch all events
   }
   return promise;
 }
@@ -97,11 +99,32 @@ function findUserByName(name) {
   return User.find({ username: name });
 }
 
-function addEvent(event) {
-  const eventToAdd = new Event(event);
-  const promise = eventToAdd.save();
-  return promise;
-}
+
+ const addEvent = async (eventData) => {
+  try {
+    // Find tags by name or create them if they don't exist
+    const tags = await Promise.all(
+      eventData.tags.map(async (tagName) => {
+        let tag = await Tag.findOne({ name: tagName });
+        if (!tag) {
+          tag = new Tag({ name: tagName });
+          await tag.save();
+        }
+        return tag._id;
+      })
+    );
+
+    const event = new Event({
+      ...eventData,
+      tags: tags,
+    });
+
+    await event.save();
+    return event;
+  } catch (error) {
+    throw new Error(`Error creating event: ${error.message}`);
+  }
+};
 
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);

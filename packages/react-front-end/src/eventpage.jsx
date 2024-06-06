@@ -1,8 +1,10 @@
+// eventpage.jsx
 import React, { useState, useEffect } from 'react';
 import './event.css';
 
 function EventForm() {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [checkedTags, setCheckedTags] = useState([])
   const [formData, setFormData] = useState({
     title: '',
     tags: [],
@@ -88,24 +90,41 @@ const fetchEvents = () => {
     .catch((error) => console.error('Error fetching events:', error));
 };
 
-  const fetchTags = () => {
-     fetch('http://localhost:8000/tags')// , {
-    //   method: "GET",
-    //   headers: addAuthHeader()
-    // }
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Fetched tags data:', data); // Log the fetched data
-        // Ensure that data is an array
-        if (Array.isArray(data)) {
-          setTags(data);
-        } else {
-          console.error('Fetched data is not an array:', data);
-          setTags([]);
-        }
-      })
-      .catch((error) => console.error('Error fetching tags:', error));
-  };
+	const handleCheckboxChange = (tagId) => {
+		setCheckedTags(prevState => ({
+		...prevState,
+		[tagId]: !prevState[tagId]
+		}));
+	};
+
+	// const fetchTags = async () => {
+	// 	try {
+	// 	  const response = await fetch('http://localhost:8000/tags');
+	// 	  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
+	// 	  const data = await response.json();
+	// 	  setTags(data);
+	// 	  // Initialize checkedTags state
+	// 	  const initialCheckedTags = {};
+	// 	  data.forEach(tag => {
+	// 		initialCheckedTags[tag._id] = false;
+	// 	  });
+	// 	  setCheckedTags(initialCheckedTags);
+	// 	} catch (error) {
+	// 	  console.error('Error fetching tags:', error);
+	// 	}
+	//   };
+
+	const fetchTags = async () => {
+		try {
+		  const response = await fetch('http://localhost:8000/tags');
+		  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
+		  const data = await response.json();
+		  setTags(data);
+		} catch (error) {
+		  console.error('Error fetching tags:', error);
+		}
+	  };
+	
 
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
@@ -122,8 +141,11 @@ const fetchEvents = () => {
 
     const eventToSubmit = {
       eventName: formData.title,
-      tags: formData.tags,
-      date: new Date(`${formData.date}T00:00:00Z`),  // Ensure date is in ISO format
+	  tags: formData.tags.map(tagId => {
+		const tag = tags.find(t => t._id === tagId);
+		return { _id: tagId, name: tag.name, color: tag.color };
+	  }),
+	  date: new Date(`${formData.date}T00:00:00Z`),  // Ensure date is in ISO format
       startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`),  // Ensure time is in ISO format
       endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`),  // Ensure time is in ISO format
       status: formData.status,
@@ -146,6 +168,7 @@ const fetchEvents = () => {
 		if (!response.ok) {
 			return response.text().then(text => {throw new Error(text)});
 		}
+		setCheckedTags({});
 		return response.json();
 	})
       .then((data) => {
@@ -195,15 +218,15 @@ const fetchEvents = () => {
   };
 
   const handleTagSelect = (tag) => {
-    if (formData.tags.includes(tag.name)) {
+    if (formData.tags.includes(tag._id)) {
       setFormData({
         ...formData,
-        tags: formData.tags.filter(t => t !== tag.name)
+        tags: formData.tags.filter(id => id !== tag._id)
       });
     } else {
       setFormData({
         ...formData,
-        tags: [...formData.tags, tag.name]
+        tags: [...formData.tags, tag._id]
       });
     }
   };
@@ -292,11 +315,12 @@ const fetchEvents = () => {
                 </button>
                 {showTagDropdown && (
                   <div className="tag-dropdown">
-                    {tags.map((tag, index) => (
-                      <div key={index} className="tag-option" onClick={() => handleTagSelect(tag)}>
+                    {tags.map(tag => (
+                      <div key={tag._id} className="tag-option" onClick={() => handleTagSelect(tag)}>
                         <input
                           type="checkbox"
-                          checked={formData.tags.includes(tag.name)}
+                          checked={checkedTags[tag._id]}
+						  onChange={() => handleCheckboxChange(tag._id)}
                           readOnly
                         />
                         <span style={{ color: tag.color }}>{tag.name}</span>

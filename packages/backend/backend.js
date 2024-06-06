@@ -39,20 +39,33 @@ app.post("/events", (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-app.post("/events/:userId", (req, res) => {
-  const { userId } = req.params;
-  const evented = req.body;
-  services
-    .addEvent(evented)
-    .then((event) => res.status(201).send(event))
-    .catch((error) => res.status(400).send(`error: ${error}`));
+// app.post("/events/:userId", (req, res) => {
+//   const { userId } = req.params;
+//   const evented = req.body;
+//   services
+//     .addEvent(evented)
+//     .then((event) => res.status(201).send(event))
+//     .catch((error) => res.status(400).send(`error: ${error}`));
+// });
+
+app.post("/events", async (req, res) => {
+  try {
+    const eventData = req.body;
+    // Assuming tags are provided as an array of tag IDs or names in the request body
+    const event = await Event.create(eventData);
+    res.status(201).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
-app.get("/events", (req, res) => {
-  services
-    .getEvent()
-    .then((events) => res.json(events)) // Ensure events are returned as JSON
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+app.get("/events", async (req, res) => {
+  try {
+    const events = await services.getEvent(); // Call the function to retrieve events
+    res.json(events);
+  } catch (error) {
+    res.status(404).send(`Resource not found: ${error}`);
+  }
 });
 
 app.get("/events/:id", (req, res) => {
@@ -92,6 +105,14 @@ app.get("/tags", (req, res) => {
   services
     .getTags()
     .then((tags) => res.send(tags))
+    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+});
+
+app.get("/tags/:id", (req, res) => {
+  const {id} = req.params;
+  services
+    .getTags(id)
+    .then((tags) => res.json(tags)) // Ensure events are returned as JSON
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
 

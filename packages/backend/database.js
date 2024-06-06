@@ -34,6 +34,7 @@ const tagSchema = new mongoose.Schema(
 
 const Tag = mongoose.model("Tag", tagSchema);
 
+
 // Define Event Schema
 const eventSchema = new mongoose.Schema(
   {
@@ -45,6 +46,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tags: [{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Tag",
+    }],
     date: {
       type: Date,
       required: true,
@@ -59,7 +64,6 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: {type: [tagSchema],default: undefined},
     description: {
       type: String,
       required: false,
@@ -97,7 +101,7 @@ const taskSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      equired: true,
+      required: true,
     },
   },
   {collection: "tasks_list"},
@@ -105,4 +109,4 @@ const taskSchema = new mongoose.Schema(
 
 const Task = mongoose.model("Task", taskSchema);
 
-export default { User, Event, Tag, Calendar , Task};
+export default { User, Event, Tag, Calendar, Task};
