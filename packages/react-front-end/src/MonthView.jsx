@@ -4,7 +4,6 @@ import "./MonthView.css";
 import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
 
-
 function addAuthHeader(otherHeaders = {}) {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -57,7 +56,7 @@ function MonthView() {
   };
 
   const fetchTasks = () => {
-    fetch("http://localhost:8000/tasks", {
+    fetch("https://assignmate7.azurewebsites.net/tasks", {
       headers: addAuthHeader(),
     })
       .then((response) => response.json())
@@ -66,7 +65,7 @@ function MonthView() {
   };
 
   const fetchTags = () => {
-    fetch("http://localhost:8000/tags", {
+    fetch("https://assignmate7.azurewebsites.net/tag", {
       headers: addAuthHeader(),
     })
       .then((response) => response.json())
@@ -75,7 +74,7 @@ function MonthView() {
   };
 
   const postTask = (task) => {
-    return fetch("http://localhost:8000/tasks", {
+    return fetch("https://assignmate7.azurewebsites.net/tasks", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
@@ -110,11 +109,14 @@ function MonthView() {
 
   const getTagColor = (tagId) => {
     const tag = tags.find((t) => t._id.$oid === tagId);
-    return tag ? tag.color : "#000"; // default color if tag not found
+    return tag ? tag.color : "#ADD8E6"; // default color if tag not found
   };
 
   const getTextColor = (backgroundColor) => {
-    const color = backgroundColor.charAt(0) === "#" ? backgroundColor.substring(1, 7) : backgroundColor;
+    const color =
+      backgroundColor.charAt(0) === "#"
+        ? backgroundColor.substring(1, 7)
+        : backgroundColor;
     const r = parseInt(color.substring(0, 2), 16);
     const g = parseInt(color.substring(2, 4), 16);
     const b = parseInt(color.substring(4, 6), 16);
@@ -126,10 +128,15 @@ function MonthView() {
     const dateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
     return (
       events[dateKey]?.map((event, index) => {
-        const backgroundColor = getTagColor(event.tag[0]);
+        const backgroundColor =
+          event.tag && event.tag[0] ? getTagColor(event.tag[0]) : getTagColor();
         const textColor = getTextColor(backgroundColor);
         return (
-          <div key={index} className="event-item" style={{ backgroundColor, color: textColor }}>
+          <div
+            key={index}
+            className="event-item"
+            style={{ backgroundColor, color: textColor }}
+          >
             {event.eventName}
           </div>
         );
@@ -204,8 +211,14 @@ function MonthView() {
     "Saturday",
   ];
 
-  const startDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-  const emptyCells = Array.from({ length: startDay }, (_, i) => <div key={`empty-${i}`} className="day-cell empty"></div>);
+  const startDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1,
+  ).getDay();
+  const emptyCells = Array.from({ length: startDay }, (_, i) => (
+    <div key={`empty-${i}`} className="day-cell empty"></div>
+  ));
   const dayCells = daysInMonth.map((day) => (
     <div key={day} className="day-cell">
       <strong className="date">{`${day}`}</strong>
@@ -291,9 +304,7 @@ function MonthView() {
               </div>
             ))}
           </div>
-          <div className="month-grid">
-            {emptyCells.concat(dayCells)}
-          </div>
+          <div className="month-grid">{emptyCells.concat(dayCells)}</div>
         </div>
       </div>
     </div>
