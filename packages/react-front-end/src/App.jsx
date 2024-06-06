@@ -89,7 +89,7 @@ function App() {
       {/* This is the alias of BrowserRouter i.e. Router */}
       <Router>
         <Routes>
-          <Route exact path="/" element={<Login handleSubmit={loginUser} />} />
+          <Route path="/" element={<Login handleSubmit={loginUser} />} />
           <Route path="/login" element={<Login handleSubmit={loginUser} />} />
           <Route
             path="/signup"
