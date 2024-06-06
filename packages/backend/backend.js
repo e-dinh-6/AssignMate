@@ -63,15 +63,22 @@ app.get("/events/:id", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
 
-app.put("/events/:eventId", (req, res) => {
+app.put("/events/:eventId", async (req, res) => {
   const { eventId } = req.params;
   const updatedEvent = req.body;
-  
-  services
-    .updateEvent(eventId, updatedEvent)
-    .then((event) => res.status(200).send(event))
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+
+  try {
+    const event = await services.updateEvent(eventId, updatedEvent);
+    if (event) {
+      res.status(200).send(event);
+    } else {
+      res.status(404).send("Resource not found");
+    }
+  } catch (error) {
+    res.status(500).send(`Internal server error: ${error}`);
+  }
 });
+
 
 app.delete("/events/:id", (req, res) => {
   const { id } = req.params;

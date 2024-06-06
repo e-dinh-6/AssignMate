@@ -131,6 +131,7 @@ const fetchEvents = () => {
     };
 
     const method = isEditMode ? 'PUT' : 'POST';
+	console.log(method);
     const url = isEditMode ? `http://localhost:8000/events/${selectedEvent._id}` : 'http://localhost:8000/events';
 
     fetch(url, {
@@ -140,7 +141,13 @@ const fetchEvents = () => {
       },
       body: JSON.stringify(eventToSubmit),
     })
-      .then((response) => response.json())
+	.then((response) => {
+		console.log(response);
+		if (!response.ok) {
+			return response.text().then(text => {throw new Error(text)});
+		}
+		return response.json();
+	})
       .then((data) => {
         fetchEvents();  // Refresh events list
         setSelectedEvent(null);  // Reset form
@@ -155,6 +162,7 @@ const fetchEvents = () => {
         });
         setIsEditMode(false);
       })
+
       .catch((error) => console.error('Error submitting event:', error));
   };
 
