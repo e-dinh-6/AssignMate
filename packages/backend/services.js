@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import databaseModel from "./database.js";
 
-const { User, Event, Tag } = databaseModel;
+const { User, Event, Tag, Task } = databaseModel;
 
 mongoose.set("debug", true);
 dotenv.config();
@@ -30,10 +30,10 @@ mongoose
       });
   });
 
-async function getUsers(username) {
+async function getUser(name) {
   let promise;
-  if (username) {
-    promise = await findUserByName(username).lean();
+  if (name) {
+    promise = await User.find({ username: name }).lean();
   } else {
     promise = await User.find().lean();
   }
@@ -60,8 +60,11 @@ function getEvent(title) {
   return promise;
 }
 
-function getEvents(userId) {
-  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+async function getEvents(userId) {
+  const events = await Event.find({ user: userId }).sort({
+    date: 1,
+    startTime: 1,
+  });
   const eventsByDay = {};
   events.forEach((event) => {
     const { date } = event;
@@ -74,9 +77,6 @@ function getEvents(userId) {
 }
 
 function addUser(user) {
-  if (!user) {
-    return;
-  }
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
@@ -88,10 +88,6 @@ function deleteUser(name) {
 
 function findUserByUsernameAndPassword(name, pw) {
   return User.find({ username: name, password: pw });
-}
-
-function findUserByName(name) {
-  return User.find({ username: name });
 }
 
 function addEvent(event) {
@@ -114,17 +110,39 @@ function deleteTag(tagName) {
   return Tag.findOneAndDelete({ name: tagName });
 }
 
+function addTask(task) {
+  const newTask = new Task(task);
+  const promise = newTask.save();
+  return promise;
+}
+
+function getTask(taskName) {
+  let promise;
+  if (taskName) {
+    promise = Task.find({ title: taskName });
+  } else {
+    promise = Task.find();
+  }
+  return promise;
+}
+
+function deleteTask(id) {
+  return Task.findByIdAndDelete(id);
+}
+
 export default {
   addUser,
   deleteUser,
-  getUsers,
+  getUser,
   getTags,
   findUserByUsernameAndPassword,
   addEvent,
   getEvent,
   getEvents,
-  findUserByName,
   deleteEvent,
   addTag,
   deleteTag,
+  addTask,
+  getTask,
+  deleteTask,
 };

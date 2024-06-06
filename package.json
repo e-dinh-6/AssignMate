@@ -14,7 +14,7 @@
   },
   "scripts": {
     "lint": "npx eslint . && npx prettier --write .",
-    "test": "npx jest",
+    "test": "cd jest-unit-testing && npm test",
     "dev": "nodemon backend.js",
     "start": "node backend.js"
   },
@@ -153,6 +153,7 @@
     "minimatch": "^3.1.2",
     "minimist": "^1.2.8",
     "mongodb": "^6.6.2",
+    "mongoose": "^8.4.1",
     "ms": "^2.1.2",
     "natural-compare": "^1.4.0",
     "object-assign": "^4.1.1",
