@@ -26,7 +26,6 @@ export function registerUser(req, res) {
               res.status(201).send({ token });
               // Add the new user to the database
               services.addUser({ username, password: hashedPassword });
-              console.log("added");
             });
           });
       }
@@ -43,6 +42,7 @@ export function loginUser(req, res) {
     .getUser(username)
     .then((retrieved) => {
       const [retrievedUser] = retrieved;
+      console.log(retrievedUser);
       if (!retrievedUser) {
         res.status(401).send("Unauthorized");
       } else {

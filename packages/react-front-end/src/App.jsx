@@ -42,9 +42,9 @@ function App() {
           response.json().then((payload) => {
             //setToken(payload.token);
             localStorage.setItem("token", payload.token);
-          }),
             setMessage(`Login successful; auth token saved`);
-          setRegistrationSuccess(true);
+            setRegistrationSuccess(true);
+          });
         } else {
           setMessage(`Login Error ${response.status}: ${response.data}`);
         }
@@ -52,12 +52,10 @@ function App() {
       .catch((error) => {
         setMessage(`Login Error: ${error}`);
       });
-
     return promise;
   }
 
   function signupUser(creds) {
-    console.log("signupUser");
     const promise = fetch(`http://localhost:8000/signup`, {
       method: "POST",
       headers: {
@@ -86,7 +84,6 @@ function App() {
   }
 
   if (registrationSuccess) {
-    //console.log(localStorage.getItem("token"));
     window.location.href = "/landing"; // Redirect to /landing
   }
 

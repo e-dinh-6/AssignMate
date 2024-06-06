@@ -70,7 +70,8 @@ function loginpage(props) {
     }
   }
 
-  function submitForm() {
+  function submitForm(event) {
+    event.preventDefault();
     props.handleSubmit(creds);
     setCreds({ username: "", pwd: "" });
   }
