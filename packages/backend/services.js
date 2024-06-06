@@ -31,7 +31,6 @@ mongoose
   });
 
 function addUser(user) {
-  console.log("user: ", user);
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
@@ -93,7 +92,7 @@ function getEvent(user, title) {
 
 async function getEvents(user) {
   // gets all of a users events sorted by date and time
-  const events = await Event.find({ username: user }).sort({
+  const events = await Event.find().sort({
     date: 1,
     startTime: 1,
   });
