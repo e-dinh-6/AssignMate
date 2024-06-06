@@ -100,7 +100,7 @@ function getEvent(user, title) {
 
 async function getEvents(user) {
   // gets all of a users events sorted by date and time
-  const events = await Event.find().sort({
+  const events = await Event.find({ username: user }).sort({
     date: 1,
     startTime: 1,
   });

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./sevenday.css";
 import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
-import { blue, blueBright } from "ansi-colors";
 
 function sevenday() {
   const [events, setEvents] = useState([]);
