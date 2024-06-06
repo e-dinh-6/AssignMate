@@ -55,6 +55,14 @@ app.get("/events", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
 
+app.get("/events/:id", (req, res) => {
+  const {id} = req.params;
+  services
+    .getEvent(id)
+    .then((events) => res.json(events)) // Ensure events are returned as JSON
+    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+});
+
 app.put("/events/:eventId", (req, res) => {
   const { eventId } = req.params;
   const updatedEvent = req.body;

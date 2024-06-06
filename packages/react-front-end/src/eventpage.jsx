@@ -66,7 +66,6 @@ function EventForm() {
   }, [selectedEvent]);
 
 
- 
 const fetchEvents = () => {
   console.log("Fetching events...");
   fetch('http://localhost:8000/events', {
@@ -132,7 +131,7 @@ const fetchEvents = () => {
     };
 
     const method = isEditMode ? 'PUT' : 'POST';
-    const url = isEditMode ? `http://localhost:8000/events/?${selectedEvent._id}` : 'http://localhost:8000/events';
+    const url = isEditMode ? `http://localhost:8000/events/${selectedEvent._id}` : 'http://localhost:8000/events';
 
     fetch(url, {
       method: method,

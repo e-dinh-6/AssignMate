@@ -50,10 +50,10 @@ function getTags(tagName) {
   return promise;
 }
 
-function getEvent(title) {
+function getEvent(id) {
   let promise;
-  if (title) {
-    promise = Event.find({ eventName: title }).lean();
+  if (id) {
+    promise = Event.findById(id).lean();
   } else {
     promise = Event.find().lean();
   }
