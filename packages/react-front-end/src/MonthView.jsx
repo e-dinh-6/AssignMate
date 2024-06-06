@@ -4,7 +4,7 @@ import "./MonthView.css";
 import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
 
-// Add the addAuthHeader function
+
 function addAuthHeader(otherHeaders = {}) {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -20,6 +20,7 @@ function addAuthHeader(otherHeaders = {}) {
 function MonthView() {
   const [events, setEvents] = useState({});
   const [tasks, setTasks] = useState([]);
+  const [tags, setTags] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -27,6 +28,7 @@ function MonthView() {
   useEffect(() => {
     fetchEvents();
     fetchTasks();
+    fetchTags();
   }, [currentDate]);
 
   const fetchEvents = () => {
@@ -40,22 +42,6 @@ function MonthView() {
         return response.json();
       })
       .then((data) => {
-        // const arrayData = Object.entries(data).reduce((acc, keyValueArray) => {
-        //   const date = keyValueArray[0];
-        //   const events = keyValueArray[1];
-
-        //   events.map((event) => {
-        //     const newEvent = {};
-        //     for (const key in event) {
-        //       newEvent[key] = event[key];
-        //     }
-        //     newEvent.date = new Date(date);
-        //     acc.push(newEvent);
-        //   });
-
-        //   return acc;
-        // }, []);
-        console.log("data", data);
         const arrayData = Object.entries(data).reduce((acc, [date, events]) => {
           events.forEach((event) => {
             const newEvent = { ...event, date: new Date(date).toISOString() };
@@ -63,7 +49,6 @@ function MonthView() {
           });
           return acc;
         }, []);
-        console.log("arrayData", arrayData);
         const filteredEvents = filterEventsByMonth(arrayData, currentDate);
         const eventsByDate = organizeEventsByDate(filteredEvents);
         setEvents(eventsByDate);
@@ -72,16 +57,25 @@ function MonthView() {
   };
 
   const fetchTasks = () => {
-    fetch("https://assignmate7.azurewebsites.net/tasks", {
+    fetch("http://localhost:8000/tasks", {
       headers: addAuthHeader(),
     })
       .then((response) => response.json())
       .then((data) => setTasks(data))
-      .catch((error) => console.log(error));
+      .catch((error) => console.error("Failed to fetch tasks:", error));
+  };
+
+  const fetchTags = () => {
+    fetch("http://localhost:8000/tags", {
+      headers: addAuthHeader(),
+    })
+      .then((response) => response.json())
+      .then((data) => setTags(data))
+      .catch((error) => console.error("Failed to fetch tags:", error));
   };
 
   const postTask = (task) => {
-    return fetch("https://assignmate7.azurewebsites.net/tasks", {
+    return fetch("http://localhost:8000/tasks", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
@@ -93,7 +87,6 @@ function MonthView() {
   const filterEventsByMonth = (events, date) => {
     const month = date.getMonth();
     const year = date.getFullYear();
-    console.log("events: ", events);
     return events.filter((event) => {
       const eventDate = new Date(event.date);
       return eventDate.getMonth() === month && eventDate.getFullYear() === year;
@@ -104,7 +97,7 @@ function MonthView() {
     return events.reduce((acc, event) => {
       const eventDate = event.date.split("T")[0];
       acc[eventDate] = acc[eventDate] || [];
-      acc[eventDate].push(event.eventName);
+      acc[eventDate].push(event);
       return acc;
     }, {});
   };
@@ -115,14 +108,32 @@ function MonthView() {
     );
   };
 
+  const getTagColor = (tagId) => {
+    const tag = tags.find((t) => t._id.$oid === tagId);
+    return tag ? tag.color : "#000"; // default color if tag not found
+  };
+
+  const getTextColor = (backgroundColor) => {
+    const color = backgroundColor.charAt(0) === "#" ? backgroundColor.substring(1, 7) : backgroundColor;
+    const r = parseInt(color.substring(0, 2), 16);
+    const g = parseInt(color.substring(2, 4), 16);
+    const b = parseInt(color.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 155 ? "#000000" : "#FFFFFF";
+  };
+
   const renderDayEvents = (day) => {
     const dateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
     return (
-      events[dateKey]?.map((event, index) => (
-        <div key={index} className="event-item">
-          {event}
-        </div>
-      )) || []
+      events[dateKey]?.map((event, index) => {
+        const backgroundColor = getTagColor(event.tag[0]);
+        const textColor = getTextColor(backgroundColor);
+        return (
+          <div key={index} className="event-item" style={{ backgroundColor, color: textColor }}>
+            {event.eventName}
+          </div>
+        );
+      }) || []
     );
   };
 
@@ -158,7 +169,7 @@ function MonthView() {
   };
 
   const removeTask = (taskId) => {
-    fetch(`https://assignmate7.azurewebsites.net/tasks/${taskId}`, {
+    fetch(`http://localhost:8000/tasks/${taskId}`, {
       method: "DELETE",
       headers: addAuthHeader(),
     })
@@ -192,6 +203,15 @@ function MonthView() {
     "Friday",
     "Saturday",
   ];
+
+  const startDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+  const emptyCells = Array.from({ length: startDay }, (_, i) => <div key={`empty-${i}`} className="day-cell empty"></div>);
+  const dayCells = daysInMonth.map((day) => (
+    <div key={day} className="day-cell">
+      <strong className="date">{`${day}`}</strong>
+      {renderDayEvents(day)}
+    </div>
+  ));
 
   return (
     <div className="month-container">
@@ -272,12 +292,7 @@ function MonthView() {
             ))}
           </div>
           <div className="month-grid">
-            {daysInMonth.map((day) => (
-              <div key={day} className="day-cell">
-                <strong className="date">{`${day}`}</strong>
-                {renderDayEvents(day)}
-              </div>
-            ))}
+            {emptyCells.concat(dayCells)}
           </div>
         </div>
       </div>
