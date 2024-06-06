@@ -97,7 +97,7 @@ function List() {
   }
 
   function fetchEvents() {
-    const promise = fetch("https://assignmate7.azurewebsites.net/events", {
+    const promise = fetch("http://localhost:8000/events", {
       headers: addAuthHeader(),
     });
     return promise;
