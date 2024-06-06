@@ -1,3 +1,4 @@
+/* MonthView.jsx */
 import React, { useState, useEffect } from "react";
 import "./MonthView.css";
 import logo from "./assets/logo.png";
@@ -24,14 +25,12 @@ function MonthView() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    fetchEvents(currentDate);
+    fetchEvents();
     fetchTasks();
   }, [currentDate]);
 
-  const fetchEvents = (date) => {
-    const month = date.getMonth() + 1; // getMonth() is zero-indexed, +1 to make it human-readable
-    const year = date.getFullYear();
-    fetch(`https://assignmate7.azurewebsites.net/events?month=${month}&year=${year}`, {
+  const fetchEvents = () => {
+    fetch("https://assignmate7.azurewebsites.net/events", {
       headers: addAuthHeader(),
     })
       .then(response => {
@@ -41,7 +40,8 @@ function MonthView() {
         return response.json();
       })
       .then(data => {
-        const eventsByDate = organizeEventsByDate(data);
+        const filteredEvents = filterEventsByMonth(data, currentDate);
+        const eventsByDate = organizeEventsByDate(filteredEvents);
         setEvents(eventsByDate);
       })
       .catch(error => console.error("Failed to fetch events:", error));
@@ -63,6 +63,15 @@ function MonthView() {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify(task),
+    });
+  };
+
+  const filterEventsByMonth = (events, date) => {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    return events.filter(event => {
+      const eventDate = new Date(event.date);
+      return eventDate.getMonth() === month && eventDate.getFullYear() === year;
     });
   };
 
