@@ -30,7 +30,7 @@ function App() {
 
   function loginUser(creds) {
     console.log("loginUser");
-    const promise = fetch(`http://localhost:8000/login`, {
+    const promise = fetch(`https://assignmate7.azurewebsites.net/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ function App() {
   }
 
   function signupUser(creds) {
-    const promise = fetch(`http://localhost:8000/signup`, {
+    const promise = fetch(`https://assignmate7.azurewebsites.net/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

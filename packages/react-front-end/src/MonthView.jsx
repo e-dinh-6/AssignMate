@@ -31,7 +31,7 @@ function MonthView() {
   }, [currentDate]);
 
   const fetchEvents = () => {
-    fetch("http://localhost:8000/events", {
+    fetch("https://assignmate7.azurewebsites.net/events", {
       headers: addAuthHeader(),
     })
       .then((response) => {
