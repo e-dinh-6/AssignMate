@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
-import Home from "./main";
 import Login from "./loginpage";
 import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
@@ -96,7 +95,7 @@ function App() {
       {/* This is the alias of BrowserRouter i.e. Router */}
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Login handleSubmit={loginUser} />} />
           <Route path="/login" element={<Login handleSubmit={loginUser} />} />
           <Route
             path="/signup"
@@ -111,7 +110,7 @@ function App() {
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
           and redirects app to home component with to="/" */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
     </>

@@ -102,7 +102,7 @@ app.delete("/tasks/:id", authenticateUser, (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Backend is working");
 });
 
 app.post("/signup", registerUser);
