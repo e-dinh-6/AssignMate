@@ -1,7 +1,7 @@
 // services.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import databaseModel from "./database.js";
+import databaseModel from "./database.js"; //eslint-disable-line
 
 const { User, Event, Tag, Task } = databaseModel;
 
@@ -30,38 +30,69 @@ mongoose
       });
   });
 
-async function getUser(name) {
+function addUser(user) {
+  const userToAdd = new User(user);
+  const promise = userToAdd.save();
+  return promise;
+}
+
+function getUser(name) {
   let promise;
   if (name) {
-    promise = await User.find({ username: name }).lean();
+    promise = User.find({ username: name }).lean();
   } else {
-    promise = await User.find().lean();
+    promise = User.find().lean();
   }
   return promise;
 }
 
-function getTags(tagName) {
-  let promise;
-  if (tagName) {
-    promise = Tag.find({ name: tagName });
-  } else {
-    promise = Tag.find();
-  }
+function deleteUser(name) {
+  return User.findOneAndDelete({ username: name });
+}
+
+function addTag(tag) {
+  const newTag = new Tag(tag);
+  const promise = newTag.save();
   return promise;
 }
 
-function getEvent(title) {
+// function getTag(user, tagName) {
+//   let promise;
+//   if (tagName) {
+//     promise = Tag.find({ username: user, name: tagName });
+//   } else {
+//     promise = Tag.find({ username: user });
+//   }
+//   return promise;
+// }
+function getTags(user) {
+  const promise = Tag.find({ username: user });
+  return promise;
+}
+
+function deleteTag(tagName) {
+  return Tag.findOneAndDelete({ name: tagName });
+}
+
+function addEvent(event) {
+  const eventToAdd = new Event(event);
+  const promise = eventToAdd.save();
+  return promise;
+}
+
+function getEvent(user, title) {
   let promise;
   if (title) {
-    promise = Event.find({ eventName: title }).lean();
+    promise = Event.find({ username: user, eventName: title }).lean();
   } else {
-    promise = Event.find().lean();
+    promise = Event.find({ username: user }).lean();
   }
   return promise;
 }
 
-async function getEvents(userId) {
-  const events = await Event.find({ user: userId }).sort({
+async function getEvents(user) {
+  // gets all of a users events sorted by date and time
+  const events = await Event.find({ username: user }).sort({
     date: 1,
     startTime: 1,
   });
@@ -76,38 +107,8 @@ async function getEvents(userId) {
   return eventsByDay;
 }
 
-function addUser(user) {
-  const userToAdd = new User(user);
-  const promise = userToAdd.save();
-  return promise;
-}
-
-function deleteUser(name) {
-  return User.findOneAndDelete({ username: name });
-}
-
-function findUserByUsernameAndPassword(name, pw) {
-  return User.find({ username: name, password: pw });
-}
-
-function addEvent(event) {
-  const eventToAdd = new Event(event);
-  const promise = eventToAdd.save();
-  return promise;
-}
-
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);
-}
-
-function addTag(tag) {
-  const newTag = new Tag(tag);
-  const promise = newTag.save();
-  return promise;
-}
-
-function deleteTag(tagName) {
-  return Tag.findOneAndDelete({ name: tagName });
 }
 
 function addTask(task) {
@@ -116,13 +117,17 @@ function addTask(task) {
   return promise;
 }
 
-function getTask(taskName) {
-  let promise;
-  if (taskName) {
-    promise = Task.find({ title: taskName });
-  } else {
-    promise = Task.find();
-  }
+// function getTask(user, taskName) {
+//   let promise;
+//   if (taskName) {
+//     promise = Task.find({ username: user, title: taskName });
+//   } else {
+//     promise = Task.find({ username: user });
+//   }
+//   return promise;
+// }
+function getTasks(user) {
+  const promise = Task.find({ username: user });
   return promise;
 }
 
@@ -132,17 +137,16 @@ function deleteTask(id) {
 
 export default {
   addUser,
-  deleteUser,
   getUser,
+  deleteUser,
+  addTag,
   getTags,
-  findUserByUsernameAndPassword,
+  deleteTag,
   addEvent,
   getEvent,
   getEvents,
   deleteEvent,
-  addTag,
-  deleteTag,
   addTask,
-  getTask,
+  getTasks,
   deleteTask,
 };

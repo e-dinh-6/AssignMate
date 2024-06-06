@@ -20,6 +20,10 @@ const User = mongoose.model("User", userSchema);
 
 const tagSchema = new mongoose.Schema(
   {
+    username: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -37,9 +41,9 @@ const Tag = mongoose.model("Tag", tagSchema);
 // Define Event Schema
 const eventSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    username: {
+      type: String,
+      required: true,
     },
     eventName: {
       type: String,
@@ -70,34 +74,38 @@ const eventSchema = new mongoose.Schema(
 
 const Event = mongoose.model("Event", eventSchema);
 
-const calendarSchema = new mongoose.Schema({
-  color: {
-    type: String,
-    default: "#000000",
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  events: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Event",
-  },
-  view: {
-    type: String,
-    enum: ["list", "week", "month"],
-    default: "month",
-  },
-});
+// const calendarSchema = new mongoose.Schema({
+//   color: {
+//     type: String,
+//     default: "#000000",
+//   },
+//   owner: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "User",
+//     required: true,
+//   },
+//   events: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "Event",
+//   },
+//   view: {
+//     type: String,
+//     enum: ["list", "week", "month"],
+//     default: "month",
+//   },
+// });
 
-const Calendar = mongoose.model("Calendar", calendarSchema);
+// const Calendar = mongoose.model("Calendar", calendarSchema);
 
 const taskSchema = new mongoose.Schema(
   {
+    username: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
-      equired: true,
+      required: true,
     },
   },
   { collection: "tasks_list" },
@@ -105,4 +113,5 @@ const taskSchema = new mongoose.Schema(
 
 const Task = mongoose.model("Task", taskSchema);
 
-export default { User, Event, Tag, Calendar, Task };
+// export default { User, Event, Tag, Calendar, Task };
+export default { User, Event, Tag, Task };

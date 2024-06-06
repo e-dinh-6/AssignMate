@@ -37,7 +37,7 @@
 }
 
 /* // Place on Timeline */
-  .start-10 {
+.start-10 {
   grid-row-start: 2;
 }
 
@@ -74,8 +74,8 @@
 }
 
 /* // Event */
-  
-  .title {
+
+.title {
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
@@ -94,8 +94,8 @@
 }
 
 /* // Global / Etc */
-  
-  body {
+
+body {
   font-family: system-ui, sans-serif;
 }
 

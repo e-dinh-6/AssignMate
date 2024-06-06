@@ -9,6 +9,7 @@ function List() {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
+
   const currentDate = new Date();
   const options = { weekday: "long", month: "long", day: "numeric" };
   const monthYear = currentDate.toLocaleDateString("en-US", {
