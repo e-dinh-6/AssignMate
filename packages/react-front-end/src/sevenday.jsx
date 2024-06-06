@@ -39,7 +39,7 @@ function sevenday() {
 
   function removeTask(taskId) {
     console.log(taskId);
-    fetch(`http://assignmate7.azurewebsites.net/tasks/${taskId}`, {
+    fetch(`https://assignmate7.azurewebsites.net/tasks/${taskId}`, {
       method: "DELETE",
       headers: addAuthHeader(),
     })
