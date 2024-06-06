@@ -1,5 +1,5 @@
 // Filename - App.js
-
+import React, { useState, useEffect } from "react";
 import ReactDOMClient from "react-dom/client";
 import {
   BrowserRouter as Router,
@@ -24,21 +24,72 @@ import "./App.css";
 //cd url: https://black-rock-04015071e.5.azurestaticapps.net
 
 function App() {
-//   const [events, setEvents] = useState([]);
-//   function fetchUsers(){
-//     const promise = fetch("http://localhost:8000/events");
-//     return promise;
-//   }
+  const INVALID_TOKEN = "INVALID_TOKEN";
+  //const [token, setToken] = useState(INVALID_TOKEN);
+  const [message, setMessage] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
-//   useEffect(() => {
-//     fetchUsers()
-//       .then((eventsList) => {
-//         setEvents(eventsList);
-//       })
-//       .catch((error) => {
-//         console.error("Erro setting events:", error); 
-//   });
-// },[]);
+  function loginUser(creds) {
+    console.log("loginUser");
+    const promise = fetch(`http://localhost:8000/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(creds),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          response.json().then((payload) => {
+            //setToken(payload.token);
+            localStorage.setItem("token", payload.token);
+          }),
+            setMessage(`Login successful; auth token saved`);
+          setRegistrationSuccess(true);
+        } else {
+          setMessage(`Login Error ${response.status}: ${response.data}`);
+        }
+      })
+      .catch((error) => {
+        setMessage(`Login Error: ${error}`);
+      });
+
+    return promise;
+  }
+
+  function signupUser(creds) {
+    console.log("signupUser");
+    const promise = fetch(`http://localhost:8000/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(creds),
+    })
+      .then((response) => {
+        if (response.status === 201) {
+          response.json().then((payload) => {
+            //setToken(payload.token);
+            localStorage.setItem("token", payload.token);
+          });
+          setMessage(
+            `Signup successful for user: ${creds.username}; auth token saved`,
+          );
+          setRegistrationSuccess(true);
+        } else {
+          setMessage(`Signup Error ${response.status}: ${response.data}`);
+        }
+      })
+      .catch((error) => {
+        setMessage(`Signup Error: ${error}`);
+      });
+    return promise;
+  }
+
+  if (registrationSuccess) {
+    //console.log(localStorage.getItem("token"));
+    window.location.href = "/landing"; // Redirect to /landing
+  }
 
   return (
     <>
@@ -46,9 +97,11 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login handleSubmit={loginUser} />} />
+          <Route
+            path="/signup"
+            element={<SignUp handleSubmit={signupUser} buttonLabel="Sign Up" />}
+          />
           <Route path="/sevenday" element={<Sevenday />} />
           <Route path="/list" element={<List />} />
           <Route path="/event" element={<AddEvent />} />
@@ -58,7 +111,6 @@ function App() {
           {/* If any route mismatches the upper 
           route endpoints then, redirect triggers 
           and redirects app to home component with to="/" */}
-          {/* <Redirect to="/" /> */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

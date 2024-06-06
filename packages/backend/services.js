@@ -135,6 +135,21 @@ function deleteTask(id) {
   return Task.findByIdAndDelete(id);
 }
 
+const updateEvent = (eventId, updatedEventData) => {
+  return new Promise((resolve, reject) => {
+    // Find the event by eventId and update it with the updatedEventData
+    Event.findByIdAndUpdate(eventId, updatedEventData, { new: true }, (err, updatedEvent) => {
+      if (err) {
+        // If there's an error, reject the promise with the error message
+        reject(err);
+      } else {
+        // If successful, resolve the promise with the updated event data
+        resolve(updatedEvent);
+      }
+    });
+  });
+};
+
 export default {
   addUser,
   deleteUser,
@@ -151,4 +166,5 @@ export default {
   addTask,
   getTask,
   deleteTask,
+  updateEvent,
 };

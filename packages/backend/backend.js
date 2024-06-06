@@ -22,13 +22,6 @@ app.post("/users", (req, res) => {
     .catch((error) => res.status(400).send(`Resource not found${error}`));
 });
 
-// app.get("/users/:username/:password", (req, res) => {
-//   const {username, password} = req.params;
-//   services.findUserByUsernameAndPassword(username,password)
-//     .then(user => res.send(user))
-//     .catch(error => resizeTo.status(404).send("Resource not found."));
-// });
-
 app.get("/users", (req, res) => {
   const name = req.params;
   services
@@ -37,13 +30,6 @@ app.get("/users", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found.${error}`));
 });
 
-// app.get("/events", (req, res) => {
-//   const { title, date, tag, description } = req.query;
-//   services
-//     .getEvent(title)
-//     .then((event) => res.send(event))
-//     .catch((error) => res.status(404).send(`Resource not found${error}`));
-// });
 
 app.post("/events", (req, res) => {
   const event = req.body;
@@ -63,11 +49,20 @@ app.post("/events/:userId", (req, res) => {
 });
 
 app.get("/events", (req, res) => {
-  const { userId } = req.params;
   services
-    .getEvents(userId)
-    .then((events) => res.send(events))
-    .catch((error) => res.status(404).send(`Resource not found${error}`));
+    .getEvent()
+    .then((events) => res.json(events)) // Ensure events are returned as JSON
+    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+});
+
+app.put("/events/:eventId", (req, res) => {
+  const { eventId } = req.params;
+  const updatedEvent = req.body;
+  
+  services
+    .updateEvent(eventId, updatedEvent)
+    .then((event) => res.status(200).send(event))
+    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
 });
 
 app.delete("/events/:id", (req, res) => {
@@ -78,12 +73,19 @@ app.delete("/events/:id", (req, res) => {
     .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-app.post("/tag", (req, res) => {
-  const tag = req.params;
+app.get("/tags", (req, res) => {
+  services
+    .getTags()
+    .then((tags) => res.send(tags))
+    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+});
+
+app.post("/tags", (req, res) => {
+  const tag = req.body;
   services
     .addTag(tag)
-    .then((tag) => res.status(201).send(tag))
-    .catch((error) => res.status(400).send(`error: ${error}`));
+    .then((newTag) => res.status(201).send(newTag))
+    .catch((error) => res.status(400).send(`Error: ${error}`));
 });
 
 app.get("/tasks", (req,res) => {
