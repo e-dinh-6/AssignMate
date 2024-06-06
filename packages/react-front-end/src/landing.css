@@ -1,0 +1,34 @@
+#root {
+  background-color: #b3d2d4;
+  justify-content: center;
+}
+
+.landing-page {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.landing-logo {
+  height: 220px;
+}
+
+.welcome {
+  margin-top: 50px;
+  color: white;
+}
+
+.view-cal {
+  border: none;
+  background-color: #b3d2d4;
+  margin-top: 80px;
+  text-decoration: underline;
+  font-size: 20px;
+  color: white;
+  margin-bottom: 25px;
+}
+
+a {
+  color: white;
+}

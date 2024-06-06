@@ -1,9 +1,9 @@
 // services.js
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import databaseModel from "./database";
+import databaseModel from "./database.js"; //eslint-disable-line
 
-const { User, Event, Tag } = databaseModel;
+const { User, Event, Tag, Task } = databaseModel;
 
 mongoose.set("debug", true);
 dotenv.config();
@@ -14,40 +14,89 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .catch((error) => console.log(error));
+  .then(() => {
+    console.log("Connected to cloud db");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the cloud database:", error);
+    console.log("Attempting to connect to the local database...");
+    mongoose
+      .connect("mongodb://localhost:27017/asignmate", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .catch((error) => {
+        console.error("Error connecting to the local database:", error);
+      });
+  });
 
-async function getUsers(username) {
+function addUser(user) {
+  console.log("user: ", user);
+  const userToAdd = new User(user);
+  const promise = userToAdd.save();
+  return promise;
+}
+
+function getUser(name) {
   let promise;
-  if (username) {
-    promise = await findUserByName(username).lean();
+  if (name) {
+    promise = User.find({ username: name });
   } else {
-    promise = await User.find().lean();
+    promise = User.find();
   }
   return promise;
 }
 
-function getTags(tagName) {
-  let promise;
-  if (tagName) {
-    promise = Tag.find({ name: tagName });
-  } else {
-    promise = Tag.find();
-  }
+function deleteUser(name) {
+  return User.findOneAndDelete({ username: name });
+}
+
+function addTag(tag) {
+  const newTag = new Tag(tag);
+  const promise = newTag.save();
   return promise;
 }
 
-function getEvent(title) {
+// function getTag(user, tagName) {
+//   let promise;
+//   if (tagName) {
+//     promise = Tag.find({ username: user, name: tagName });
+//   } else {
+//     promise = Tag.find({ username: user });
+//   }
+//   return promise;
+// }
+function getTags(user) {
+  const promise = Tag.find({ username: user });
+  return promise;
+}
+
+function deleteTag(tagName) {
+  return Tag.findOneAndDelete({ name: tagName });
+}
+
+function addEvent(event) {
+  const eventToAdd = new Event(event);
+  const promise = eventToAdd.save();
+  return promise;
+}
+
+function getEvent(user, title) {
   let promise;
   if (title) {
-    promise = Event.find({ eventName: title }).lean();
+    promise = Event.find({ username: user, eventName: title });
   } else {
-    promise = Event.find().lean();
+    promise = Event.find({ username: user });
   }
   return promise;
 }
 
-function getEvents(userId) {
-  const events = Event.find({ user: userId }).sort({ date: 1, startTime: 1 });
+async function getEvents(user) {
+  // gets all of a users events sorted by date and time
+  const events = await Event.find({ username: user }).sort({
+    date: 1,
+    startTime: 1,
+  });
   const eventsByDay = {};
   events.forEach((event) => {
     const { date } = event;
@@ -59,45 +108,46 @@ function getEvents(userId) {
   return eventsByDay;
 }
 
-function addUser(user) {
-  const userToAdd = new User(user);
-  const promise = userToAdd.save();
-  return promise;
-}
-
-function findUserByUsernameAndPassword(name, pw) {
-  return User.find({ username: name, password: pw });
-}
-
-function findUserByName(name) {
-  return User.find({ username: name });
-}
-
-function addEvent(event) {
-  const eventToAdd = new Event(event);
-  const promise = eventToAdd.save();
-  return promise;
-}
-
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);
 }
 
-function addTag(tag) {
-  const newTag = new Tag(tag);
-  const promise = newTag.save();
+function addTask(task) {
+  const newTask = new Task(task);
+  const promise = newTask.save();
   return promise;
+}
+
+// function getTask(user, taskName) {
+//   let promise;
+//   if (taskName) {
+//     promise = Task.find({ username: user, title: taskName });
+//   } else {
+//     promise = Task.find({ username: user });
+//   }
+//   return promise;
+// }
+function getTasks(user) {
+  const promise = Task.find({ username: user });
+  return promise;
+}
+
+function deleteTask(id) {
+  return Task.findByIdAndDelete(id);
 }
 
 export default {
   addUser,
-  getUsers,
+  getUser,
+  deleteUser,
+  addTag,
   getTags,
-  findUserByUsernameAndPassword,
+  deleteTag,
   addEvent,
   getEvent,
   getEvents,
-  findUserByName,
   deleteEvent,
-  addTag,
+  addTask,
+  getTasks,
+  deleteTask,
 };

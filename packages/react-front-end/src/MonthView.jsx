@@ -218,7 +218,7 @@ function MonthView() {
             ))}
           </div>
           <div className="month-grid">
-            {daysInMonth.map(day => (
+            {daysInMonth.map((day) => (
               <div key={day} className="day-cell">
                 <strong className="date">{`${day}`}</strong>
                 {renderDayEvents(day)}
