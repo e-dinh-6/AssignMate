@@ -134,6 +134,7 @@ function MonthView() {
   };
 
   const daysInMonth = Array.from({ length: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() }, (_, i) => i + 1);
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   return (
     <div className="month-container">
@@ -201,13 +202,20 @@ function MonthView() {
             </div>
           </div>
         </aside>
-        <div className="month-grid">
-          {daysInMonth.map(day => (
-            <div key={day} className="day-cell">
-              <strong className="date">{`${day}`}</strong>
-              {renderDayEvents(day)}
-            </div>
-          ))}
+        <div className="month-grid-container">
+          <div className="days-of-week">
+            {daysOfWeek.map((day, index) => (
+              <div key={index} className="day-name">{day}</div>
+            ))}
+          </div>
+          <div className="month-grid">
+            {daysInMonth.map(day => (
+              <div key={day} className="day-cell">
+                <strong className="date">{`${day}`}</strong>
+                {renderDayEvents(day)}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
