@@ -30,6 +30,10 @@ mongoose
       });
   });
 
+  mongoose.set('strictPopulate', false);
+
+
+
 function addUser(user) {
   const userToAdd = new User(user);
   const promise = userToAdd.save();
@@ -77,8 +81,15 @@ function deleteTag(tagName) {
 function addEvent(event) {
   const eventToAdd = new Event(event);
   const promise = eventToAdd.save();
+function getTags(id) {
+  let promise;
+  if (id) {
+    promise = Tag.findById(id);
+  } else {
+    promise = Tag.find();
+  }
   return promise;
-}
+}}
 
 function getEvent(user, title) {
   let promise;
@@ -106,6 +117,54 @@ async function getEvents(user) {
   });
   return eventsByDay;
 }
+
+function addUser(user) {
+  if (!user) {
+    return;
+  }
+  const userToAdd = new User(user);
+  const promise = userToAdd.save();
+  return promise;
+}
+
+function deleteUser(name) {
+  return User.findOneAndDelete({ username: name });
+}
+
+function findUserByUsernameAndPassword(name, pw) {
+  return User.find({ username: name, password: pw });
+}
+
+function findUserByName(name) {
+  return User.find({ username: name });
+}
+
+
+ const addEvent = async (eventData) => {
+  try {
+    // Find tags by name or create them if they don't exist
+    const tags = await Promise.all(
+      eventData.tags.map(async (tagName) => {
+        let tag = await Tag.findOne({ name: tagName });
+        if (!tag) {
+          tag = new Tag({ name: tagName });
+          await tag.save();
+        }
+        return tag._id;
+      })
+    );
+
+    const event = new Event({
+      ...eventData,
+      tags: tags,
+    });
+
+    await event.save();
+    return event;
+  } catch (error) {
+    throw new Error(`Error creating event: ${error.message}`);
+  }
+};
 
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);
@@ -135,6 +194,16 @@ function deleteTask(id) {
   return Task.findByIdAndDelete(id);
 }
 
+
+const updateEvent = async (eventId, updatedEvent) => {
+  try {
+    const event = await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
+    return event;
+  } catch (error) {
+    throw new Error(`Unable to update event: ${error.message}`);
+  }
+};
+
 export default {
   addUser,
   getUser,
@@ -149,4 +218,5 @@ export default {
   addTask,
   getTasks,
   deleteTask,
+  updateEvent,
 };

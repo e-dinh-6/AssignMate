@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import "./event.css";
+import React, { useState, useEffect } from 'react';
+import './event.css';
 
-const EventForm = () => {
+function EventForm() {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [checkedTags, setCheckedTags] = useState([])
   const [formData, setFormData] = useState({
     title: "",
     tags: [],
@@ -12,51 +13,78 @@ const EventForm = () => {
     status: "In Progress",
     description: "",
   });
-  const [tags, setTags] = useState([{ name: "CSC 307", color: "#FF5733" }]);
-  const [newTagName, setNewTagName] = useState("");
-  const [newTagColor, setNewTagColor] = useState("#000000");
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Project Meeting",
-      tags: ["CSC 307"],
-      date: "2024-05-30",
-      timeStart: "10:00",
-      timeEnd: "12:00",
-      description: "Description for event 1",
-    },
-    { id: 2, title: "Event Title 2", tags: [] },
-  ]);
+  const [tags, setTags] = useState([]);
+  const [newTagName, setNewTagName] = useState('');
+  const [newTagColor, setNewTagColor] = useState('#000000');
+  const [events, setEvents] = useState([]);  // Initialize as an empty array
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [showNewTagModal, setShowNewTagModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
+  // function addAuthHeader(otherHeaders = {}) {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     return otherHeaders;
+  //   } else {
+  //     return {
+  //       ...otherHeaders,
+  //       Authorization: `Bearer ${token}`,
+  //     };
+  //   }
+  // }
+
+
   useEffect(() => {
-    if (selectedEvent) {
-      setFormData({
-        title: selectedEvent.title,
-        tags: selectedEvent.tags,
-        date: selectedEvent.date,
-        timeStart: selectedEvent.timeStart,
-        timeEnd: selectedEvent.timeEnd,
-        status: selectedEvent.status,
-        description: selectedEvent.description,
-      });
-      setIsEditMode(false);
-    } else {
-      setFormData({
-        title: "",
-        tags: [],
-        date: "",
-        timeStart: "",
-        timeEnd: "",
-        status: "In Progress",
-        description: "",
-      });
-      setIsEditMode(false);
-    }
+    fetchEvents();
+    fetchTags();
+  }, []);
+
+  
+  useEffect(() => {
+	if (selectedEvent) {
+	  setFormData({
+		title: selectedEvent.eventName || '',
+		tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
+		date: selectedEvent.date? selectedEvent.date.split('T')[0] : '',
+		timeStart: selectedEvent.startTime? selectedEvent.startTime.split('T')[1].substring(0, 5) : '',
+		timeEnd: selectedEvent.endTime? selectedEvent.endTime.split('T')[1].substring(0, 5) : '',
+		status: selectedEvent.status || 'In Progress',
+		description: selectedEvent.description || ''
+	  });
+	  const initialCheckedTags = {};
+	  selectedEvent.tags.forEach((tag) => {
+		initialCheckedTags[tag._id] = true;
+	  });
+	  setCheckedTags(initialCheckedTags);
+	  setIsEditMode(true);
+	} else {
+	  resetForm();
+	}
   }, [selectedEvent]);
 
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/events');
+      if (!response.ok) throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+      const data = await response.json();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  const fetchTags = async () => {
+	try {
+	  const response = await fetch('http://localhost:8000/tags');
+	  if (!response.ok) throw new Error(`Failed to fetch tags: ${response.status} ${response.statusText}`);
+	  const data = await response.json();
+	  setTags(data);
+	} catch (error) {
+	  console.error('Error fetching tags:', error);
+	}
+  };
+
+  
   const handleChange = (e) => {
     const { name, value, type, options } = e.target;
     if (type === "select-multiple") {
@@ -69,25 +97,51 @@ const EventForm = () => {
     }
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isEditMode && selectedEvent) {
-      // Update existing event
-      const updatedEvents = events.map((event) =>
-        event.id === selectedEvent.id
-          ? { ...formData, id: selectedEvent.id }
-          : event,
-      );
-      setEvents(updatedEvents);
-    } else {
-      // Add new event
-      const newEvent = {
-        ...formData,
-        id: events.length ? events[events.length - 1].id + 1 : 1,
-      };
-      setEvents([...events, newEvent]);
-    }
-    // Reset form fields and selected event
+
+    const formattedTags = formData.tags.filter(tag => tag.name && typeof tag.name === 'string');
+
+    const eventToSubmit = {
+      eventName: formData.title,
+	  tags: formattedTags,
+	  date: new Date(`${formData.date}T00:00:00Z`),  // Ensure date is in ISO format
+      startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`),  // Ensure time is in ISO format
+      endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`),  // Ensure time is in ISO format
+      status: formData.status,
+      description: formData.description
+    };
+
+    const method = isEditMode ? 'PUT' : 'POST';
+    const url = isEditMode ? `http://localhost:8000/events/${selectedEvent._id}` : 'http://localhost:8000/events';
+
+    fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(eventToSubmit),
+    })
+	.then((response) => {
+		console.log(response);
+		if (!response.ok) {
+			return response.text().then(text => {throw new Error(text)});
+		}
+		setCheckedTags({});
+		return response.json();
+	})
+      .then((data) => {
+        fetchEvents();  // Refresh events list
+		resetForm();
+        setSelectedEvent(null);  // Reset form
+        setIsEditMode(false);
+      })
+
+      .catch((error) => console.error('Error submitting event:', error));
+  };
+
+  const resetForm = () => {
     setFormData({
       title: "",
       tags: [],
@@ -97,18 +151,46 @@ const EventForm = () => {
       status: "In Progress",
       description: "",
     });
-    setSelectedEvent(null);
-    setIsEditMode(false);
   };
 
+
   const handleAddTag = () => {
-    if (newTagName.trim() !== "") {
-      setTags([...tags, { name: newTagName, color: newTagColor }]);
-      setNewTagName("");
-      setNewTagColor("#800080");
-      setShowNewTagModal(false);
+    const newTag = {
+      name: newTagName,
+      color: newTagColor
+    };
+
+    fetch('http://localhost:8000/tags', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTag),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Ensure the new tag is added to the list
+        setTags([...tags, data]);
+        setNewTagName('');
+        setNewTagColor('#000000');
+        setShowNewTagModal(false);
+      })
+      .catch((error) => console.error('Error adding tag:', error));
+  };
+
+  const handleCheckboxChange = (tagId, isChecked) => {
+    setCheckedTags((prevState) => ({ ...prevState, [tagId]: isChecked }));
+
+    if (isChecked) {
+      setFormData((prevState) => ({
+        ...prevState,
+        tags: [...prevState.tags, tagId]
+      }));
     } else {
-      alert("Tag name cannot be empty");
+      setFormData((prevState) => ({
+        ...prevState,
+        tags: prevState.tags.filter((id) => id !== tagId)
+      }));
     }
   };
 
@@ -116,23 +198,20 @@ const EventForm = () => {
     setShowTagDropdown(!showTagDropdown);
   };
 
-  const handleTagSelect = (tag) => {
-    if (formData.tags.includes(tag.name)) {
-      setFormData({
-        ...formData,
-        tags: formData.tags.filter((t) => t !== tag.name),
-      });
-    } else {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, tag.name],
-      });
-    }
-  };
 
   const handleEdit = () => {
-    setFormData(selectedEvent);
-    setIsEditMode(true);
+	if (selectedEvent) {
+	  setFormData({
+		title: selectedEvent.eventName || '',
+		tags: selectedEvent.tags || [],
+		date: selectedEvent.date ? selectedEvent.date.split('T')[0] : '',
+		timeStart: selectedEvent.startTime ? selectedEvent.startTime.split('T')[1]?.substring(0, 5) : '',
+		timeEnd: selectedEvent.endTime ? selectedEvent.endTime.split('T')[1]?.substring(0, 5) : '',
+		status: selectedEvent.status || 'In Progress',
+		description: selectedEvent.description || ''
+	  });
+	  setIsEditMode(true);
+	}
   };
 
   const handleCancelEdit = () => {
@@ -140,20 +219,18 @@ const EventForm = () => {
     setIsEditMode(false);
   };
 
+  console.log(events);
+
   return (
     <div className="event-form-container">
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-          {events.map((event) => (
-            <li
-              key={event.id}
-              className="event-name"
-              onClick={() => setSelectedEvent(event)}
-            >
-              {event.title} ({event.tags.join(", ")})
-            </li>
-          ))}
+			{events && events.map(event => (
+			<li key={event._id} className="event-name" onClick={() => setSelectedEvent(event)}>
+				{event.eventName} ({event.tags ? event.tags.map(tag => tag.name).join(', ') : ''})
+			</li>
+			))}
         </ul>
       </div>
       <form className="event-form" onSubmit={handleSubmit}>
@@ -168,33 +245,29 @@ const EventForm = () => {
           <div>
             <div className="form-group">
               <label>Title:</label>
-              <div>{selectedEvent.title}</div>
+              <div>{selectedEvent.eventName}</div>
             </div>
             <div className="form-group">
-              <label>Tags:</label>
-              <div>{selectedEvent.tags.join(", ")}</div>
+               <label>Tags:</label>
+      			<div>{selectedEvent.tags?.join(', ')}</div> {/* Add optional chaining here */}
             </div>
             <div className="form-group">
               <label>Date:</label>
-              <div>{selectedEvent.date}</div>
+              <div>{selectedEvent.date.split('T')[0]}</div>
             </div>
-            <div className="form-group">
-              <label>Start Time:</label>
-              <div>{selectedEvent.timeStart}</div>
-            </div>
-            <div className="form-group">
-              <label>End Time:</label>
-              <div>{selectedEvent.timeEnd}</div>
-            </div>
+			<div className="form-group">
+				<label>Start Time:</label>
+				<div>{selectedEvent.startTime ? selectedEvent.startTime.split('T')[1]?.substring(0, 5) : ''}</div>
+			</div>
+			<div className="form-group">
+				<label>End Time:</label>
+				<div>{selectedEvent.endTime ? selectedEvent.endTime.split('T')[1]?.substring(0, 5) : ''}</div>
+			</div>
             <div className="form-group">
               <label>Description:</label>
-              <div className="event-description-container">
-                {selectedEvent.description}
-              </div>
+              <div className="event-description-container">{selectedEvent.description}</div>
             </div>
-            <button type="button" onClick={handleEdit} className="create-btn">
-              Edit Event
-            </button>
+            <button type="button" onClick={handleEdit} className="create-btn">Edit Event</button>
           </div>
         ) : (
           <div>
@@ -220,15 +293,12 @@ const EventForm = () => {
                 </button>
                 {showTagDropdown && (
                   <div className="tag-dropdown">
-                    {tags.map((tag, index) => (
-                      <div
-                        key={index}
-                        className="tag-option"
-                        onClick={() => handleTagSelect(tag)}
-                      >
+                    {tags.map((tag) => (
+                      <div key={tag._id} className="tag-option" onClick={() => handleCheckboxChange(tag._id)}>
                         <input
                           type="checkbox"
-                          checked={formData.tags.includes(tag.name)}
+                          checked={checkedTags[tag._id]}
+						  onChange={(e) => handleCheckboxChange(tag._id, e.target.checked)}
                           readOnly
                         />
                         <span style={{ color: tag.color }}>{tag.name}</span>
@@ -266,20 +336,8 @@ const EventForm = () => {
                     />
                   </div>
                   <div className="buttons">
-                    <button
-                      type="button"
-                      onClick={handleAddTag}
-                      className="tag-btn"
-                    >
-                      Add Tag
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowNewTagModal(false)}
-                      className="tag-btn"
-                    >
-                      Cancel
-                    </button>
+                    <button type="button" onClick={handleAddTag} className="tag-btn">Add Tag</button>
+                    <button type="button" onClick={() => setShowNewTagModal(false)} className="tag-btn">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -322,24 +380,14 @@ const EventForm = () => {
               ></textarea>
             </div>
             <div className="edit-event">
-              <button type="submit" className="create-btn">
-                {isEditMode ? "Update Event" : "Create Event"}
-              </button>
-              {isEditMode && (
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  className="create-btn"
-                >
-                  Cancel Edit
-                </button>
-              )}
+              <button type="submit" className="create-btn">{isEditMode ? 'Update Event' : 'Create Event'}</button>
+              {isEditMode && <button type="button" onClick={handleCancelEdit} className="create-btn">Cancel Edit</button>}
             </div>
           </div>
         )}
       </form>
     </div>
   );
-};
+}
 
 export default EventForm;

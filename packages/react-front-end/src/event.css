@@ -3,6 +3,7 @@
   font-family: Arial, sans-serif;
   background-color: #c4e8eb;
   padding: 20px;
+  margin-top: 90px;
 }
 
 .sidebar {
@@ -38,6 +39,7 @@
 
 .event-form h1 {
   font-size: 2em;
+  margin-top: 0px;
   margin-bottom: 20px;
 }
 
