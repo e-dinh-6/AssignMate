@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import mut from "../packages/backend/services";
+import mut from "../packages/backend/services"; //eslint-disable-line
 
 // make sure you are running tests while connected to an empty database or tests will fail
 
