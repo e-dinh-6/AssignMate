@@ -25,10 +25,9 @@ export function registerUser(req, res) {
               console.log("Token:", token);
               res.status(201).send({ token });
               // Add the new user to the database
-              return services.addUser({
-                username,
-                hashedPassword,
-              });
+              services
+                .addUser({ username, password: hashedPassword })
+              console.log("added");
             });
           });
       }
@@ -41,28 +40,32 @@ export function loginUser(req, res) {
   // const retrievedUser = services.getUser(
   //   (c) => c.username === username
   // );
-  const retrievedUser = services.getUser(username);
-
-  if (!retrievedUser) {
-    // invalid username
-    res.status(401).send("Unauthorized");
-  } else {
-    bcrypt
-      .compare(pwd, retrievedUser.hashedPassword)
-      .then((matched) => {
-        if (matched) {
-          generateAccessToken(username).then((token) => {
-            res.status(200).send({ token });
-          });
-        } else {
-          // invalid password
-          res.status(401).send("Unauthorized");
-        }
-      })
-      .catch(() => {
+  services.getUser(username)
+    .then((retrievedUser) => {
+      retrievedUser = retrievedUser[0];
+      if (!retrievedUser) {
         res.status(401).send("Unauthorized");
-      });
-  }
+      } else {
+        bcrypt
+          .compare(pwd, retrievedUser.password)
+          .then((matched) => {
+            if (matched) {
+              generateAccessToken(username)
+                .then((token) => {
+                  res.status(200).send({ token });
+                });
+            } else {
+              res.status(401).send("Unauthorized");
+            }
+          })
+          .catch(() => {
+            res.status(401).send("Unauthorized");
+          });
+      }
+    })
+    .catch(() => {
+      res.status(401).send("Unauthorized");
+    });
 }
 
 function generateAccessToken(username) {

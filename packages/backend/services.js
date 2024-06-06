@@ -31,6 +31,7 @@ mongoose
   });
 
 function addUser(user) {
+  console.log("user: ", user);
   const userToAdd = new User(user);
   const promise = userToAdd.save();
   return promise;
@@ -39,9 +40,9 @@ function addUser(user) {
 function getUser(name) {
   let promise;
   if (name) {
-    promise = User.find({ username: name }).lean();
+    promise = User.find({ username: name });
   } else {
-    promise = User.find().lean();
+    promise = User.find();
   }
   return promise;
 }
@@ -83,9 +84,9 @@ function addEvent(event) {
 function getEvent(user, title) {
   let promise;
   if (title) {
-    promise = Event.find({ username: user, eventName: title }).lean();
+    promise = Event.find({ username: user, eventName: title });
   } else {
-    promise = Event.find({ username: user }).lean();
+    promise = Event.find({ username: user });
   }
   return promise;
 }
