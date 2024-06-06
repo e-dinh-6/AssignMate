@@ -4,12 +4,13 @@
   "main": "module.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
-    }
+    },
+    "collectCoverage": true
   },
   "author": "",
   "license": "ISC",

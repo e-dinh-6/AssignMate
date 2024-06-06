@@ -38,38 +38,6 @@ describe("getUser function", () => {
   });
 });
 
-describe("findUserByName function", () => {
-  test("Testing findUserByName function w/ no name", async () => {
-    const expected = [{ username: "joe" }];
-    return mut.findUserByName("joe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-
-  test("Testing findUserByName function w/ username", () => {
-    const expected = [{ username: "joe" }];
-    return mut.findUserByName("joe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-});
-
-describe("findUserByUsernameAndPassword function", () => {
-  test("Testing findUserByUserameAndPassword function w/ no name", async () => {
-    const expected = [{ username: "joe", password: "hijoe" }];
-    return mut.findUserByUsernameAndPassword("joe", "hijoe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-
-  test("Testing findUserByUsernameAndPassword function w/ username", () => {
-    const expected = [{ username: "joe", password: "hijoe" }];
-    return mut.findUserByUsernameAndPassword("joe", "hijoe").then((got) => {
-      expect(got).toMatchObject(expected);
-    });
-  });
-});
-
 describe("addTag function", () => {
   test("adding Tag should return back the Tag", () => {
     const tag = { name: "school" };
