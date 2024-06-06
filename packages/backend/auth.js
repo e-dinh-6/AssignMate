@@ -25,8 +25,7 @@ export function registerUser(req, res) {
               console.log("Token:", token);
               res.status(201).send({ token });
               // Add the new user to the database
-              services
-                .addUser({ username, password: hashedPassword })
+              services.addUser({ username, password: hashedPassword });
               console.log("added");
             });
           });
@@ -40,9 +39,10 @@ export function loginUser(req, res) {
   // const retrievedUser = services.getUser(
   //   (c) => c.username === username
   // );
-  services.getUser(username)
-    .then((retrievedUser) => {
-      retrievedUser = retrievedUser[0];
+  services
+    .getUser(username)
+    .then((retrieved) => {
+      const [retrievedUser] = retrieved;
       if (!retrievedUser) {
         res.status(401).send("Unauthorized");
       } else {
@@ -50,10 +50,9 @@ export function loginUser(req, res) {
           .compare(pwd, retrievedUser.password)
           .then((matched) => {
             if (matched) {
-              generateAccessToken(username)
-                .then((token) => {
-                  res.status(200).send({ token });
-                });
+              generateAccessToken(username).then((token) => {
+                res.status(200).send({ token });
+              });
             } else {
               res.status(401).send("Unauthorized");
             }
