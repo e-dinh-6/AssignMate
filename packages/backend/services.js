@@ -78,22 +78,12 @@ function deleteTag(tagName) {
   return Tag.findOneAndDelete({ name: tagName });
 }
 
-// function getTags(id) {
-//   let promise;
-//   if (id) {
-//     promise = Tag.findById(id);
-//   } else {
-//     promise = Tag.find();
-//   }
-//   return promise;
-// }
-
-function getEvent(user, title) {
+async function getEvent(user, id) {
   let promise;
-  if (title) {
-    promise = Event.find({ username: user, eventName: title });
+  if (id) {
+    promise = Event.find({ username: user, _id: id }).populate('tags');
   } else {
-    promise = Event.find({ username: user });
+    promise = Event.find({ username: user }).populate('tags');
   }
   return promise;
 }
@@ -125,9 +115,11 @@ async function getEvents(user) {
           tag = new Tag({ name: tagName });
           await tag.save();
         }
-        return tag._id;
+        return tag;
       })
     );
+
+    console.log("tagsss", tags);
 
     const event = new Event({
       ...eventData,
@@ -141,18 +133,6 @@ async function getEvents(user) {
   }
 };
 
-async function convertTagNamesToObjectIds(tagNames) {
-  const tagIds = await Promise.all(tagNames.map(async (tagName) => {
-    let tag = await Tag.findOne({ name: tagName });
-    if (!tag) {
-      tag = new Tag({ name: tagName });
-      await tag.save();
-    }
-    return tag._id;
-  }));
-  return tagIds;
-}
-
 function deleteEvent(id) {
   return Event.findByIdAndDelete(id);
 }
@@ -163,15 +143,6 @@ function addTask(task) {
   return promise;
 }
 
-// function getTask(user, taskName) {
-//   let promise;
-//   if (taskName) {
-//     promise = Task.find({ username: user, title: taskName });
-//   } else {
-//     promise = Task.find({ username: user });
-//   }
-//   return promise;
-// }
 function getTasks(user) {
   const promise = Task.find({ username: user });
   return promise;
@@ -206,5 +177,4 @@ export default {
   getTasks,
   deleteTask,
   updateEvent,
-  convertTagNamesToObjectIds,
 };

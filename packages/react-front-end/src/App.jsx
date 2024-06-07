@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
-import Login from "./Loginpage";
+import Login from "./loginpage";
 import SignUp from "./RegisterUser";
 import Sevenday from "./sevenday";
 import List from "./list";

@@ -41,11 +41,19 @@ function EventForm() {
     fetchTags();
   }, []);
 
+  // useEffect(() => {
+  //   if (selectedEvent) {
+  //     resetForm();
+  //     console.log("hi");
+  //   }
+  // }, [selectedEvent]);
+
   useEffect(() => {
     if (selectedEvent) {
+      console.log("selected", selectedEvent);
       setFormData({
         title: selectedEvent.eventName || "",
-        tags: selectedEvent.tags.map((tag) => tag._id) || [], // Make sure to map tag IDs to an array
+        tags: selectedEvent.tags || [], // Make sure to map tag IDs to an array
         date: selectedEvent.date ? selectedEvent.date.split("T")[0] : "",
         timeStart: selectedEvent.startTime
           ? selectedEvent.startTime.split("T")[1].substring(0, 5)
@@ -57,13 +65,16 @@ function EventForm() {
         description: selectedEvent.description || "",
       });
       const initialCheckedTags = {};
-      selectedEvent.tags.forEach((tag) => {
-        initialCheckedTags[tag._id] = true;
+      console.log("selected tags", selectedEvent.tags);
+      selectedEvent.tags.forEach((tagId) => {
+        initialCheckedTags[tagId] = true;
       });
+      console.log("initial", initialCheckedTags);
       setCheckedTags(initialCheckedTags);
       setIsEditMode(true);
     } else {
       resetForm();
+      setIsEditMode(false);
     }
   }, [selectedEvent]);
 
@@ -126,10 +137,12 @@ function EventForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log("form data: ", formData);
+    console.log("form data tags: ", formData.tags);
     const formattedTags = formData.tags.filter(
-      (tag) => tag.name && typeof tag.name === "string",
+      (tag) => typeof tag === "string" && tag.trim().length > 0,
     );
+    console.log("tags: ", formattedTags);
 
     const eventToSubmit = {
       eventName: formData.title,
@@ -143,8 +156,8 @@ function EventForm() {
 
     const method = isEditMode ? "PUT" : "POST";
     const url = isEditMode
-      ? "https://assignmate7.azurewebsites.net/${selectedEvent._id}"
-      : "https://assignmate7.azurewebsites.net/events";
+      ? `http://localhost:8000/events/${selectedEvent._id}`
+      : `http://localhost:8000/events`;
 
     fetch(url, {
       method: method,
@@ -165,8 +178,8 @@ function EventForm() {
       })
       .then((data) => {
         fetchEvents(); // Refresh events list
-        resetForm();
         setSelectedEvent(null); // Reset form
+        resetForm();
         setIsEditMode(false);
       })
 
@@ -183,6 +196,8 @@ function EventForm() {
       status: "In Progress",
       description: "",
     });
+    setCheckedTags({});
+    setShowTagDropdown(false);
   };
 
   const handleAddTag = () => {
@@ -209,24 +224,30 @@ function EventForm() {
       .catch((error) => console.error("Error adding tag:", error));
   };
 
-  const handleCheckboxChange = (tagId, isChecked) => {
-    setCheckedTags((prevState) => ({ ...prevState, [tagId]: isChecked }));
-
-    if (isChecked) {
-      setFormData((prevState) => ({
-        ...prevState,
-        tags: [...prevState.tags, tagId],
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        tags: prevState.tags.filter((id) => id !== tagId),
-      }));
-    }
+  const handleCheckboxChange = (tagId) => {
+    setCheckedTags((prevState) => ({
+      ...prevState,
+      [tagId]: !prevState[tagId],
+    }));
   };
 
   const toggleTagDropdown = () => {
     setShowTagDropdown(!showTagDropdown);
+  };
+
+  const handleTagSelect = (tag) => {
+    console.log("T a g", tag);
+    if (formData.tags.includes(tag._id)) {
+      setFormData({
+        ...formData,
+        tags: formData.tags.filter((id) => id !== tag._id),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        tags: [...formData.tags, tag._id],
+      });
+    }
   };
 
   const handleEdit = () => {
@@ -272,9 +293,7 @@ function EventForm() {
                 className="event-name"
                 onClick={() => setSelectedEvent(event)}
               >
-                {event.eventName} (
-                {event.tags ? event.tags.map((tag) => tag.name).join(", ") : ""}
-                )
+                {event.eventName}
               </li>
             ))}
         </ul>
@@ -356,14 +375,12 @@ function EventForm() {
                       <div
                         key={tag._id}
                         className="tag-option"
-                        onClick={() => handleCheckboxChange(tag._id)}
+                        onClick={() => handleTagSelect(tag)}
                       >
                         <input
                           type="checkbox"
                           checked={checkedTags[tag._id]}
-                          onChange={(e) =>
-                            handleCheckboxChange(tag._id, e.target.checked)
-                          }
+                          onChange={() => handleCheckboxChange(tag._id)}
                           readOnly
                         />
                         <span style={{ color: tag.color }}>{tag.name}</span>

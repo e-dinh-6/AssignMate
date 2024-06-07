@@ -1,3 +1,4 @@
+// backend.js
 import express from "express";
 import cors from "cors";
 import services from "./services.js"; //eslint-disable-line
@@ -44,22 +45,24 @@ app.get("/events", authenticateUser, (req, res) => {
   const { username } = req;
   services
     .getEvents(username)
-    .then((events) => res.json(events)) // Ensure events are returned as JSON
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+    .then((events) => res.send(events))
+    .catch((error) => res.status(404).send(`Resource not found${error}`));
 });
 
-
-app.put('/events/:id', async (req, res) => {
+app.put("/events/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const updatedEvent = req.body;
   try {
-    const tagIds = await convertTagNamesToObjectIds(req.body.tags);
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, { ...req.body, tags: tagIds }, { new: true });
-    res.status(200).json(updatedEvent);
+    const event = await services.updateEvent(eventId, updatedEvent);
+    if (event) {
+      res.status(200).send(event);
+    } else {
+      res.status(404).send("Resource not found");
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Unable to update event: ' + error.message });
+    res.status(500).send(`Internal server error: ${error}`);
   }
 });
-
-
 
 app.delete("/events/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
@@ -74,17 +77,9 @@ app.post("/tag", authenticateUser, (req, res) => {
   const { username } = req;
   tag.username = username;
   services
-  .addTag(tag)
-  .then((events) => res.send(events))
-  .catch((error) => res.status(404).send(`Resource not found${error}`));
-});
-
-app.get("/tag/:id", authenticateUser, (req, res) => {
-  const {user} = req;
-  services
-    .getTags(user)
-    .then((tags) => res.json(tags)) // Ensure events are returned as JSON
-    .catch((error) => res.status(404).send(`Resource not found: ${error}`));
+    .addTag(tag)
+    .then((tag) => res.status(201).send(tag))
+    .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
 app.get("/tag", authenticateUser, (req, res) => {
