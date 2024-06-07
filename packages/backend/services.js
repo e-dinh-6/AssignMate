@@ -100,6 +100,7 @@ async function getEvents(user) {
     }
     eventsByDay[date].push(event);
   });
+  console.log(eventsByDay);
   return eventsByDay;
 }
 
@@ -117,7 +118,7 @@ const addEvent = async (eventData) => {
       }),
     );
 
-    console.log("tagsss", tags);
+    console.log("data", eventData);
 
     const event = new Event({
       ...eventData,

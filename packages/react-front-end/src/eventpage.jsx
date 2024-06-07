@@ -143,6 +143,7 @@ function EventForm() {
       (tag) => typeof tag === "string" && tag.trim().length > 0,
     );
     console.log("tags: ", formattedTags);
+    console.log(formData.timeStart);
 
     const eventToSubmit = {
       eventName: formData.title,

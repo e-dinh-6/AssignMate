@@ -133,8 +133,8 @@ function List() {
     fetchEvents()
       .then((res) => res.json())
       .then((json) => {
+        console.log("json", json);
         setEvents(json);
-        console.log("_event: ", events);
       })
       .catch((error) => console.log(error));
 
@@ -251,9 +251,10 @@ function List() {
                 {dailyEvents.map((event) => (
                   <li key={event._id}>
                     <strong className="event-details">
-                      {new Date(event.startTime).toLocaleTimeString([], {
+                      {new Date(event.startTime).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
+                        timeZone: "UTC", // Specify UTC timezone
                       })}
                     </strong>
                     <label className="event-details">{event.eventName}</label>
@@ -261,7 +262,6 @@ function List() {
                   </li>
                 ))}
               </ul>
-              <hr></hr>
             </section>
           ))}
         </div>
