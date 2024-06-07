@@ -30,9 +30,7 @@ mongoose
       });
   });
 
-  mongoose.set('strictPopulate', false);
-
-
+mongoose.set("strictPopulate", false);
 
 function addUser(user) {
   const userToAdd = new User(user);
@@ -81,9 +79,9 @@ function deleteTag(tagName) {
 async function getEvent(user, id) {
   let promise;
   if (id) {
-    promise = Event.find({ username: user, _id: id }).populate('tags');
+    promise = Event.find({ username: user, _id: id }).populate("tags");
   } else {
-    promise = Event.find({ username: user }).populate('tags');
+    promise = Event.find({ username: user }).populate("tags");
   }
   return promise;
 }
@@ -105,7 +103,7 @@ async function getEvents(user) {
   return eventsByDay;
 }
 
- const addEvent = async (eventData) => {
+const addEvent = async (eventData) => {
   try {
     // Find tags by name or create them if they don't exist
     const tags = await Promise.all(
@@ -116,14 +114,14 @@ async function getEvents(user) {
           await tag.save();
         }
         return tag;
-      })
+      }),
     );
 
     console.log("tagsss", tags);
 
     const event = new Event({
       ...eventData,
-      tags: tags,
+      tags,
     });
 
     await event.save();
@@ -152,10 +150,11 @@ function deleteTask(id) {
   return Task.findByIdAndDelete(id);
 }
 
-
 const updateEvent = async (eventId, updatedEvent) => {
   try {
-    const event = await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
+    const event = await Event.findByIdAndUpdate(eventId, updatedEvent, {
+      new: true,
+    });
     return event;
   } catch (error) {
     throw new Error(`Unable to update event: ${error.message}`);

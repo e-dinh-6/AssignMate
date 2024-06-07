@@ -37,8 +37,8 @@
   color: inherit;
   padding: 5px;
   margin-top: 5%;
-  font-size: 500%; 
-  text-decoration: none; 
+  font-size: 500%;
+  text-decoration: none;
 }
 
 h1 {
@@ -191,7 +191,7 @@ p {
   background-color: #fff;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   height: 100%; /* Adjust the height as needed */
 }
 
