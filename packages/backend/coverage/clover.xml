@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1717772669091" clover="3.2.0">
-  <project timestamp="1717772669091" name="All files">
-    <metrics statements="70" coveredstatements="45" conditionals="8" coveredconditionals="3" methods="19" coveredmethods="12" elements="97" coveredelements="60" complexity="0" loc="70" ncloc="70" packages="1" files="2" classes="2"/>
+<coverage generated="1717774523322" clover="3.2.0">
+  <project timestamp="1717774523322" name="All files">
+    <metrics statements="70" coveredstatements="36" conditionals="8" coveredconditionals="1" methods="19" coveredmethods="9" elements="97" coveredelements="46" complexity="0" loc="70" ncloc="70" packages="1" files="2" classes="2"/>
     <file name="database.js" path="/Users/katyhosokawa/Desktop/csc307/AssignMate/packages/backend/database.js">
       <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="5" count="1" type="stmt"/>
@@ -14,7 +14,7 @@
       <line num="116" count="1" type="stmt"/>
     </file>
     <file name="services.js" path="/Users/katyhosokawa/Desktop/csc307/AssignMate/packages/backend/services.js">
-      <metrics statements="62" coveredstatements="37" conditionals="8" coveredconditionals="3" methods="19" coveredmethods="12"/>
+      <metrics statements="62" coveredstatements="28" conditionals="8" coveredconditionals="1" methods="19" coveredmethods="9"/>
       <line num="6" count="1" type="stmt"/>
       <line num="8" count="1" type="stmt"/>
       <line num="9" count="1" type="stmt"/>
@@ -37,21 +37,21 @@
       <line num="56" count="1" type="stmt"/>
       <line num="57" count="1" type="stmt"/>
       <line num="58" count="1" type="stmt"/>
-      <line num="71" count="3" type="stmt"/>
-      <line num="72" count="3" type="stmt"/>
-      <line num="76" count="1" type="stmt"/>
-      <line num="81" count="4" type="cond" truecount="1" falsecount="1"/>
+      <line num="71" count="2" type="stmt"/>
+      <line num="72" count="2" type="stmt"/>
+      <line num="76" count="0" type="stmt"/>
+      <line num="81" count="1" type="cond" truecount="1" falsecount="1"/>
       <line num="82" count="0" type="stmt"/>
-      <line num="84" count="4" type="stmt"/>
-      <line num="86" count="4" type="stmt"/>
-      <line num="91" count="1" type="stmt"/>
-      <line num="95" count="1" type="stmt"/>
-      <line num="96" count="1" type="stmt"/>
-      <line num="97" count="10" type="stmt"/>
-      <line num="98" count="10" type="cond" truecount="2" falsecount="0"/>
-      <line num="99" count="2" type="stmt"/>
-      <line num="101" count="10" type="stmt"/>
-      <line num="103" count="1" type="stmt"/>
+      <line num="84" count="1" type="stmt"/>
+      <line num="86" count="1" type="stmt"/>
+      <line num="91" count="0" type="stmt"/>
+      <line num="95" count="0" type="stmt"/>
+      <line num="96" count="0" type="stmt"/>
+      <line num="97" count="0" type="stmt"/>
+      <line num="98" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="99" count="0" type="stmt"/>
+      <line num="101" count="0" type="stmt"/>
+      <line num="103" count="0" type="stmt"/>
       <line num="106" count="1" type="stmt"/>
       <line num="107" count="1" type="stmt"/>
       <line num="109" count="1" type="stmt"/>
