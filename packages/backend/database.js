@@ -37,7 +37,6 @@ const tagSchema = new mongoose.Schema(
 
 const Tag = mongoose.model("Tag", tagSchema);
 
-
 // Define Event Schema
 const eventSchema = new mongoose.Schema(
   {
@@ -48,10 +47,12 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tags: [{
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Tag",
-    }],
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
     date: {
       type: Date,
       required: true,

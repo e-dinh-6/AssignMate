@@ -1,4 +1,4 @@
- # AssignMate
+# AssignMate
 
 For students who are unorganized and need a system in place to help them complete assignments on time and know deadlines. AssignMate is a calendar that is more catered for assignments and products that allows you to manage upcoming events and tasks. Unlike Google Calendar our Product allows for full customizability of colors for different tags.
 

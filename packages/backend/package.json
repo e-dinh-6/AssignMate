@@ -10,11 +10,6 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./../../.prettierrc",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
-  },
   "author": "",
   "license": "ISC",
   "description": "",
