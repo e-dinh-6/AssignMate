@@ -59,7 +59,7 @@ function addTag(tag) {
 }
 
 function getTag(user, tagName) {
-  let promise = Tag.find({ username: user, name: tagName });
+  const promise = Tag.find({ username: user, name: tagName });
   return promise;
 }
 
@@ -100,21 +100,21 @@ async function getEvents(user) {
 }
 
 const addEvent = async (eventData) => {
-    // Find tags by name or create them if they don't exist
-    const tags = await Promise.all(
-      eventData.tags.map(async (tagName) => {
-        let tag = await Tag.findOne({ name: tagName });
-        if (!tag) {
-          tag = new Tag({ name: tagName });
-          await tag.save();
-        }
-        return tag;
-      }),
-    );
-    const event = new Event({
-      ...eventData,
-      tags,
-    });
+  // Find tags by name or create them if they don't exist
+  const tags = await Promise.all(
+    eventData.tags.map(async (tagName) => {
+      let tag = await Tag.findOne({ name: tagName });
+      if (!tag) {
+        tag = new Tag({ name: tagName });
+        await tag.save();
+      }
+      return tag;
+    }),
+  );
+  const event = new Event({
+    ...eventData,
+    tags,
+  });
 
   const promise = event.save();
   return promise;
@@ -144,7 +144,7 @@ const updateEvent = async (eventId, updatedEvent) => {
     new: true,
   });
   return promise;
-}
+};
 
 export default {
   addUser,

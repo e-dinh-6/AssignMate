@@ -26,7 +26,6 @@ describe("getUser function", () => {
   test("Testing getUser function w/ no name", () => {
     const expected = [{ username: "testUser" }];
     return mut.getUser().then((got) => {
-      console.log(got);
       expect(got).toMatchObject(expected);
     });
   });
@@ -71,7 +70,7 @@ describe("addEvent function", () => {
     const event = {
       username: "testUser",
       eventName: "meeting",
-      tags: ["school","nonExistantTag"],
+      tags: ["school", "nonExistantTag"],
       date: new Date("2024-06-05"),
       startTime: new Date("2024-06-05T12:00:00"),
       endTime: new Date("2024-06-05T13:00:00"),
@@ -79,13 +78,12 @@ describe("addEvent function", () => {
     };
     try {
       const got = await mut.addEvent(event);
-      console.log(got);
       expect(got).toMatchObject({
         username: event.username,
         eventName: event.eventName,
         date: event.date,
         startTime: event.startTime,
-        endTime: event.endTime, // Fixed typo here (endTome -> endTime)
+        endTime: event.endTime,
         status: event.status,
       });
     } catch (error) {
@@ -108,17 +106,18 @@ describe("updateEvent function", () => {
       endTime: new Date("2024-06-05T13:00:00"),
       status: "done",
     };
-    return mut.updateEvent(event._id.toHexString(),updatedEvent).then((got) => {
-      console.log(got);
-      expect(got).toMatchObject({
-        username: updatedEvent.username,
-        eventName: updatedEvent.eventName,
-        date: updatedEvent.date,
-        startTime: updatedEvent.startTime,
-        endTime: updatedEvent.endTime,
-        status: updatedEvent.status,
+    return mut
+      .updateEvent(event._id.toHexString(), updatedEvent) //eslint-disable-line
+      .then((got) => {
+        expect(got).toMatchObject({
+          username: updatedEvent.username,
+          eventName: updatedEvent.eventName,
+          date: updatedEvent.date,
+          startTime: updatedEvent.startTime,
+          endTime: updatedEvent.endTime,
+          status: updatedEvent.status,
+        });
       });
-    });
   });
 });
 
@@ -126,14 +125,14 @@ describe("getEvent function", () => {
   test("Testing getEvent function w/ id", async () => {
     const expected = await mut.getEvent("testUser");
     const event = expected[0];
-    return mut.getEvent("testUser",event._id.toHexString()).then((got) => {
+    return mut.getEvent("testUser", event._id.toHexString()).then((got) => {
+      //eslint-disable-line
       expect(got).toMatchObject(expected);
     });
   });
-   test("Testing getEvent function w/o id", async () => {
+  test("Testing getEvent function w/o id", async () => {
     const expected = {};
-    return mut.getEvent("testUser",null).then((got) => {
-      console.log(got);
+    return mut.getEvent("testUser", null).then((got) => {
       expect(got).toMatchObject(expected);
     });
   });
@@ -143,6 +142,7 @@ describe("deleteEvent function", () => {
   test("delete event that is in database; should return deleted user", async () => {
     const expected = await mut.getEvent("testUser");
     return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => {
+      //eslint-disable-line
       const event = expected[0];
       expect(got).toMatchObject({
         username: event.username,
@@ -160,41 +160,40 @@ describe("deleteEvent function", () => {
     }));
 });
 
-describe('getEvents function', () => {
-  test('should return events grouped by date', async () => {
-    const event =
-      {
-        _id: '6663705c47c75e5afe27e717',
-        username: 'anotherUser',
-        date: new Date('2024-06-05T00:00:00.000Z'),
-        startTime: new Date('2024-06-05T15:00:00.000Z'),
-        endTime: new Date('2024-06-05T21:00:00.000Z'),
-        status: 'done',
-        tags: [],
-        eventName: 'dinner',
-        __v: 0,
-      };
+describe("getEvents function", () => {
+  test("should return events grouped by date", async () => {
+    const event = {
+      _id: "6663705c47c75e5afe27e717",
+      username: "anotherUser",
+      date: new Date("2024-06-05T00:00:00.000Z"),
+      startTime: new Date("2024-06-05T15:00:00.000Z"),
+      endTime: new Date("2024-06-05T21:00:00.000Z"),
+      status: "done",
+      tags: [],
+      eventName: "dinner",
+      __v: 0,
+    };
     await mut.addEvent(event);
-    const result = await mut.getEvents('anotherUser');
+    const result = await mut.getEvents("anotherUser");
     const resultWithoutId = {};
-    for (const dateKey in result) {
+    Object.keys(result).forEach((dateKey) => {
       resultWithoutId[dateKey] = result[dateKey].map((event) => {
         const eventObject = event.toObject();
         const { _id, ...eventWithoutId } = eventObject;
         return { ...eventWithoutId, _id: _id.toHexString() };
       });
-    }
+    });
     const expected = {
-      'Tue Jun 04 2024 17:00:00 GMT-0700 (Pacific Daylight Time)': [event],
+      "Tue Jun 04 2024 17:00:00 GMT-0700 (Pacific Daylight Time)": [event],
     };
     expect(expected).toEqual(resultWithoutId);
-    await mut.deleteEvent('6663705c47c75e5afe27e717');
+    await mut.deleteEvent("6663705c47c75e5afe27e717");
   });
 });
 
 describe("deleteTag function", () => {
   test("delete tag that is in database; should return deleted tag", async () => {
-    const expected = await mut.getTag("testUser","school","newTag");
+    const expected = await mut.getTag("testUser", "school", "newTag");
     return mut.deleteTag("school").then((got) => {
       expect(got).toMatchObject(expected[0]);
     });
@@ -209,6 +208,7 @@ describe("deleteTask function", () => {
   test("delete task that is in database; should return deleted task", async () => {
     const task = await mut.getTasks("testUser");
     mut.deleteTask(task[0]._id).then((got) => {
+      //eslint-disable-line
       expect(got).toMatchObject(task[0]);
     });
   });
