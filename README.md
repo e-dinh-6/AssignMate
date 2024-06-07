@@ -6,7 +6,7 @@ For students who are unorganized and need a system in place to help them complet
 https://www.figma.com/proto/DlgSD0SPMK5pEvgIsd9igE/AssignMate?node-id=0-1&t=NxstKKaojkmlRD5Q-1
 
 <h3>Development environment set up</h3>
-Set up a .env file with your mongoose database, place it in the backend folder 
+Set up a .env file with your mongoose database authentication, place it in the backend folder 
 
 <h3>Diagram</h3>
 <a href= "https://github.com/e-dinh-6/AssignMate/blob/main/diagram.md" >Link to Diagram</a>
