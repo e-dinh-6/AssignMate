@@ -41,6 +41,7 @@ function List() {
             eventArray.filter((event) => event._id !== eventId),
           );
           setEvents(updated);
+          window.location.reload();
         }
       })
       .catch((error) => {
