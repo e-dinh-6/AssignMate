@@ -9,3 +9,4 @@ https://www.figma.com/proto/DlgSD0SPMK5pEvgIsd9igE/AssignMate?node-id=0-1&t=Nxst
 Set up a .env file with your mongoose database, place it in the backend folder 
 
 <h3>Diagram</h3>
+<a href= "https://github.com/e-dinh-6/AssignMate/blob/main/diagram.md" >Link to Diagram</a>
