@@ -1,4 +1,4 @@
-# AssignMate
+ # AssignMate
 
 For students who are unorganized and need a system in place to help them complete assignments on time and know deadlines. AssignMate is a calendar that is more catered for assignments and products that allows you to manage upcoming events and tasks. Unlike Google Calendar our Product allows for full customizability of colors for different tags.
 
@@ -9,7 +9,7 @@ https://www.figma.com/proto/DlgSD0SPMK5pEvgIsd9igE/AssignMate?node-id=0-1&t=Nxst
 Set up a .env file with your mongoose database authentication, place it in the backend folder
 
 <h3>Diagram</h3>
-<a href= "https://github.com/e-dinh-6/AssignMate/blob/main/diagram.md](https://github.com/e-dinh-6/AssignMate/blob/af2b2f86494679efc69093a69d9fa1873c53f524/docs/diagram.md)" >Link to Diagram</a>
+<a href= "https://github.com/e-dinh-6/AssignMate/blob/main/diagram.md](https://github.com/e-dinh-6/AssignMate/blob/af2b2f86494679efc69093a69d9fa1873c53f524/docs/diagram.md" >Link to Diagram</a>
 
 <h3>Contributors</h3>
 Emi Dinh, Katy Hosokawa, Chenyi Zhao, Mei Shiratori, Taying Thao
