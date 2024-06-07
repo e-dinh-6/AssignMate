@@ -12,6 +12,20 @@
   right: 10px;
 }
 
+.back-button {
+  padding: 10px 20px;
+  background-color: #749fcd;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
 .sidebar {
   width: 250px;
   background-color: #b3d2d4;
