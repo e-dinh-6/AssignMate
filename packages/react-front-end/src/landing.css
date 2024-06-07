@@ -32,3 +32,21 @@
 a {
   color: white;
 }
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(
+      -30px
+    ); /* Adjust this value for how high you want the jump */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.jump-once {
+  animation: jump 1s ease-in-out; /* Adjust animation duration as needed */
+}

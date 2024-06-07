@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./event.css";
 
 function EventForm() {
@@ -20,6 +21,8 @@ function EventForm() {
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [showNewTagModal, setShowNewTagModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const navigate = useNavigate();
 
   function addAuthHeader(otherHeaders = {}) {
     const token = localStorage.getItem("token");
@@ -254,6 +257,11 @@ function EventForm() {
 
   return (
     <div className="event-form-container">
+      <div className="back-button-container">
+        <button onClick={() => navigate("/list")} className="back-button">
+          Back to List
+        </button>
+      </div>
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>

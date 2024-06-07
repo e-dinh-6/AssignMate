@@ -8,6 +8,8 @@ function Loginpage(props) {
     pwd: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   return (
     <form>
       <MDBContainer
@@ -22,6 +24,7 @@ function Loginpage(props) {
           />
           <h4 className="mt-1 mb-5 pb-1">Login to AssignMate</h4>
         </div>
+
         <MDBInput
           wrapperClass="mb-4"
           label="Username"
@@ -47,6 +50,12 @@ function Loginpage(props) {
           Sign in
         </MDBBtn>
 
+        {errorMessage && ( // Conditionally render error message
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}
+          </div>
+        )}
+
         <div className="text-center">
           <p>
             Not a member? <a href="/signup">Register</a>
@@ -70,7 +79,11 @@ function Loginpage(props) {
 
   function submitForm(event) {
     event.preventDefault();
-    props.handleSubmit(creds);
+    props.handleSubmit(creds).then((response) => {
+      if (!response || response.status !== 200) {
+        setErrorMessage(`Invalid Username and Password. Please try again.`);
+      }
+    });
     setCreds({ username: "", pwd: "" });
   }
 }

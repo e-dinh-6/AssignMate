@@ -1,5 +1,5 @@
 // src/list.jsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./list.css";
 import logo from "./assets/logo.png";
@@ -9,6 +9,7 @@ function List() {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [checkedTaskIds, setCheckedTaskIds] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   const currentDate = new Date();
   const options = { weekday: "long", month: "long", day: "numeric" };
@@ -37,10 +38,17 @@ function List() {
     })
       .then((response) => {
         if (response.status === 204) {
-          const updated = Object.values(events).flatMap((eventArray) =>
-            eventArray.filter((event) => event._id !== eventId),
-          );
-          setEvents(updated);
+          const updatedEvents = { ...events };
+
+          // Loop through each date in the events object
+          for (const date in updatedEvents) {
+            // Filter out the event with the specified eventId
+            updatedEvents[date] = updatedEvents[date].filter(
+              (event) => event._id !== eventId,
+            );
+          }
+          setEvents(updatedEvents);
+          console.log("Events: ", events);
         }
       })
       .catch((error) => {
@@ -80,7 +88,7 @@ function List() {
     setCheckedTaskIds([]);
   }
 
-  function addTask() {
+  function addTask(task) {
     postTask({ title: newTaskTitle })
       .then((response) => {
         if (response.status === 201) {
@@ -126,6 +134,7 @@ function List() {
       .then((res) => res.json())
       .then((json) => {
         setEvents(json);
+        console.log("_event: ", events);
       })
       .catch((error) => console.log(error));
 
@@ -135,30 +144,33 @@ function List() {
       .catch((error) => console.log(error));
   }, []);
 
-  const filteredEvents = Object.entries(events).reduce(
-    (acc, [date, dailyEvents]) => {
-      const eventDate = new Date(date);
-      const eventYear = eventDate.getFullYear();
-      const eventMonth = eventDate.getMonth();
-      const eventDay = eventDate.getDate();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth();
-      const currentDay = currentDate.getDate();
+  useEffect(() => {
+    console.log("EVENTS: ", events);
+    setFilteredEvents(
+      Object.entries(events).reduce((acc, [date, dailyEvents]) => {
+        const eventDate = new Date(date);
+        const eventYear = eventDate.getFullYear();
+        const eventMonth = eventDate.getMonth();
+        const eventDay = eventDate.getDate();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth();
+        const currentDay = currentDate.getDate();
 
-      // Compare only year, month, and day components
-      if (
-        eventYear > currentYear ||
-        (eventYear === currentYear && eventMonth > currentMonth) ||
-        (eventYear === currentYear &&
-          eventMonth === currentMonth &&
-          eventDay >= currentDay)
-      ) {
-        acc[date] = dailyEvents;
-      }
-      return acc;
-    },
-    {},
-  );
+        // Compare only year, month, and day components
+        if (
+          eventYear > currentYear ||
+          (eventYear === currentYear && eventMonth > currentMonth) ||
+          (eventYear === currentYear &&
+            eventMonth === currentMonth &&
+            eventDay >= currentDay)
+        ) {
+          acc[date] = dailyEvents;
+        }
+        return acc;
+      }, {}),
+    );
+    console.log("filter", filteredEvents);
+  }, [events]);
 
   return (
     <div className="container">

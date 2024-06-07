@@ -18,6 +18,8 @@ function RegisterUser(props) {
     pwd: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   return (
     <MDBContainer className="my-5" style={{ backgroundColor: "#b3d2d4" }}>
       <MDBCard style={{ backgroundColor: "#e0ebec" }}>
@@ -58,6 +60,11 @@ function RegisterUser(props) {
                   Register
                 </MDBBtn>
               </form>
+              {errorMessage && ( // Conditionally render error message
+                <div className="alert alert-danger" role="alert">
+                  {errorMessage}
+                </div>
+              )}
             </MDBCardBody>
           </MDBCol>
         </MDBRow>
@@ -79,7 +86,11 @@ function RegisterUser(props) {
 
   function submitForm(event) {
     event.preventDefault();
-    props.handleSubmit(creds);
+    props.handleSubmit(creds).then((response) => {
+      if (!response || response.status !== 200) {
+        setErrorMessage(`This username has been taken. Please try again.`);
+      }
+    });
     setCreds({ username: "", pwd: "" });
   }
 }
