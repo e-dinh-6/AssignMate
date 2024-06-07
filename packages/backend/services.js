@@ -58,15 +58,11 @@ function addTag(tag) {
   return promise;
 }
 
-// function getTag(user, tagName) {
-//   let promise;
-//   if (tagName) {
-//     promise = Tag.find({ username: user, name: tagName });
-//   } else {
-//     promise = Tag.find({ username: user });
-//   }
-//   return promise;
-// }
+function getTag(user, tagName) {
+  let promise = Tag.find({ username: user, name: tagName });
+  return promise;
+}
+
 function getTags(user) {
   const promise = Tag.find({ username: user });
   return promise;
@@ -100,12 +96,10 @@ async function getEvents(user) {
     }
     eventsByDay[date].push(event);
   });
-  console.log(eventsByDay);
   return eventsByDay;
 }
 
 const addEvent = async (eventData) => {
-  try {
     // Find tags by name or create them if they don't exist
     const tags = await Promise.all(
       eventData.tags.map(async (tagName) => {
@@ -117,19 +111,13 @@ const addEvent = async (eventData) => {
         return tag;
       }),
     );
-
-    console.log("data", eventData);
-
     const event = new Event({
       ...eventData,
       tags,
     });
 
-    await event.save();
-    return event;
-  } catch (error) {
-    throw new Error(`Error creating event: ${error.message}`);
-  }
+  const promise = event.save();
+  return promise;
 };
 
 function deleteEvent(id) {
@@ -152,21 +140,18 @@ function deleteTask(id) {
 }
 
 const updateEvent = async (eventId, updatedEvent) => {
-  try {
-    const event = await Event.findByIdAndUpdate(eventId, updatedEvent, {
-      new: true,
-    });
-    return event;
-  } catch (error) {
-    throw new Error(`Unable to update event: ${error.message}`);
-  }
-};
+  const promise = await Event.findByIdAndUpdate(eventId, updatedEvent, {
+    new: true,
+  });
+  return promise;
+}
 
 export default {
   addUser,
   getUser,
   deleteUser,
   addTag,
+  getTag,
   getTags,
   deleteTag,
   addEvent,
