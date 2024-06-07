@@ -41,12 +41,6 @@ function EventForm() {
     fetchTags();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedEvent) {
-  //     resetForm();
-  //     console.log("hi");
-  //   }
-  // }, [selectedEvent]);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -71,7 +65,7 @@ function EventForm() {
       });
       console.log("initial", initialCheckedTags);
       setCheckedTags(initialCheckedTags);
-      setIsEditMode(true);
+      setIsEditMode(false);
     } else {
       resetForm();
       setIsEditMode(false);
@@ -81,7 +75,7 @@ function EventForm() {
   const fetchEvents = async () => {
     try {
       const response = await fetch(
-        "https://assignmate7.azurewebsites.net/events",
+        "http://localhost:8000/events",
         {
           headers: addAuthHeader(),
         },
@@ -107,7 +101,7 @@ function EventForm() {
   const fetchTags = async () => {
     try {
       const response = await fetch(
-        "https://assignmate7.azurewebsites.net/tag",
+        "http://localhost:8000/tag",
         {
           headers: addAuthHeader(),
         },
@@ -207,7 +201,7 @@ function EventForm() {
       color: newTagColor,
     };
 
-    fetch("https://assignmate7.azurewebsites.net/tag", {
+    fetch("http://localhost:8000/tag", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
@@ -277,6 +271,13 @@ function EventForm() {
 
   console.log(events);
 
+
+  const tagMap = {};
+  tags.forEach(tag => {
+    tagMap[tag._id] = tag.name;
+  });
+
+
   return (
     <div className="event-form-container">
       <div className="back-button-container">
@@ -287,15 +288,13 @@ function EventForm() {
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-          {events &&
-            events.map((event) => (
-              <li
-                key={event._id}
+          {events && events.map((event) => (
+              <li key={event._id}
                 className="event-name"
                 onClick={() => setSelectedEvent(event)}
               >
-                {event.eventName}
-              </li>
+            {event.eventName} ({event.tags ? event.tags.map(tagId => tagMap[tagId]).join(', ') : ''})
+            </li>
             ))}
         </ul>
       </div>
