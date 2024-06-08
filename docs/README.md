@@ -13,3 +13,6 @@ Set up a .env file with your mongoose database authentication, place it in the b
 
 <h3>Contributors</h3>
 Emi Dinh, Katy Hosokawa, Chenyi Zhao, Mei Shiratori, Taying Thao
+
+<h3>Demo Video</h3>
+<a href = "https://youtu.be/nnv2lzIqHt4"> Demo Video</a>
