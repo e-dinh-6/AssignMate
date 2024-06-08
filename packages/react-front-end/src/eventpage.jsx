@@ -138,14 +138,17 @@ function EventForm() {
     const selectedTagIds = Object.keys(checkedTags)
     .filter((tagId) => checkedTags[tagId]);
 
-    console.log('Selected Tag IDs:', selectedTagIds);
-
-    const formattedTags = selectedTagIds.map(tagId => tagMap[tagId]);
-
+    let tagsToSend;
+    if (!isEditMode) {
+      const formattedTags = selectedTagIds.map(tagId => tagMap[tagId]);
+      tagsToSend = formattedTags;
+    } else {
+      tagsToSend = selectedTagIds;
+    }
 
     const eventToSubmit = {
       eventName: formData.title,
-      tags: formattedTags,
+      tags: tagsToSend,
       date: new Date(`${formData.date}T00:00:00Z`), // Ensure date is in ISO format
       startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`), // Ensure time is in ISO format
       endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`), // Ensure time is in ISO format
