@@ -134,8 +134,7 @@ describe("getEvent function", () => {
   test("Testing getEvent function w/ id", async () => {
     const expected = await mut.getEvent("testUser");
     const event = expected[0];
-    return mut.getEvent("testUser", event._id.toHexString()).then((got) => {
-      //eslint-disable-line
+    return mut.getEvent("testUser", event._id.toHexString()).then((got) => { //eslint-disable-line
       expect(got).toMatchObject(expected);
     });
   });
@@ -150,8 +149,7 @@ describe("getEvent function", () => {
 describe("deleteEvent function", () => {
   test("delete event that is in database; should return deleted user", async () => {
     const expected = await mut.getEvent("testUser");
-    return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => {
-      //eslint-disable-line
+    return mut.deleteEvent(expected[0]._id.toHexString()).then((got) => { //eslint-disable-line
       const event = expected[0];
       expect(got).toMatchObject({
         username: event.username,
@@ -285,8 +283,7 @@ describe("deleteTag function", () => {
 describe("deleteTask function", () => {
   test("delete task that is in database; should return deleted task", async () => {
     const task = await mut.getTasks("testUser");
-    mut.deleteTask(task[0]._id).then((got) => {
-      //eslint-disable-line
+    mut.deleteTask(task[0]._id).then((got) => { //eslint-disable-line
       expect(got).toMatchObject(task[0]);
     });
   });
