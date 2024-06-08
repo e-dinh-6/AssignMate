@@ -176,7 +176,7 @@ function MonthView() {
   };
 
   const removeTask = (taskId) => {
-    fetch(`http://localhost:8000/tasks/${taskId}`, {
+    fetch(`https://assignmate7.azurewebsites.net/tasks/${taskId}`, {
       method: "DELETE",
       headers: addAuthHeader(),
     })
