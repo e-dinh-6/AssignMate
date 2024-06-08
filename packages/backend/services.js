@@ -58,6 +58,7 @@ function addTag(tag) {
   return promise;
 }
 
+
 function getTags(user) {
   const promise = Tag.find({ username: user });
   return promise;

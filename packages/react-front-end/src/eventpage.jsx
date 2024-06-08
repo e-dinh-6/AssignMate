@@ -131,13 +131,15 @@ function EventForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form data: ", formData);
-    console.log("form data tags: ", formData.tags);
-    const formattedTags = formData.tags.filter(
-      (tag) => typeof tag === "string" && tag.trim().length > 0,
-    );
-    console.log("tags: ", formattedTags);
-    console.log(formData.timeStart);
+
+    console.log('Checked Tags:', checkedTags);
+    console.log('Form Data:', formData);
+
+    const formattedTags = Object.keys(checkedTags)
+    .filter((tagId) => checkedTags[tagId])
+    .map((tagId) => tagMap[tagId]);
+
+    console.log('Formatted Tags:', formattedTags);
 
     const eventToSubmit = {
       eventName: formData.title,
@@ -148,6 +150,8 @@ function EventForm() {
       status: formData.status,
       description: formData.description,
     };
+
+    console.log('Event to Submit:', eventToSubmit);
 
     const method = isEditMode ? "PUT" : "POST";
     const url = isEditMode
@@ -172,6 +176,8 @@ function EventForm() {
         return response.json();
       })
       .then((data) => {
+        console.log('Data:', data);
+
         fetchEvents(); // Refresh events list
         setSelectedEvent(null); // Reset form
         resetForm();
@@ -218,12 +224,14 @@ function EventForm() {
       })
       .catch((error) => console.error("Error adding tag:", error));
   };
-
+  
   const handleCheckboxChange = (tagId) => {
-    setCheckedTags((prevState) => ({
-      ...prevState,
-      [tagId]: !prevState[tagId],
-    }));
+    setCheckedTags((prevState) => {
+      const newState = { ...prevState, [tagId]: !prevState[tagId] };
+      const selectedTags = Object.keys(newState).filter(key => newState[key]);
+      setFormData({ ...formData, tags: selectedTags });
+      return newState;
+    });
   };
 
   const toggleTagDropdown = () => {
@@ -314,8 +322,7 @@ function EventForm() {
             </div>
             <div className="form-group">
               <label>Tags:</label>
-              <div>{selectedEvent.tags?.join(", ")}</div>{" "}
-              {/* Add optional chaining here */}
+              <div>{selectedEvent.tags? selectedEvent.tags.map((tagId) => tagMap[tagId]).join(", ") : ""}</div>
             </div>
             <div className="form-group">
               <label>Date:</label>
