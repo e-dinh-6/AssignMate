@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1717825865596" clover="3.2.0">
-  <project timestamp="1717825865596" name="All files">
+<coverage generated="1717826307676" clover="3.2.0">
+  <project timestamp="1717826307676" name="All files">
     <metrics statements="61" coveredstatements="61" conditionals="8" coveredconditionals="8" methods="18" coveredmethods="18" elements="87" coveredelements="87" complexity="0" loc="61" ncloc="61" packages="1" files="2" classes="2"/>
     <file name="database.js" path="/Users/katyhosokawa/Desktop/csc307/AssignMate/packages/backend/database.js">
       <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>

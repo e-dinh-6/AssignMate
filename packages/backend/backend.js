@@ -41,7 +41,6 @@ app.post("/events", authenticateUser, (req, res) => {
     .catch((error) => res.status(400).send(`error: ${error}`));
 });
 
-
 app.get("/events", authenticateUser, (req, res) => {
   const { username } = req;
   services
