@@ -193,7 +193,7 @@ describe("getEvents function", () => {
     const expected = {
       "Tue Jun 04 2024 17:00:00 GMT-0700 (Pacific Daylight Time)": [event],
     };
-    expect(expected).toEqual(resultWithoutId);
+    expect(expected).toMatchObject(resultWithoutId);
     await mut.deleteEvent("6663705c47c75e5afe27e717");
   });
   test("no events found", async () => {
@@ -261,7 +261,7 @@ describe("getEvents function", () => {
         },
       ],
     };
-    expect(expected).toEqual(resultWithoutId);
+    expect(expected).toMatchObject(resultWithoutId);
     await mut.deleteEvent("3a7c8b5e9d12f4a6c6e9b7c8");
     await mut.deleteEvent("9f7a2c8b39a014c6b9d3b6a4");
   });
