@@ -41,12 +41,6 @@ function EventForm() {
     fetchTags();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedEvent) {
-  //     resetForm();
-  //     console.log("hi");
-  //   }
-  // }, [selectedEvent]);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -71,7 +65,7 @@ function EventForm() {
       });
       console.log("initial", initialCheckedTags);
       setCheckedTags(initialCheckedTags);
-      setIsEditMode(true);
+      setIsEditMode(false);
     } else {
       resetForm();
       setIsEditMode(false);
@@ -81,7 +75,7 @@ function EventForm() {
   const fetchEvents = async () => {
     try {
       const response = await fetch(
-        "https://assignmate7.azurewebsites.net/events",
+        "http://localhost:8000/events",
         {
           headers: addAuthHeader(),
         },
@@ -107,7 +101,7 @@ function EventForm() {
   const fetchTags = async () => {
     try {
       const response = await fetch(
-        "https://assignmate7.azurewebsites.net/tag",
+        "http://localhost:8000/tag",
         {
           headers: addAuthHeader(),
         },
@@ -137,23 +131,32 @@ function EventForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form data: ", formData);
-    console.log("form data tags: ", formData.tags);
-    const formattedTags = formData.tags.filter(
-      (tag) => typeof tag === "string" && tag.trim().length > 0,
-    );
-    console.log("tags: ", formattedTags);
-    console.log(formData.timeStart);
+
+    console.log('Checked Tags:', checkedTags);
+    console.log('Form Data:', formData);
+
+    const selectedTagIds = Object.keys(checkedTags)
+    .filter((tagId) => checkedTags[tagId]);
+
+    let tagsToSend;
+    if (!isEditMode) {
+      const formattedTags = selectedTagIds.map(tagId => tagMap[tagId]);
+      tagsToSend = formattedTags;
+    } else {
+      tagsToSend = selectedTagIds;
+    }
 
     const eventToSubmit = {
       eventName: formData.title,
-      tags: formattedTags,
+      tags: tagsToSend,
       date: new Date(`${formData.date}T00:00:00Z`), // Ensure date is in ISO format
       startTime: new Date(`${formData.date}T${formData.timeStart}:00Z`), // Ensure time is in ISO format
       endTime: new Date(`${formData.date}T${formData.timeEnd}:00Z`), // Ensure time is in ISO format
       status: formData.status,
       description: formData.description,
     };
+
+    console.log('Event to Submit:', eventToSubmit);
 
     const method = isEditMode ? "PUT" : "POST";
     const url = isEditMode
@@ -178,6 +181,8 @@ function EventForm() {
         return response.json();
       })
       .then((data) => {
+        console.log('Data:', data);
+
         fetchEvents(); // Refresh events list
         setSelectedEvent(null); // Reset form
         resetForm();
@@ -207,7 +212,7 @@ function EventForm() {
       color: newTagColor,
     };
 
-    fetch("https://assignmate7.azurewebsites.net/tag", {
+    fetch("http://localhost:8000/tag", {
       method: "POST",
       headers: addAuthHeader({
         "Content-Type": "application/json",
@@ -224,12 +229,14 @@ function EventForm() {
       })
       .catch((error) => console.error("Error adding tag:", error));
   };
-
+  
   const handleCheckboxChange = (tagId) => {
-    setCheckedTags((prevState) => ({
-      ...prevState,
-      [tagId]: !prevState[tagId],
-    }));
+    setCheckedTags((prevState) => {
+      const newState = { ...prevState, [tagId]: !prevState[tagId] };
+      const selectedTags = Object.keys(newState).filter(key => newState[key]);
+      setFormData({ ...formData, tags: selectedTags });
+      return newState;
+    });
   };
 
   const toggleTagDropdown = () => {
@@ -277,6 +284,13 @@ function EventForm() {
 
   console.log(events);
 
+
+  const tagMap = {};
+  tags.forEach(tag => {
+    tagMap[tag._id] = tag.name;
+  });
+
+
   return (
     <div className="event-form-container">
       <div className="back-button-container">
@@ -287,15 +301,13 @@ function EventForm() {
       <div className="sidebar">
         <h2>Other Events:</h2>
         <ul>
-          {events &&
-            events.map((event) => (
-              <li
-                key={event._id}
+          {events && events.map((event) => (
+              <li key={event._id}
                 className="event-name"
                 onClick={() => setSelectedEvent(event)}
               >
-                {event.eventName}
-              </li>
+            {event.eventName} ({event.tags ? event.tags.map(tagId => tagMap[tagId]).join(', ') : ''})
+            </li>
             ))}
         </ul>
       </div>
@@ -315,8 +327,10 @@ function EventForm() {
             </div>
             <div className="form-group">
               <label>Tags:</label>
-              <div>{selectedEvent.tags?.join(", ")}</div>{" "}
-              {/* Add optional chaining here */}
+              <div>{selectedEvent.tags && selectedEvent.tags.map((tagId) => {
+    console.log("Tag ID:", tagId);
+    return tagMap[tagId] || ""; // Check if tagId exists in tagMap
+}).join(", ")}</div>
             </div>
             <div className="form-group">
               <label>Date:</label>
