@@ -191,7 +191,7 @@ describe("getEvents function", () => {
       });
     });
     const expected = {
-      "Tue Jun 04 2024 17:00:00 GMT-0700 (Pacific Daylight Time)": [event],
+      "Wed Jun 05 2024 00:00:00 GMT+0000 (Coordinated Universal Time)": [event],
     };
     expect(expected).toMatchObject(resultWithoutId);
     await mut.deleteEvent("6663705c47c75e5afe27e717");
@@ -236,7 +236,7 @@ describe("getEvents function", () => {
       });
     });
     const expected = {
-      "Thu Jun 06 2024 17:00:00 GMT-0700 (Pacific Daylight Time)": [
+      "Fri Jun 07 2024 00:00:00 GMT+0000 (Coordinated Universal Time)": [
         {
           _id: "9f7a2c8b39a014c6b9d3b6a4",
           username: "mickey",
