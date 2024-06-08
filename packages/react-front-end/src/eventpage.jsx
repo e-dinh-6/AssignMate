@@ -135,11 +135,13 @@ function EventForm() {
     console.log('Checked Tags:', checkedTags);
     console.log('Form Data:', formData);
 
-    const formattedTags = Object.keys(checkedTags)
-    .filter((tagId) => checkedTags[tagId])
-    .map((tagId) => tagMap[tagId]);
+    const selectedTagIds = Object.keys(checkedTags)
+    .filter((tagId) => checkedTags[tagId]);
 
-    console.log('Formatted Tags:', formattedTags);
+    console.log('Selected Tag IDs:', selectedTagIds);
+
+    const formattedTags = selectedTagIds.map(tagId => tagMap[tagId]);
+
 
     const eventToSubmit = {
       eventName: formData.title,
@@ -322,7 +324,10 @@ function EventForm() {
             </div>
             <div className="form-group">
               <label>Tags:</label>
-              <div>{selectedEvent.tags? selectedEvent.tags.map((tagId) => tagMap[tagId]).join(", ") : ""}</div>
+              <div>{selectedEvent.tags && selectedEvent.tags.map((tagId) => {
+    console.log("Tag ID:", tagId);
+    return tagMap[tagId] || ""; // Check if tagId exists in tagMap
+}).join(", ")}</div>
             </div>
             <div className="form-group">
               <label>Date:</label>
