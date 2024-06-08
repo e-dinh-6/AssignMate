@@ -9,6 +9,7 @@ mongoose.set("debug", true);
 dotenv.config();
 const { MONGODB_URL } = process.env;
 
+/* istanbul ignore next */
 mongoose
   .connect(MONGODB_URL, {
     useNewUrlParser: true,
@@ -19,7 +20,6 @@ mongoose
   })
   .catch((error) => {
     console.error("Error connecting to the cloud database:", error);
-    console.log("Attempting to connect to the local database...");
     mongoose
       .connect("mongodb://localhost:27017/asignmate", {
         useNewUrlParser: true,
@@ -82,21 +82,23 @@ async function getEvent(user, id) {
   return promise;
 }
 
-async function getEvents(user) {
-  // gets all of a users events sorted by date and time
-  const events = await Event.find({ username: user }).sort({
-    date: 1,
-    startTime: 1,
-  });
-  const eventsByDay = {};
-  events.forEach((event) => {
-    const { date } = event;
-    if (!eventsByDay[date]) {
-      eventsByDay[date] = [];
-    }
-    eventsByDay[date].push(event);
-  });
-  return eventsByDay;
+function getEvents(user) {
+  return Event.find({ username: user })
+    .sort({
+      date: 1,
+      startTime: 1,
+    })
+    .then((events) => {
+      const eventsByDay = {};
+      events.forEach((event) => {
+        const { date } = event;
+        if (!eventsByDay[date]) {
+          eventsByDay[date] = [];
+        }
+        eventsByDay[date].push(event);
+      });
+      return eventsByDay;
+    });
 }
 
 const addEvent = async (eventData) => {

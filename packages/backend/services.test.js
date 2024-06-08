@@ -58,8 +58,17 @@ describe("addTask function", () => {
 
 describe("getTags function", () => {
   test("Testing getTags function w/ username", () => {
-    const expected = [{ username: "testUser" }];
+    const expected = [{ username: "testUser", name: "school" }];
     return mut.getTags("testUser").then((got) => {
+      expect(got).toMatchObject(expected);
+    });
+  });
+});
+
+describe("getTasks function", () => {
+  test("Testing getTasks function w/ username", () => {
+    const expected = [{ username: "testUser", title: "Laundry" }];
+    return mut.getTasks("testUser").then((got) => {
       expect(got).toMatchObject(expected);
     });
   });
@@ -188,6 +197,75 @@ describe("getEvents function", () => {
     };
     expect(expected).toEqual(resultWithoutId);
     await mut.deleteEvent("6663705c47c75e5afe27e717");
+  });
+  test("no events found", async () => {
+    const result = await mut.getEvents("idontexist");
+    const expected = {};
+    expect(expected).toEqual(result);
+  });
+  test("multiple events on one date", async () => {
+    const event = {
+      _id: "9f7a2c8b39a014c6b9d3b6a4",
+      username: "mickey",
+      date: new Date("2024-06-07T00:00:00.000Z"),
+      startTime: new Date("2024-06-07T15:00:00.000Z"),
+      endTime: new Date("2024-06-07T21:00:00.000Z"),
+      status: "later",
+      tags: [],
+      eventName: "concert",
+      __v: 0,
+    };
+    const event2 = {
+      _id: "3a7c8b5e9d12f4a6c6e9b7c8",
+      username: "mickey",
+      date: new Date("2024-06-07T00:00:00.000Z"),
+      startTime: new Date("2024-06-07T19:00:00.000Z"),
+      endTime: new Date("2024-06-07T22:00:00.000Z"),
+      status: "later",
+      tags: [],
+      eventName: "office hours",
+      __v: 0,
+    };
+    await mut.addEvent(event);
+    await mut.addEvent(event2);
+    const result = await mut.getEvents("mickey");
+    const resultWithoutId = {};
+    Object.keys(result).forEach((dateKey) => {
+      resultWithoutId[dateKey] = result[dateKey].map((event) => {
+        const eventObject = event.toObject();
+        const { _id, ...eventWithoutId } = eventObject;
+        return { ...eventWithoutId, _id: _id.toHexString() };
+      });
+    });
+    const expected = {
+      "Thu Jun 06 2024 17:00:00 GMT-0700 (Pacific Daylight Time)": [
+        {
+          _id: "9f7a2c8b39a014c6b9d3b6a4",
+          username: "mickey",
+          eventName: "concert",
+          tags: [],
+          date: new Date("2024-06-07T00:00:00.000Z"),
+          startTime: new Date("2024-06-07T15:00:00.000Z"),
+          endTime: new Date("2024-06-07T21:00:00.000Z"),
+          status: "later",
+          __v: 0,
+        },
+        {
+          _id: "3a7c8b5e9d12f4a6c6e9b7c8",
+          username: "mickey",
+          eventName: "office hours",
+          tags: [],
+          date: new Date("2024-06-07T00:00:00.000Z"),
+          startTime: new Date("2024-06-07T19:00:00.000Z"),
+          endTime: new Date("2024-06-07T22:00:00.000Z"),
+          status: "later",
+          __v: 0,
+        },
+      ],
+    };
+    expect(expected).toEqual(resultWithoutId);
+    await mut.deleteEvent("3a7c8b5e9d12f4a6c6e9b7c8");
+    await mut.deleteEvent("9f7a2c8b39a014c6b9d3b6a4");
   });
 });
 
